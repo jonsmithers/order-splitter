@@ -1,1 +1,41 @@
-"use strict";var CACHE_NAME="order-splitter-cache-v0.5.2",urlsToCache=["/","/styles.css","/all.min.js"];self.addEventListener("install",function(e){e.waitUntil(caches.open(CACHE_NAME).then(function(e){return console.log("Opened cache"),e.addAll(urlsToCache)}))}),self.addEventListener("activate",function(e){var t=[CACHE_NAME];e.waitUntil(caches.keys().then(function(e){return Promise.all(e.filter(function(e){return-1===t.indexOf(e)}).map(function(e){return caches.delete(e)}))}))}),self.addEventListener("fetch",function(e){e.respondWith(caches.match(e.request).then(function(t){return t||fetch(e.request)}))});
+let CACHE_NAME = 'order-splitter-cache-%%GULP_INJECT_VERSION%%';
+let urlsToCache = ['index.html', 'index.js'].map(f => './'+f);
+
+self.addEventListener('install', function(event) {
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+    .then(function(cache) {
+      console.log('Opened cache');
+      return cache.addAll(urlsToCache);
+    })
+  );
+});
+
+self.addEventListener('activate', function(event) {
+  let cacheWhiteList = [CACHE_NAME];
+  event.waitUntil(
+    caches.keys().then(function(keyList) {
+      return Promise.all(
+        keyList.filter(function(key) {
+          return cacheWhiteList.indexOf(key) === -1;
+        }).map(function(key) {
+          return caches.delete(key);
+        })
+      );
+    })
+  );
+});
+
+
+self.addEventListener('fetch', function(event) {
+  event.respondWith(
+    caches.match(event.request)
+    .then(function(response) {
+      // Cache hit - return response
+      if (response) {
+        return response;
+      }
+      return fetch(event.request);
+    })
+  );
+});
