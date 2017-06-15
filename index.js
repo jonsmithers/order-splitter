@@ -13695,6 +13695,29 @@ Polymer({
 
   };
 Polymer({
+        is: 'flip-left-enter-animation',
+
+        behaviors: [
+            Polymer.NeonAnimationBehavior
+        ],
+
+        configure: function(config) {
+            var node = config.node;
+
+            if (config.transformOrigin) {
+                this.setPrefixedProperty(node, 'transformOrigin', config.transformOrigin);
+            }
+
+            this._effect = new KeyframeEffect(node, [
+                    {offset: 0,   transform: 'perspective(1500px) rotateY(180deg)'},
+                    // {offset: 0.5, transform: 'perspective(1000px) rotateY(-90deg)'},
+                    {offset: 1,   transform: 'perspective(1500px) rotateY(0deg)'},
+            ], this.timingFromConfig(config));
+
+            return this._effect;
+        }
+    });
+Polymer({
         is: 'flip-left-exit-animation',
 
         behaviors: [
@@ -17215,7 +17238,7 @@ defineCustomElement('order-split-results-table', class extends Polymer.Element {
             }
         });
 // this is to help with debugging any SW caching issues if they appear
-            var scriptSha = '20f0687';
+            var scriptSha = 'e6c1dd9';
             var htmlSha = document.querySelector('#sha').innerText;
             console.debug(`script version: ${scriptSha}`);
             console.debug(`html version:   ${htmlSha}`);
