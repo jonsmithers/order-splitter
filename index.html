@@ -1,4 +1,4 @@
-<html><head><title>Order Splitter</title><meta charset=UTF-8><meta name=theme-color content=#11923B><meta name=mobile-web-app-capable content=yes><meta name=application-name content=PSK><link rel=icon sizes=192x192 href=ordersplitter192.png asnyc><link rel=icon sizes=16x16 href=ordersplitter16.png><link rel=icon sizes=32x32 href=ordersplitter32.png><meta name=apple-mobile-web-app-capable content=yes><meta name=apple-mobile-web-app-status-bar-style content=black><meta name=apple-mobile-web-app-title content="Order Splitter"><link rel=apple-touch-icon href=ordersplitter152.png asnyc><meta name=msapplication-TileColor content=#3372DF><meta name=msapplication-TileImage content=ordersplitter144.png async><link rel=manifest href=manifest.json></head><body><div hidden by-vulcanize><script src=bower_components/web-animations-js/web-animations-next-lite.min.js></script><dom-module id=iron-flex assetpath="../bower_components/iron-flex-layout/"><template><style>
+<html><head><title>Order Splitter</title><meta charset=UTF-8><meta name=theme-color content=#11923B><meta name=mobile-web-app-capable content=yes><meta name=application-name content=PSK><link rel=icon sizes=192x192 href=ordersplitter192.png asnyc><link rel=icon sizes=16x16 href=ordersplitter16.png><link rel=icon sizes=32x32 href=ordersplitter32.png><meta name=apple-mobile-web-app-capable content=yes><meta name=apple-mobile-web-app-status-bar-style content=black><meta name=apple-mobile-web-app-title content="Order Splitter"><link rel=apple-touch-icon href=ordersplitter152.png asnyc><meta name=msapplication-TileColor content=#3372DF><meta name=msapplication-TileImage content=ordersplitter144.png async><link rel=manifest href=manifest.json></head><body><div hidden by-vulcanize><dom-module id=iron-flex assetpath="bower_components/iron-flex-layout/"><template><style>
       .layout.horizontal,
       .layout.vertical {
         display: -ms-flexbox;
@@ -69,7 +69,7 @@
         -webkit-flex: none;
         flex: none;
       }
-    </style></template></dom-module><dom-module id=iron-flex-reverse assetpath="../bower_components/iron-flex-layout/"><template><style>
+    </style></template></dom-module><dom-module id=iron-flex-reverse assetpath="bower_components/iron-flex-layout/"><template><style>
       .layout.horizontal-reverse,
       .layout.vertical-reverse {
         display: -ms-flexbox;
@@ -94,7 +94,7 @@
         -webkit-flex-wrap: wrap-reverse;
         flex-wrap: wrap-reverse;
       }
-    </style></template></dom-module><dom-module id=iron-flex-alignment assetpath="../bower_components/iron-flex-layout/"><template><style>
+    </style></template></dom-module><dom-module id=iron-flex-alignment assetpath="bower_components/iron-flex-layout/"><template><style>
       /**
        * Alignment in cross axis.
        */
@@ -227,7 +227,7 @@
         -webkit-align-content: space-around;
         align-content: space-around;
       }
-    </style></template></dom-module><dom-module id=iron-flex-factors assetpath="../bower_components/iron-flex-layout/"><template><style>
+    </style></template></dom-module><dom-module id=iron-flex-factors assetpath="bower_components/iron-flex-layout/"><template><style>
       .flex,
       .flex-1 {
         -ms-flex: 1 1 0.000000001px;
@@ -302,7 +302,7 @@
         -webkit-flex: 12;
         flex: 12;
       }
-    </style></template></dom-module><dom-module id=iron-positioning assetpath="../bower_components/iron-flex-layout/"><template><style>
+    </style></template></dom-module><dom-module id=iron-positioning assetpath="bower_components/iron-flex-layout/"><template><style>
       .block {
         display: block;
       }
@@ -1236,7 +1236,7 @@
 
     }
 
-  </style></custom-style><dom-module id=paper-item-shared-styles assetpath="../bower_components/paper-item/"><template><style>
+  </style></custom-style><dom-module id=paper-item-shared-styles assetpath="bower_components/paper-item/"><template><style>
       :host, .paper-item {
         display: block;
         position: relative;
@@ -1286,7 +1286,7 @@
 
         @apply --paper-item-focused-before;
       }
-    </style></template></dom-module><dom-module id=paper-item assetpath="../bower_components/paper-item/"><template><style include=paper-item-shared-styles></style><style>
+    </style></template></dom-module><dom-module id=paper-item assetpath="bower_components/paper-item/"><template><style include=paper-item-shared-styles></style><style>
       :host {
         @apply --layout-horizontal;
         @apply --layout-center;
@@ -1294,18 +1294,18 @@
 
         @apply --paper-item;
       }
-    </style><slot></slot></template></dom-module><dom-module id=example-order assetpath="../elements/"><template strip-whitespace><style include="iron-flex iron-flex-alignment"></style><style>
+    </style><slot></slot></template></dom-module><dom-module id=example-order assetpath="elements/"><template strip-whitespace><style include="iron-flex iron-flex-alignment"></style><style>
             .pointer {
                 cursor: pointer;
             }
             .padding-right {
                 padding-right: 20px;
             }
-        </style><div class="horizontal layout"><div class="padding-right vertical layout"><dom-repeat items=[[orderTypes]]><template><paper-item class=pointer on-click=_selectItem>[[item]]</paper-item></template></dom-repeat></div><span>[[selectedOrder]]</span></div><array-selector id=selector items={{orders}} selected={{selectedOrder}}></array-selector></template></dom-module><dom-module id=neon-animatable assetpath="../bower_components/neon-animation/"><template><style>
+        </style><div class="horizontal layout"><div class="padding-right vertical layout"><dom-repeat items=[[orderTypes]]><template><paper-item class=pointer on-click=_selectItem>[[item]]</paper-item></template></dom-repeat></div><span>[[selectedOrder]]</span></div><array-selector id=selector items={{orders}} selected={{selectedOrder}}></array-selector></template></dom-module><dom-module id=neon-animatable assetpath="bower_components/neon-animation/"><template><style>
       :host {
         display: block;
       }
-    </style><slot></slot></template></dom-module><dom-module id=neon-animated-pages assetpath="../bower_components/neon-animation/"><template><style>
+    </style><slot></slot></template></dom-module><dom-module id=neon-animated-pages assetpath="bower_components/neon-animation/"><template><style>
       :host {
         display: block;
         position: relative;
@@ -1327,7 +1327,7 @@
       :host > ::slotted(.neon-animating) {
         pointer-events: none;
       }
-    </style><slot id=content></slot></template></dom-module><dom-module id=flip-card assetpath="../elements/"><template><style>
+    </style><slot id=content></slot></template></dom-module><script src=bower_components/web-animations-js/web-animations-next-lite.min.js></script><dom-module id=flip-card assetpath="elements/"><template><style>
             neon-animatable {
                 backface-visibility: hidden;
             }
@@ -1341,7 +1341,7 @@
                 /* height: 100vh; */
                 /* overflow: scroll; */
             }
-        </style><neon-animated-pages id=flipCard selected={{selectedSide}} entry-animation=flip-left-enter-animation exit-animation=flip-left-exit-animation><neon-animatable entry-animation=flip-left-enter-animation exit-animation=flip-left-exit-animation id=a><slot name=front></slot></neon-animatable><neon-animatable entry-animation=flip-left-enter-animation exit-animation=flip-left-exit-animation id=b><slot name=back></slot></neon-animatable></neon-animated-pages></template></dom-module><dom-module id=paper-ripple assetpath="../bower_components/paper-ripple/"><template><style>
+        </style><neon-animated-pages id=flipCard selected={{selectedSide}} entry-animation=flip-left-enter-animation exit-animation=flip-left-exit-animation><neon-animatable entry-animation=flip-left-enter-animation exit-animation=flip-left-exit-animation id=a><slot name=front></slot></neon-animatable><neon-animatable entry-animation=flip-left-enter-animation exit-animation=flip-left-exit-animation id=b><slot name=back></slot></neon-animatable></neon-animated-pages></template></dom-module><dom-module id=paper-ripple assetpath="bower_components/paper-ripple/"><template><style>
       :host {
         display: block;
         position: absolute;
@@ -1467,7 +1467,7 @@
                     0 11px 15px -7px rgba(0, 0, 0, 0.4);
       };
     }
-  </style></custom-style><dom-module id=paper-material-styles assetpath="../bower_components/paper-styles/element-styles/"><template><style>
+  </style></custom-style><dom-module id=paper-material-styles assetpath="bower_components/paper-styles/element-styles/"><template><style>
       :host, html {
         --paper-material: {
           display: block;
@@ -1507,7 +1507,7 @@
       :host(.paper-material[elevation="5"]), .paper-material[elevation="5"] {
         @apply --paper-material-elevation-5;
       }
-    </style></template></dom-module><dom-module id=paper-button assetpath="../bower_components/paper-button/"><template strip-whitespace><style include=paper-material-styles>
+    </style></template></dom-module><dom-module id=paper-button assetpath="bower_components/paper-button/"><template strip-whitespace><style include=paper-material-styles>
       /* Need to specify the same specificity as the styles imported from paper-material. */
       :host {
         @apply --layout-inline;
@@ -1585,7 +1585,7 @@
       paper-ripple {
         color: var(--paper-button-ink-color);
       }
-    </style><slot></slot></template></dom-module><dom-module id=paper-checkbox assetpath="../bower_components/paper-checkbox/"><template strip-whitespace><style>
+    </style><slot></slot></template></dom-module><dom-module id=paper-checkbox assetpath="bower_components/paper-checkbox/"><template strip-whitespace><style>
       :host {
         display: inline-block;
         white-space: nowrap;
@@ -1751,17 +1751,17 @@
       #checkbox.invalid:not(.checked) {
         border-color: var(--paper-checkbox-error-color, var(--error-color));
       }
-    </style><div id=checkboxContainer><div id=checkbox class$="[[_computeCheckboxClass(checked, invalid)]]"><div id=checkmark class$=[[_computeCheckmarkClass(checked)]]></div></div></div><div id=checkboxLabel><slot></slot></div></template></dom-module><dom-module id=iron-a11y-announcer assetpath="../bower_components/iron-a11y-announcer/"><template><style>
+    </style><div id=checkboxContainer><div id=checkbox class$="[[_computeCheckboxClass(checked, invalid)]]"><div id=checkmark class$=[[_computeCheckmarkClass(checked)]]></div></div></div><div id=checkboxLabel><slot></slot></div></template></dom-module><dom-module id=iron-a11y-announcer assetpath="bower_components/iron-a11y-announcer/"><template><style>
       :host {
         display: inline-block;
         position: fixed;
         clip: rect(0px,0px,0px,0px);
       }
-    </style><div aria-live$=[[mode]]>[[_text]]</div></template></dom-module><dom-module id=iron-input assetpath="../bower_components/iron-input/"><template><style>
+    </style><div aria-live$=[[mode]]>[[_text]]</div></template></dom-module><dom-module id=iron-input assetpath="bower_components/iron-input/"><template><style>
       :host {
         display: inline-block;
       }
-    </style><slot id=content></slot></template></dom-module><dom-module id=paper-input-char-counter assetpath="../bower_components/paper-input/"><template><style>
+    </style><slot id=content></slot></template></dom-module><dom-module id=paper-input-char-counter assetpath="bower_components/paper-input/"><template><style>
       :host {
         display: inline-block;
         float: right;
@@ -1777,7 +1777,7 @@
       :host-context([dir="rtl"]) {
         float: left;
       }
-    </style><span>[[_charCounterStr]]</span></template></dom-module><dom-module id=paper-input-container assetpath="../bower_components/paper-input/"><template><style>
+    </style><span>[[_charCounterStr]]</span></template></dom-module><dom-module id=paper-input-container assetpath="bower_components/paper-input/"><template><style>
       :host {
         display: block;
         padding: 8px 0;
@@ -2010,7 +2010,7 @@
       .add-on-content.is-highlighted ::slotted(*) {
         color: var(--paper-input-container-focus-color, var(--primary-color));
       }
-    </style><div class=floated-label-placeholder aria-hidden=true hidden=[[noLabelFloat]]>&nbsp;</div><div class=input-wrapper><span class=prefix><slot name=prefix></slot></span><div class$=[[_computeInputContentClass(noLabelFloat,alwaysFloatLabel,focused,invalid,_inputHasContent)]] id=labelAndInputContainer><slot name=label></slot><slot name=input></slot></div><span class=suffix><slot name=suffix></slot></span></div><div class$=[[_computeUnderlineClass(focused,invalid)]]><div class=unfocused-line></div><div class=focused-line></div></div><div class$=[[_computeAddOnContentClass(focused,invalid)]]><slot name=add-on></slot></div></template></dom-module><dom-module id=paper-input-error assetpath="../bower_components/paper-input/"><template><style>
+    </style><div class=floated-label-placeholder aria-hidden=true hidden=[[noLabelFloat]]>&nbsp;</div><div class=input-wrapper><span class=prefix><slot name=prefix></slot></span><div class$=[[_computeInputContentClass(noLabelFloat,alwaysFloatLabel,focused,invalid,_inputHasContent)]] id=labelAndInputContainer><slot name=label></slot><slot name=input></slot></div><span class=suffix><slot name=suffix></slot></span></div><div class$=[[_computeUnderlineClass(focused,invalid)]]><div class=unfocused-line></div><div class=focused-line></div></div><div class$=[[_computeAddOnContentClass(focused,invalid)]]><slot name=add-on></slot></div></template></dom-module><dom-module id=paper-input-error assetpath="bower_components/paper-input/"><template><style>
       :host {
         display: inline-block;
         visibility: hidden;
@@ -2027,7 +2027,7 @@
       :host([invalid]) {
         visibility: visible;
       };
-    </style><slot></slot></template></dom-module><dom-module id=paper-input assetpath="../bower_components/paper-input/"><template><style>
+    </style><slot></slot></template></dom-module><dom-module id=paper-input assetpath="bower_components/paper-input/"><template><style>
       :host {
         display: block;
       }
@@ -2093,7 +2093,7 @@
       label {
         pointer-events: none;
       }
-    </style><paper-input-container id=container no-label-float=[[noLabelFloat]] always-float-label=[[_computeAlwaysFloatLabel(alwaysFloatLabel,placeholder)]] auto-validate$=[[autoValidate]] disabled$=[[disabled]] invalid=[[invalid]]><slot name=prefix slot=prefix></slot><label hidden$=[[!label]] aria-hidden=true for=input slot=label>[[label]]</label> <span id=template-placeholder></span><slot name=suffix slot=suffix></slot><template is=dom-if if=[[errorMessage]]><paper-input-error aria-live=assertive slot=add-on>[[errorMessage]]</paper-input-error></template><template is=dom-if if=[[charCounter]]><paper-input-char-counter slot=add-on></paper-input-char-counter></template></paper-input-container></template><template id=v0><input is=iron-input id=input slot=input aria-labelledby$=[[_ariaLabelledBy]] aria-describedby$=[[_ariaDescribedBy]] disabled$=[[disabled]] title$=[[title]] bind-value={{value}} invalid={{invalid}} prevent-invalid-input=[[preventInvalidInput]] allowed-pattern=[[allowedPattern]] validator=[[validator]] type$=[[type]] pattern$=[[pattern]] required$=[[required]] autocomplete$=[[autocomplete]] autofocus$=[[autofocus]] inputmode$=[[inputmode]] minlength$=[[minlength]] maxlength$=[[maxlength]] min$=[[min]] max$=[[max]] step$=[[step]] name$=[[name]] placeholder$=[[placeholder]] readonly$=[[readonly]] list$=[[list]] size$=[[size]] autocapitalize$=[[autocapitalize]] autocorrect$=[[autocorrect]] on-change=_onChange tabindex$=[[tabIndex]] autosave$=[[autosave]] results$=[[results]] accept$=[[accept]] multiple$=[[multiple]]></template><template id=v1><iron-input bind-value={{value}} id=input slot=input maxlength$=[[maxlength]] allowed-pattern=[[allowedPattern]] invalid={{invalid}} validator=[[validator]]><input id=nativeInput aria-labelledby$=[[_ariaLabelledBy]] aria-describedby$=[[_ariaDescribedBy]] disabled$=[[disabled]] title$=[[title]] type$=[[type]] pattern$=[[pattern]] required$=[[required]] autocomplete$=[[autocomplete]] autofocus$=[[autofocus]] inputmode$=[[inputmode]] minlength$=[[minlength]] maxlength$=[[maxlength]] min$=[[min]] max$=[[max]] step$=[[step]] name$=[[name]] placeholder$=[[placeholder]] readonly$=[[readonly]] list$=[[list]] size$=[[size]] autocapitalize$=[[autocapitalize]] autocorrect$=[[autocorrect]] on-change=_onChange tabindex$=[[tabIndex]] autosave$=[[autosave]] results$=[[results]] accept$=[[accept]] multiple$=[[multiple]]></iron-input></template></dom-module><dom-module id=order-input assetpath="../elements/"><template><style>
+    </style><paper-input-container id=container no-label-float=[[noLabelFloat]] always-float-label=[[_computeAlwaysFloatLabel(alwaysFloatLabel,placeholder)]] auto-validate$=[[autoValidate]] disabled$=[[disabled]] invalid=[[invalid]]><slot name=prefix slot=prefix></slot><label hidden$=[[!label]] aria-hidden=true for=input slot=label>[[label]]</label> <span id=template-placeholder></span><slot name=suffix slot=suffix></slot><template is=dom-if if=[[errorMessage]]><paper-input-error aria-live=assertive slot=add-on>[[errorMessage]]</paper-input-error></template><template is=dom-if if=[[charCounter]]><paper-input-char-counter slot=add-on></paper-input-char-counter></template></paper-input-container></template><template id=v0><input is=iron-input id=input slot=input aria-labelledby$=[[_ariaLabelledBy]] aria-describedby$=[[_ariaDescribedBy]] disabled$=[[disabled]] title$=[[title]] bind-value={{value}} invalid={{invalid}} prevent-invalid-input=[[preventInvalidInput]] allowed-pattern=[[allowedPattern]] validator=[[validator]] type$=[[type]] pattern$=[[pattern]] required$=[[required]] autocomplete$=[[autocomplete]] autofocus$=[[autofocus]] inputmode$=[[inputmode]] minlength$=[[minlength]] maxlength$=[[maxlength]] min$=[[min]] max$=[[max]] step$=[[step]] name$=[[name]] placeholder$=[[placeholder]] readonly$=[[readonly]] list$=[[list]] size$=[[size]] autocapitalize$=[[autocapitalize]] autocorrect$=[[autocorrect]] on-change=_onChange tabindex$=[[tabIndex]] autosave$=[[autosave]] results$=[[results]] accept$=[[accept]] multiple$=[[multiple]]></template><template id=v1><iron-input bind-value={{value}} id=input slot=input maxlength$=[[maxlength]] allowed-pattern=[[allowedPattern]] invalid={{invalid}} validator=[[validator]]><input id=nativeInput aria-labelledby$=[[_ariaLabelledBy]] aria-describedby$=[[_ariaDescribedBy]] disabled$=[[disabled]] title$=[[title]] type$=[[type]] pattern$=[[pattern]] required$=[[required]] autocomplete$=[[autocomplete]] autofocus$=[[autofocus]] inputmode$=[[inputmode]] minlength$=[[minlength]] maxlength$=[[maxlength]] min$=[[min]] max$=[[max]] step$=[[step]] name$=[[name]] placeholder$=[[placeholder]] readonly$=[[readonly]] list$=[[list]] size$=[[size]] autocapitalize$=[[autocapitalize]] autocorrect$=[[autocorrect]] on-change=_onChange tabindex$=[[tabIndex]] autosave$=[[autosave]] results$=[[results]] accept$=[[accept]] multiple$=[[multiple]]></iron-input></template></dom-module><dom-module id=order-input assetpath="elements/"><template><style>
             .hidden {
                 display: none;
             }
@@ -2117,7 +2117,7 @@
             span[slot="prefix"] {
                 padding-right: 2px;
             }
-        </style><div><textarea id=textarea rows=20 cols=60 placeholder="Paste order details here" autofocus></textarea><paper-input type=number label=Taxes id=tax><span slot=prefix>$</span></paper-input><paper-input type=number label=Fees id=fee><span slot=prefix>$</span></paper-input><div id=tipContainer><paper-input type=number label=Tip id=tip><span slot=prefix class$=[[_computeTipDollarClass(usePercentForTip)]]>$</span> <span slot=suffix class$=[[_computeTipPercentClass(usePercentForTip)]]>%</span></paper-input><paper-checkbox checked={{usePercentForTip}} on-tap=_onCheckboxTap>Percentage</paper-checkbox></div><paper-button id=split on-tap=_onSplitButtonTap>Split</paper-button></div><iron-location id=location></iron-location></template></dom-module><dom-module id=paper-tooltip assetpath="../bower_components/paper-tooltip/"><template><style>
+        </style><div><textarea id=textarea rows=20 cols=60 placeholder="Paste order details here" autofocus></textarea><paper-input type=number label=Taxes id=tax><span slot=prefix>$</span></paper-input><paper-input type=number label=Fees id=fee><span slot=prefix>$</span></paper-input><div id=tipContainer><paper-input type=number label=Tip id=tip><span slot=prefix class$=[[_computeTipDollarClass(usePercentForTip)]]>$</span> <span slot=suffix class$=[[_computeTipPercentClass(usePercentForTip)]]>%</span></paper-input><paper-checkbox checked={{usePercentForTip}} on-tap=_onCheckboxTap>Percentage</paper-checkbox></div><paper-button id=split on-tap=_onSplitButtonTap>Split</paper-button></div><iron-location id=location></iron-location></template></dom-module><dom-module id=paper-tooltip assetpath="bower_components/paper-tooltip/"><template><style>
       :host {
         display: block;
         position: absolute;
@@ -2151,7 +2151,7 @@
       .hidden {
         display: none !important;
       }
-    </style><div id=tooltip class=hidden><slot></slot></div></template></dom-module><dom-module id=order-split-results-table assetpath="../elements/"><template hidden><style>
+    </style><div id=tooltip class=hidden><slot></slot></div></template></dom-module><dom-module id=order-split-results-table assetpath="elements/"><template hidden><style>
             :host {
                 @apply(--paper-font-common-base);
             }
@@ -2239,5 +2239,5 @@
             .step-text {
                 font-size: 20px;
             }
-        </style></div><div align=right id=sha>4de3167</div><div align=right>6/15/2017, 6:54:24 AM</div><flip-card id=mainFlipCard><div slot=front class=wrapperwrapper><div class=wrapper><div class=left-panel><div class=logo-wrapper><img src=images/ordersplitter-logo.png alt="Order Splitter"><h1>Order Splitter</h1><span class=version>0.6.0</span></div><order-input></order-input></div><div class=right-panel><div class=step><h1>How it Works</h1><span class=number><h3>1</h3></span> <span class=step-text>Copy order details from OrderUp</span></div><div><pre>                        <example-order></example-order>
+        </style></div><div align=right id=sha>26da5db</div><div align=right>6/15/2017, 7:15:00 AM</div><flip-card id=mainFlipCard><div slot=front class=wrapperwrapper><div class=wrapper><div class=left-panel><div class=logo-wrapper><img src=images/ordersplitter-logo.png alt="Order Splitter"><h1>Order Splitter</h1><span class=version>0.6.0</span></div><order-input></order-input></div><div class=right-panel><div class=step><h1>How it Works</h1><span class=number><h3>1</h3></span> <span class=step-text>Copy order details from OrderUp</span></div><div><pre>                        <example-order></example-order>
                     </pre></div><div class=step><span class=number><h3>2</h3></span> <span class=step-text>Enter taxes, fees, and tip</span></div><div class=step><span class=number><h3>3</h3></span> <span class=step-text>Split order</span></div></div></div></div><div slot=back class=wrapperwrapper><order-split-results-table id=table></order-split-results-table></div></flip-card><script src=index.js></script></body></html>

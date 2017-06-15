@@ -17238,7 +17238,7 @@ defineCustomElement('order-split-results-table', class extends Polymer.Element {
             }
         });
 // this is to help with debugging any SW caching issues if they appear
-            var scriptSha = '4de3167';
+            var scriptSha = '26da5db';
             var htmlSha = document.querySelector('#sha').innerText;
             console.debug(`script version: ${scriptSha}`);
             console.debug(`html version:   ${htmlSha}`);
