@@ -68,9 +68,11 @@ class OrderUpParser {
         lines.reduce((lastItemCost, line) => {
             let itemCostMatch, nameMatch;
 
-            if (itemCostMatch = line.match('.*\\$([0-9.]+)')) {
-                let itemCost = Number(itemCostMatch[1]);
-                return itemCost;
+            if(!lastItemCost) {
+                if (itemCostMatch = line.match('.*\\$([0-9.]+)')) {
+                    let itemCost = Number(itemCostMatch[1]);
+                    return itemCost;
+                }
             }
 
             if (nameMatch = line.match('.*Label for:(.*)')) {
@@ -92,9 +94,9 @@ class CsvParser {
 
         const lines = csv.split('\n');
         for(const line of lines) {
-            if(line.trim() !== "") {
+            if(line.trim() !== '') {
                 const [name, ...priceStrings] = line.split(',');
-                const price = priceStrings.map(ps => Number(ps.trim().replace('$',''))).reduce((p,acc) => p+acc);
+                const price = priceStrings.map(ps => Number(ps.trim().replace('$',''))).reduce((p,acc) => p+acc, 0);
                 if(name === 'fee') {
                     order.withNonTaxedFees(price);
                 }
@@ -113,19 +115,29 @@ class CsvParser {
         return order;
     }
 };
-window.onload = function() {
-  // check for URL query parameters
-    if (window.location.search) {
-        var queryString = window.location.search.substring(1); // remove prefixing '?'
-        var order = new QueryStringParser().parse(queryString).split();
-        OrderSplitResults.show(order);
-    }
-};
-
 function defineCustomElement(tag, elementClass) {
     customElements.define(tag, class extends elementClass {
         static get is() { return tag; }
     });
+}
+
+var Utils = {
+    _prettifyNumber(n) {
+        n = Math.round(n * 100) / 100; // round to 2 decimal places
+
+        // pad to 2 decimal places if necessary
+        var s = n.toString();
+
+        if (s.indexOf('.') === -1) {
+            s += '.';
+        }
+
+        while (s.length < s.indexOf('.') + 3) {
+            s += '0';
+        }
+
+        return s;
+    }
 };
 class Order {
     constructor() {
@@ -175,6 +187,9 @@ class Order {
     }
 
     get taxPercent() {
+        if(this.subTotal === 0) {
+            return 0;
+        }
         return this.tax/this.subTotal;
     }
 
@@ -189,6 +204,9 @@ class Order {
     get tipPercent() {
         if(this.isTipPercentage) {
             return this._tipPercentage;
+        }
+        if(this.subTotal === 0) {
+            return 0;
         }
         return this._tipDollars / this.subTotal;
     }
@@ -229,7 +247,7 @@ class Order {
     toJSON() {
         let ret = {};
         ret.people = Array.from(this.people);
-        ret.tip = this.tip;
+        ret.tipDollars = this.tipDollars;
         ret.tax = this.tax;
         ret.nonTaxedFees = this.nonTaxedFees;
         ret.taxedFees = this.taxedFees;
@@ -241,7 +259,7 @@ class Order {
     static fromJSON(json) {
         let order = new Order();
         order.people = new Map(json.people);
-        order.withTip(json.tip, json.isTipPercentage)
+        order.withTip(json.tipDollars, false)
             .withTax(json.tax)
             .withNonTaxedFees(json.nonTaxedFees)
             .withTaxedFees(json.taxedFees);
@@ -249,6 +267,14 @@ class Order {
     }
 };
 (function() {
+    console.debug('service worker is disabled for now.');
+    navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for(let registration of registrations) {
+            console.log('uninstalling old service worker');
+            registration.unregister();
+        } 
+    });
+    return; // no service worker until we iron bugs out of caching
     let queryParams = new Map(location.search.slice(1).split('&').map(t=>t.split('=')));
     if (location.hostname === 'localhost' && queryParams.get('sw') !== 'test') {
         console.log('service worker disabled on localhost');
@@ -12344,6 +12370,1392 @@ class ExampleOrder extends Polymer.Element {
     }
 
 window.customElements.define(ExampleOrder.is, ExampleOrder);
+/**
+   * `IronResizableBehavior` is a behavior that can be used in Polymer elements to
+   * coordinate the flow of resize events between "resizers" (elements that control the
+   * size or hidden state of their children) and "resizables" (elements that need to be
+   * notified when they are resized or un-hidden by their parents in order to take
+   * action on their new measurements).
+   *
+   * Elements that perform measurement should add the `IronResizableBehavior` behavior to
+   * their element definition and listen for the `iron-resize` event on themselves.
+   * This event will be fired when they become showing after having been hidden,
+   * when they are resized explicitly by another resizable, or when the window has been
+   * resized.
+   *
+   * Note, the `iron-resize` event is non-bubbling.
+   *
+   * @polymerBehavior Polymer.IronResizableBehavior
+   * @demo demo/index.html
+   **/
+  Polymer.IronResizableBehavior = {
+    properties: {
+      /**
+       * The closest ancestor element that implements `IronResizableBehavior`.
+       */
+      _parentResizable: {
+        type: Object,
+        observer: '_parentResizableChanged'
+      },
+
+      /**
+       * True if this element is currently notifying its descendant elements of
+       * resize.
+       */
+      _notifyingDescendant: {
+        type: Boolean,
+        value: false
+      }
+    },
+
+    listeners: {
+      'iron-request-resize-notifications': '_onIronRequestResizeNotifications'
+    },
+
+    created: function() {
+      // We don't really need property effects on these, and also we want them
+      // to be created before the `_parentResizable` observer fires:
+      this._interestedResizables = [];
+      this._boundNotifyResize = this.notifyResize.bind(this);
+    },
+
+    attached: function() {
+      // NOTE(valdrin) In CustomElements v1 with native HTMLImports, the order
+      // of imports affects the order of `attached` callbacks (see webcomponents/custom-elements#15).
+      // This might cause a child to notify parents too early (as the parent
+      // still has to be upgraded), resulting in a parent not able to keep track
+      // of the `_interestedResizables`. To solve this, we wait for the document
+      // to be done loading before firing the event.
+      if (document.readyState === 'loading') {
+        var _this = this;
+        document.addEventListener('readystatechange', function readystatechanged() {
+          document.removeEventListener('readystatechange', readystatechanged);
+          _this.isAttached && _this.attached();
+        });
+        return;
+      }
+      this.fire('iron-request-resize-notifications', null, {
+        node: this,
+        bubbles: true,
+        cancelable: true
+      });
+
+      if (!this._parentResizable) {
+        window.addEventListener('resize', this._boundNotifyResize);
+        this.notifyResize();
+      }
+    },
+
+    detached: function() {
+      if (this._parentResizable) {
+        this._parentResizable.stopResizeNotificationsFor(this);
+      } else {
+        window.removeEventListener('resize', this._boundNotifyResize);
+      }
+
+      this._parentResizable = null;
+    },
+
+    /**
+     * Can be called to manually notify a resizable and its descendant
+     * resizables of a resize change.
+     */
+    notifyResize: function() {
+      if (!this.isAttached) {
+        return;
+      }
+
+      this._interestedResizables.forEach(function(resizable) {
+        if (this.resizerShouldNotify(resizable)) {
+          this._notifyDescendant(resizable);
+        }
+      }, this);
+
+      this._fireResize();
+    },
+
+    /**
+     * Used to assign the closest resizable ancestor to this resizable
+     * if the ancestor detects a request for notifications.
+     */
+    assignParentResizable: function(parentResizable) {
+      this._parentResizable = parentResizable;
+    },
+
+    /**
+     * Used to remove a resizable descendant from the list of descendants
+     * that should be notified of a resize change.
+     */
+    stopResizeNotificationsFor: function(target) {
+      var index = this._interestedResizables.indexOf(target);
+
+      if (index > -1) {
+        this._interestedResizables.splice(index, 1);
+        this.unlisten(target, 'iron-resize', '_onDescendantIronResize');
+      }
+    },
+
+    /**
+     * This method can be overridden to filter nested elements that should or
+     * should not be notified by the current element. Return true if an element
+     * should be notified, or false if it should not be notified.
+     *
+     * @param {HTMLElement} element A candidate descendant element that
+     * implements `IronResizableBehavior`.
+     * @return {boolean} True if the `element` should be notified of resize.
+     */
+    resizerShouldNotify: function(element) { return true; },
+
+    _onDescendantIronResize: function(event) {
+      if (this._notifyingDescendant) {
+        event.stopPropagation();
+        return;
+      }
+
+      // NOTE(cdata): In ShadowDOM, event retargeting makes echoing of the
+      // otherwise non-bubbling event "just work." We do it manually here for
+      // the case where Polymer is not using shadow roots for whatever reason:
+      if (!Polymer.Settings.useShadow) {
+        this._fireResize();
+      }
+    },
+
+    _fireResize: function() {
+      this.fire('iron-resize', null, {
+        node: this,
+        bubbles: false
+      });
+    },
+
+    _onIronRequestResizeNotifications: function(event) {
+      var target = Polymer.dom(event).rootTarget;
+      if (target === this) {
+        return;
+      }
+
+      if (this._interestedResizables.indexOf(target) === -1) {
+        this._interestedResizables.push(target);
+        this.listen(target, 'iron-resize', '_onDescendantIronResize');
+      }
+
+      target.assignParentResizable(this);
+      this._notifyDescendant(target);
+
+      event.stopPropagation();
+    },
+
+    _parentResizableChanged: function(parentResizable) {
+      if (parentResizable) {
+        window.removeEventListener('resize', this._boundNotifyResize);
+      }
+    },
+
+    _notifyDescendant: function(descendant) {
+      // NOTE(cdata): In IE10, attached is fired on children first, so it's
+      // important not to notify them if the parent is not attached yet (or
+      // else they will get redundantly notified when the parent attaches).
+      if (!this.isAttached) {
+        return;
+      }
+
+      this._notifyingDescendant = true;
+      descendant.notifyResize();
+      this._notifyingDescendant = false;
+    }
+  };
+/**
+   * `Polymer.NeonAnimatableBehavior` is implemented by elements containing animations for use with
+   * elements implementing `Polymer.NeonAnimationRunnerBehavior`.
+   * @polymerBehavior
+   */
+  Polymer.NeonAnimatableBehavior = {
+
+    properties: {
+
+      /**
+       * Animation configuration. See README for more info.
+       */
+      animationConfig: {
+        type: Object
+      },
+
+      /**
+       * Convenience property for setting an 'entry' animation. Do not set `animationConfig.entry`
+       * manually if using this. The animated node is set to `this` if using this property.
+       */
+      entryAnimation: {
+        observer: '_entryAnimationChanged',
+        type: String
+      },
+
+      /**
+       * Convenience property for setting an 'exit' animation. Do not set `animationConfig.exit`
+       * manually if using this. The animated node is set to `this` if using this property.
+       */
+      exitAnimation: {
+        observer: '_exitAnimationChanged',
+        type: String
+      }
+
+    },
+
+    _entryAnimationChanged: function() {
+      this.animationConfig = this.animationConfig || {};
+      this.animationConfig['entry'] = [{
+        name: this.entryAnimation,
+        node: this
+      }];
+    },
+
+    _exitAnimationChanged: function() {
+      this.animationConfig = this.animationConfig || {};
+      this.animationConfig['exit'] = [{
+        name: this.exitAnimation,
+        node: this
+      }];
+    },
+
+    _copyProperties: function(config1, config2) {
+      // shallowly copy properties from config2 to config1
+      for (var property in config2) {
+        config1[property] = config2[property];
+      }
+    },
+
+    _cloneConfig: function(config) {
+      var clone = {
+        isClone: true
+      };
+      this._copyProperties(clone, config);
+      return clone;
+    },
+
+    _getAnimationConfigRecursive: function(type, map, allConfigs) {
+      if (!this.animationConfig) {
+        return;
+      }
+
+      if(this.animationConfig.value && typeof this.animationConfig.value === 'function') {
+      	this._warn(this._logf('playAnimation', "Please put 'animationConfig' inside of your components 'properties' object instead of outside of it."));
+      	return;
+      }
+
+      // type is optional
+      var thisConfig;
+      if (type) {
+        thisConfig = this.animationConfig[type];
+      } else {
+        thisConfig = this.animationConfig;
+      }
+
+      if (!Array.isArray(thisConfig)) {
+        thisConfig = [thisConfig];
+      }
+
+      // iterate animations and recurse to process configurations from child nodes
+      if (thisConfig) {
+        for (var config, index = 0; config = thisConfig[index]; index++) {
+          if (config.animatable) {
+            config.animatable._getAnimationConfigRecursive(config.type || type, map, allConfigs);
+          } else {
+            if (config.id) {
+              var cachedConfig = map[config.id];
+              if (cachedConfig) {
+                // merge configurations with the same id, making a clone lazily
+                if (!cachedConfig.isClone) {
+                  map[config.id] = this._cloneConfig(cachedConfig)
+                  cachedConfig = map[config.id];
+                }
+                this._copyProperties(cachedConfig, config);
+              } else {
+                // put any configs with an id into a map
+                map[config.id] = config;
+              }
+            } else {
+              allConfigs.push(config);
+            }
+          }
+        }
+      }
+    },
+
+    /**
+     * An element implementing `Polymer.NeonAnimationRunnerBehavior` calls this method to configure
+     * an animation with an optional type. Elements implementing `Polymer.NeonAnimatableBehavior`
+     * should define the property `animationConfig`, which is either a configuration object
+     * or a map of animation type to array of configuration objects.
+     */
+    getAnimationConfig: function(type) {
+      var map = {};
+      var allConfigs = [];
+      this._getAnimationConfigRecursive(type, map, allConfigs);
+      // append the configurations saved in the map to the array
+      for (var key in map) {
+        allConfigs.push(map[key]);
+      }
+      return allConfigs;
+    }
+
+  };
+Polymer({
+
+    is: 'neon-animatable',
+
+    behaviors: [
+      Polymer.NeonAnimatableBehavior,
+      Polymer.IronResizableBehavior
+    ]
+
+  });
+/**
+   * @param {!Function} selectCallback
+   * @constructor
+   */
+  Polymer.IronSelection = function(selectCallback) {
+    this.selection = [];
+    this.selectCallback = selectCallback;
+  };
+
+  Polymer.IronSelection.prototype = {
+
+    /**
+     * Retrieves the selected item(s).
+     *
+     * @method get
+     * @returns Returns the selected item(s). If the multi property is true,
+     * `get` will return an array, otherwise it will return
+     * the selected item or undefined if there is no selection.
+     */
+    get: function() {
+      return this.multi ? this.selection.slice() : this.selection[0];
+    },
+
+    /**
+     * Clears all the selection except the ones indicated.
+     *
+     * @method clear
+     * @param {Array} excludes items to be excluded.
+     */
+    clear: function(excludes) {
+      this.selection.slice().forEach(function(item) {
+        if (!excludes || excludes.indexOf(item) < 0) {
+          this.setItemSelected(item, false);
+        }
+      }, this);
+    },
+
+    /**
+     * Indicates if a given item is selected.
+     *
+     * @method isSelected
+     * @param {*} item The item whose selection state should be checked.
+     * @returns Returns true if `item` is selected.
+     */
+    isSelected: function(item) {
+      return this.selection.indexOf(item) >= 0;
+    },
+
+    /**
+     * Sets the selection state for a given item to either selected or deselected.
+     *
+     * @method setItemSelected
+     * @param {*} item The item to select.
+     * @param {boolean} isSelected True for selected, false for deselected.
+     */
+    setItemSelected: function(item, isSelected) {
+      if (item != null) {
+        if (isSelected !== this.isSelected(item)) {
+          // proceed to update selection only if requested state differs from current
+          if (isSelected) {
+            this.selection.push(item);
+          } else {
+            var i = this.selection.indexOf(item);
+            if (i >= 0) {
+              this.selection.splice(i, 1);
+            }
+          }
+          if (this.selectCallback) {
+            this.selectCallback(item, isSelected);
+          }
+        }
+      }
+    },
+
+    /**
+     * Sets the selection state for a given item. If the `multi` property
+     * is true, then the selected state of `item` will be toggled; otherwise
+     * the `item` will be selected.
+     *
+     * @method select
+     * @param {*} item The item to select.
+     */
+    select: function(item) {
+      if (this.multi) {
+        this.toggle(item);
+      } else if (this.get() !== item) {
+        this.setItemSelected(this.get(), false);
+        this.setItemSelected(item, true);
+      }
+    },
+
+    /**
+     * Toggles the selection state for `item`.
+     *
+     * @method toggle
+     * @param {*} item The item to toggle.
+     */
+    toggle: function(item) {
+      this.setItemSelected(item, !this.isSelected(item));
+    }
+
+  };
+/**
+   * @polymerBehavior Polymer.IronSelectableBehavior
+   */
+  Polymer.IronSelectableBehavior = {
+
+      /**
+       * Fired when iron-selector is activated (selected or deselected).
+       * It is fired before the selected items are changed.
+       * Cancel the event to abort selection.
+       *
+       * @event iron-activate
+       */
+
+      /**
+       * Fired when an item is selected
+       *
+       * @event iron-select
+       */
+
+      /**
+       * Fired when an item is deselected
+       *
+       * @event iron-deselect
+       */
+
+      /**
+       * Fired when the list of selectable items changes (e.g., items are
+       * added or removed). The detail of the event is a mutation record that
+       * describes what changed.
+       *
+       * @event iron-items-changed
+       */
+
+    properties: {
+
+      /**
+       * If you want to use an attribute value or property of an element for
+       * `selected` instead of the index, set this to the name of the attribute
+       * or property. Hyphenated values are converted to camel case when used to
+       * look up the property of a selectable element. Camel cased values are
+       * *not* converted to hyphenated values for attribute lookup. It's
+       * recommended that you provide the hyphenated form of the name so that
+       * selection works in both cases. (Use `attr-or-property-name` instead of
+       * `attrOrPropertyName`.)
+       */
+      attrForSelected: {
+        type: String,
+        value: null
+      },
+
+      /**
+       * Gets or sets the selected element. The default is to use the index of the item.
+       * @type {string|number}
+       */
+      selected: {
+        type: String,
+        notify: true
+      },
+
+      /**
+       * Returns the currently selected item.
+       *
+       * @type {?Object}
+       */
+      selectedItem: {
+        type: Object,
+        readOnly: true,
+        notify: true
+      },
+
+      /**
+       * The event that fires from items when they are selected. Selectable
+       * will listen for this event from items and update the selection state.
+       * Set to empty string to listen to no events.
+       */
+      activateEvent: {
+        type: String,
+        value: 'tap',
+        observer: '_activateEventChanged'
+      },
+
+      /**
+       * This is a CSS selector string.  If this is set, only items that match the CSS selector
+       * are selectable.
+       */
+      selectable: String,
+
+      /**
+       * The class to set on elements when selected.
+       */
+      selectedClass: {
+        type: String,
+        value: 'iron-selected'
+      },
+
+      /**
+       * The attribute to set on elements when selected.
+       */
+      selectedAttribute: {
+        type: String,
+        value: null
+      },
+
+      /**
+       * Default fallback if the selection based on selected with `attrForSelected`
+       * is not found.
+       */
+      fallbackSelection: {
+        type: String,
+        value: null
+      },
+
+      /**
+       * The list of items from which a selection can be made.
+       */
+      items: {
+        type: Array,
+        readOnly: true,
+        notify: true,
+        value: function() {
+          return [];
+        }
+      },
+
+      /**
+       * The set of excluded elements where the key is the `localName`
+       * of the element that will be ignored from the item list.
+       *
+       * @default {template: 1}
+       */
+      _excludedLocalNames: {
+        type: Object,
+        value: function() {
+          return {
+            'template': 1,
+            'dom-bind': 1,
+            'dom-if': 1,
+            'dom-repeat': 1,
+          };
+        }
+      }
+    },
+
+    observers: [
+      '_updateAttrForSelected(attrForSelected)',
+      '_updateSelected(selected)',
+      '_checkFallback(fallbackSelection)'
+    ],
+
+    created: function() {
+      this._bindFilterItem = this._filterItem.bind(this);
+      this._selection = new Polymer.IronSelection(this._applySelection.bind(this));
+    },
+
+    attached: function() {
+      this._observer = this._observeItems(this);
+      this._addListener(this.activateEvent);
+    },
+
+    detached: function() {
+      if (this._observer) {
+        Polymer.dom(this).unobserveNodes(this._observer);
+      }
+      this._removeListener(this.activateEvent);
+    },
+
+    /**
+     * Returns the index of the given item.
+     *
+     * @method indexOf
+     * @param {Object} item
+     * @returns Returns the index of the item
+     */
+    indexOf: function(item) {
+      return this.items.indexOf(item);
+    },
+
+    /**
+     * Selects the given value.
+     *
+     * @method select
+     * @param {string|number} value the value to select.
+     */
+    select: function(value) {
+      this.selected = value;
+    },
+
+    /**
+     * Selects the previous item.
+     *
+     * @method selectPrevious
+     */
+    selectPrevious: function() {
+      var length = this.items.length;
+      var index = (Number(this._valueToIndex(this.selected)) - 1 + length) % length;
+      this.selected = this._indexToValue(index);
+    },
+
+    /**
+     * Selects the next item.
+     *
+     * @method selectNext
+     */
+    selectNext: function() {
+      var index = (Number(this._valueToIndex(this.selected)) + 1) % this.items.length;
+      this.selected = this._indexToValue(index);
+    },
+
+    /**
+     * Selects the item at the given index.
+     *
+     * @method selectIndex
+     */
+    selectIndex: function(index) {
+      this.select(this._indexToValue(index));
+    },
+
+    /**
+     * Force a synchronous update of the `items` property.
+     *
+     * NOTE: Consider listening for the `iron-items-changed` event to respond to
+     * updates to the set of selectable items after updates to the DOM list and
+     * selection state have been made.
+     *
+     * WARNING: If you are using this method, you should probably consider an
+     * alternate approach. Synchronously querying for items is potentially
+     * slow for many use cases. The `items` property will update asynchronously
+     * on its own to reflect selectable items in the DOM.
+     */
+    forceSynchronousItemUpdate: function() {
+      if (this._observer && typeof this._observer.flush === "function") {
+        // NOTE(bicknellr): `Polymer.dom.flush` above is no longer sufficient to
+        // trigger `observeNodes` callbacks. Polymer 2.x returns an object from
+        // `observeNodes` with a `flush` that synchronously gives the callback
+        // any pending MutationRecords (retrieved with `takeRecords`). Any case
+        // where ShadyDOM flushes were expected to synchronously trigger item
+        // updates will now require calling `forceSynchronousItemUpdate`.
+        this._observer.flush();
+      } else {
+        this._updateItems();
+      }
+    },
+
+    // UNUSED, FOR API COMPATIBILITY
+    get _shouldUpdateSelection() {
+      return this.selected != null;
+    },
+
+    _checkFallback: function() {
+      this._updateSelected();
+    },
+
+    _addListener: function(eventName) {
+      this.listen(this, eventName, '_activateHandler');
+    },
+
+    _removeListener: function(eventName) {
+      this.unlisten(this, eventName, '_activateHandler');
+    },
+
+    _activateEventChanged: function(eventName, old) {
+      this._removeListener(old);
+      this._addListener(eventName);
+    },
+
+    _updateItems: function() {
+      var nodes = Polymer.dom(this).queryDistributedElements(this.selectable || '*');
+      nodes = Array.prototype.filter.call(nodes, this._bindFilterItem);
+      this._setItems(nodes);
+    },
+
+    _updateAttrForSelected: function() {
+      if (this.selectedItem) {
+        this.selected = this._valueForItem(this.selectedItem);
+      }
+    },
+
+    _updateSelected: function() {
+      this._selectSelected(this.selected);
+    },
+
+    _selectSelected: function(selected) {
+      if (!this.items) {
+        return;
+      }
+
+      var item = this._valueToItem(this.selected);
+      if (item) {
+        this._selection.select(item);
+      } else {
+        this._selection.clear();
+      }
+      // Check for items, since this array is populated only when attached
+      // Since Number(0) is falsy, explicitly check for undefined
+      if (this.fallbackSelection && this.items.length && (this._selection.get() === undefined)) {
+        this.selected = this.fallbackSelection;
+      }
+    },
+
+    _filterItem: function(node) {
+      return !this._excludedLocalNames[node.localName];
+    },
+
+    _valueToItem: function(value) {
+      return (value == null) ? null : this.items[this._valueToIndex(value)];
+    },
+
+    _valueToIndex: function(value) {
+      if (this.attrForSelected) {
+        for (var i = 0, item; item = this.items[i]; i++) {
+          if (this._valueForItem(item) == value) {
+            return i;
+          }
+        }
+      } else {
+        return Number(value);
+      }
+    },
+
+    _indexToValue: function(index) {
+      if (this.attrForSelected) {
+        var item = this.items[index];
+        if (item) {
+          return this._valueForItem(item);
+        }
+      } else {
+        return index;
+      }
+    },
+
+    _valueForItem: function(item) {
+      if (!item) {
+        return null;
+      }
+
+      var propValue = item[Polymer.CaseMap.dashToCamelCase(this.attrForSelected)];
+      return propValue != undefined ? propValue : item.getAttribute(this.attrForSelected);
+    },
+
+    _applySelection: function(item, isSelected) {
+      if (this.selectedClass) {
+        this.toggleClass(this.selectedClass, isSelected, item);
+      }
+      if (this.selectedAttribute) {
+        this.toggleAttribute(this.selectedAttribute, isSelected, item);
+      }
+      this._selectionChange();
+      this.fire('iron-' + (isSelected ? 'select' : 'deselect'), {item: item});
+    },
+
+    _selectionChange: function() {
+      this._setSelectedItem(this._selection.get());
+    },
+
+    // observe items change under the given node.
+    _observeItems: function(node) {
+      return Polymer.dom(node).observeNodes(function(mutation) {
+        this._updateItems();
+        this._updateSelected();
+
+        // Let other interested parties know about the change so that
+        // we don't have to recreate mutation observers everywhere.
+        this.fire('iron-items-changed', mutation, {
+          bubbles: false,
+          cancelable: false
+        });
+      });
+    },
+
+    _activateHandler: function(e) {
+      var t = e.target;
+      var items = this.items;
+      while (t && t != this) {
+        var i = items.indexOf(t);
+        if (i >= 0) {
+          var value = this._indexToValue(i);
+          this._itemActivate(value, t);
+          return;
+        }
+        t = t.parentNode;
+      }
+    },
+
+    _itemActivate: function(value, item) {
+      if (!this.fire('iron-activate',
+          {selected: value, item: item}, {cancelable: true}).defaultPrevented) {
+        this.select(value);
+      }
+    }
+
+  };
+(function() {
+
+    function IronMeta(options) {
+      this.type = (options && options.type) || 'default';
+      this.key = options && options.key;
+      if ('value' in options) {
+        this.value = options.value;
+      }
+    }
+
+    IronMeta.types = {};
+
+    IronMeta.prototype = {
+      get value() {
+        var type = this.type;
+        var key = this.key;
+
+        if (type && key) {
+          return IronMeta.types[type] && IronMeta.types[type][key];
+        }
+      },
+
+      set value(value) {
+        var type = this.type;
+        var key = this.key;
+
+        if (type && key) {
+          var type = IronMeta.types[type] = IronMeta.types[type] || {};
+          if (value == null) {
+            delete type[key];
+          } else {
+            type[key] = value;
+          }
+        }
+      },
+
+      get list() {
+        var type = this.type;
+
+        if (type) {
+          return Object.keys(IronMeta.types[this.type]).map(function(key) {
+            return metaDatas[this.type][key];
+          }, this);
+        }
+      },
+
+      byKey(key) {
+        this.key = key;
+        return this.value;
+      }
+    };
+
+    Polymer.IronMeta = IronMeta;
+
+    var metaDatas = Polymer.IronMeta.types;
+
+    Polymer({
+
+      is: 'iron-meta',
+
+      properties: {
+
+        /**
+         * The type of meta-data.  All meta-data of the same type is stored
+         * together.
+         */
+        type: {
+          type: String,
+          value: 'default',
+        },
+
+        /**
+         * The key used to store `value` under the `type` namespace.
+         */
+        key: {
+          type: String,
+        },
+
+        /**
+         * The meta-data to store or retrieve.
+         */
+        value: {
+          type: String,
+          notify: true,
+        },
+
+        /**
+         * If true, `value` is set to the iron-meta instance itself.
+         */
+         self: {
+          type: Boolean,
+          observer: '_selfChanged'
+        },
+
+        __meta: {
+          type: Boolean,
+          computed: '__computeMeta(type, key, value)'
+        }
+      },
+
+      hostAttributes: {
+        hidden: true
+      },
+
+      __computeMeta: function(type, key, value) {
+        let meta = new Polymer.IronMeta({
+          type: type,
+          key: key
+        });
+
+        if (value !== undefined && value !== meta.value) {
+          meta.value = value;
+        } else if (this.value !== meta.value) {
+          this.value = meta.value;
+        }
+
+        return meta;
+      },
+
+      get list() {
+        return this.__meta && this.__meta.list;
+      },
+
+      _selfChanged: function(self) {
+        if (self) {
+          this.value = this;
+        }
+      },
+
+      /**
+       * Retrieves meta data value by key.
+       *
+       * @method byKey
+       * @param {string} key The key of the meta-data to be returned.
+       * @return {*}
+       */
+      byKey: function(key) {
+        return new Polymer.IronMeta({
+          type: this.type,
+          key: key
+        }).value;
+      }
+    });
+  })();
+/**
+   * `Polymer.NeonAnimationRunnerBehavior` adds a method to run animations.
+   *
+   * @polymerBehavior Polymer.NeonAnimationRunnerBehavior
+   */
+  Polymer.NeonAnimationRunnerBehaviorImpl = {
+
+    _configureAnimations: function(configs) {
+      var results = [];
+      if (configs.length > 0) {
+        for (var config, index = 0; config = configs[index]; index++) {
+          var neonAnimation = document.createElement(config.name);
+          // is this element actually a neon animation?
+          if (neonAnimation.isNeonAnimation) {
+            var result = null;
+            // configuration or play could fail if polyfills aren't loaded
+            try {
+              result = neonAnimation.configure(config);
+              // Check if we have an Effect rather than an Animation
+              if (typeof result.cancel != 'function') {
+                result = document.timeline.play(result);
+              }
+            } catch (e) {
+              result = null;
+              console.warn('Couldnt play', '(', config.name, ').', e);
+            }
+            if (result) {
+              results.push({
+                neonAnimation: neonAnimation,
+                config: config,
+                animation: result,
+              });
+            }
+          } else {
+            console.warn(this.is + ':', config.name, 'not found!');
+          }
+        }
+      }
+      return results;
+    },
+
+    _shouldComplete: function(activeEntries) {
+      var finished = true;
+      for (var i = 0; i < activeEntries.length; i++) {
+        if (activeEntries[i].animation.playState != 'finished') {
+          finished = false;
+          break;
+        }
+      }
+      return finished;
+    },
+
+    _complete: function(activeEntries) {
+      for (var i = 0; i < activeEntries.length; i++) {
+        activeEntries[i].neonAnimation.complete(activeEntries[i].config);
+      }
+      for (var i = 0; i < activeEntries.length; i++) {
+        activeEntries[i].animation.cancel();
+      }
+    },
+
+    /**
+     * Plays an animation with an optional `type`.
+     * @param {string=} type
+     * @param {!Object=} cookie
+     */
+    playAnimation: function(type, cookie) {
+      var configs = this.getAnimationConfig(type);
+      if (!configs) {
+        return;
+      }
+      this._active = this._active || {};
+      if (this._active[type]) {
+        this._complete(this._active[type]);
+        delete this._active[type];
+      }
+
+      var activeEntries = this._configureAnimations(configs);
+
+      if (activeEntries.length == 0) {
+        this.fire('neon-animation-finish', cookie, {bubbles: false});
+        return;
+      }
+
+      this._active[type] = activeEntries;
+
+      for (var i = 0; i < activeEntries.length; i++) {
+        activeEntries[i].animation.onfinish = function() {
+          if (this._shouldComplete(activeEntries)) {
+            this._complete(activeEntries);
+            delete this._active[type];
+            this.fire('neon-animation-finish', cookie, {bubbles: false});
+          }
+        }.bind(this);
+      }
+    },
+
+    /**
+     * Cancels the currently running animations.
+     */
+    cancelAnimation: function() {
+      for (var k in this._animations) {
+        this._animations[k].cancel();
+      }
+      this._animations = {};
+    }
+  };
+
+  /** @polymerBehavior Polymer.NeonAnimationRunnerBehavior */
+  Polymer.NeonAnimationRunnerBehavior = [
+    Polymer.NeonAnimatableBehavior,
+    Polymer.NeonAnimationRunnerBehaviorImpl
+  ];
+(function() {
+
+  Polymer({
+
+    is: 'neon-animated-pages',
+
+    behaviors: [
+      Polymer.IronResizableBehavior,
+      Polymer.IronSelectableBehavior,
+      Polymer.NeonAnimationRunnerBehavior
+    ],
+
+    properties: {
+
+      activateEvent: {
+        type: String,
+        value: ''
+      },
+
+      // if true, the initial page selection will also be animated according to its animation config.
+      animateInitialSelection: {
+        type: Boolean,
+        value: false
+      }
+
+    },
+
+    listeners: {
+      'iron-select': '_onIronSelect',
+      'neon-animation-finish': '_onNeonAnimationFinish'
+    },
+
+    _onIronSelect: function(event) {
+      var selectedPage = event.detail.item;
+
+      // Only consider child elements.
+      if (this.items.indexOf(selectedPage) < 0) {
+        return;
+      }
+
+      var oldPage = this._valueToItem(this._prevSelected) || false;
+      this._prevSelected = this.selected;
+
+      // on initial load and if animateInitialSelection is negated, simply display selectedPage.
+      if (!oldPage && !this.animateInitialSelection) {
+        this._completeSelectedChanged();
+        return;
+      }
+
+      this.animationConfig = [];
+
+      // configure selectedPage animations.
+      if (this.entryAnimation) {
+        this.animationConfig.push({
+          name: this.entryAnimation,
+          node: selectedPage
+        });
+      } else {
+        if (selectedPage.getAnimationConfig) {
+          this.animationConfig.push({
+            animatable: selectedPage,
+            type: 'entry'
+          });
+        }
+      }
+
+      // configure oldPage animations iff exists.
+      if (oldPage) {
+
+        // cancel the currently running animation if one is ongoing.
+        if (oldPage.classList.contains('neon-animating')) {
+          this._squelchNextFinishEvent = true;
+          this.cancelAnimation();
+          this._completeSelectedChanged();
+          this._squelchNextFinishEvent = false;
+        }
+
+        // configure the animation.
+        if (this.exitAnimation) {
+          this.animationConfig.push({
+            name: this.exitAnimation,
+            node: oldPage
+          });
+        } else {
+          if (oldPage.getAnimationConfig) {
+            this.animationConfig.push({
+              animatable: oldPage,
+              type: 'exit'
+            });
+          }
+        }
+
+        // display the oldPage during the transition.
+        oldPage.classList.add('neon-animating');
+      }
+
+      // display the selectedPage during the transition.
+      selectedPage.classList.add('neon-animating');
+
+      // actually run the animations.
+      if (this.animationConfig.length >= 1) {
+
+        // on first load, ensure we run animations only after element is attached.
+        if (!this.isAttached) {
+          this.async(function () {
+            this.playAnimation(undefined, {
+              fromPage: null,
+              toPage: selectedPage
+            });
+          });
+
+        } else {
+          this.playAnimation(undefined, {
+            fromPage: oldPage,
+            toPage: selectedPage
+          });
+        }
+
+      } else {
+        this._completeSelectedChanged(oldPage, selectedPage);
+      }
+    },
+
+    /**
+     * @param {Object=} oldPage
+     * @param {Object=} selectedPage
+     */
+    _completeSelectedChanged: function(oldPage, selectedPage) {
+      if (selectedPage) {
+        selectedPage.classList.remove('neon-animating');
+      }
+      if (oldPage) {
+        oldPage.classList.remove('neon-animating');
+      }
+      if (!selectedPage || !oldPage) {
+        var nodes = Polymer.dom(this.$.content).getDistributedNodes();
+        for (var node, index = 0; node = nodes[index]; index++) {
+          node.classList && node.classList.remove('neon-animating');
+        }
+      }
+      this.async(this._notifyPageResize);
+    },
+
+    _onNeonAnimationFinish: function(event) {
+      if (this._squelchNextFinishEvent) {
+        this._squelchNextFinishEvent = false;
+        return;
+      }
+      this._completeSelectedChanged(event.detail.fromPage, event.detail.toPage);
+    },
+
+    _notifyPageResize: function() {
+      var selectedPage = this.selectedItem || this._valueToItem(this.selected);
+      this.resizerShouldNotify = function(element) {
+        return element == selectedPage;
+      }
+      this.notifyResize();
+    }
+  })
+
+})();
+/**
+   * Use `Polymer.NeonAnimationBehavior` to implement an animation.
+   * @polymerBehavior
+   */
+  Polymer.NeonAnimationBehavior = {
+
+    properties: {
+
+      /**
+       * Defines the animation timing.
+       */
+      animationTiming: {
+        type: Object,
+        value: function() {
+          return {
+            duration: 500,
+            easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+            fill: 'both'
+          }
+        }
+      }
+
+    },
+
+    /**
+     * Can be used to determine that elements implement this behavior.
+     */
+    isNeonAnimation: true,
+
+    /**
+     * Do any animation configuration here.
+     */
+    // configure: function(config) {
+    // },
+
+    created: function() {
+      if (!document.body.animate) {
+        console.warn('No web animations detected. This element will not' +
+            ' function without a web animations polyfill.');
+      }
+    },
+
+    /**
+     * Returns the animation timing by mixing in properties from `config` to the defaults defined
+     * by the animation.
+     */
+    timingFromConfig: function(config) {
+      if (config.timing) {
+        for (var property in config.timing) {
+          this.animationTiming[property] = config.timing[property];
+        }
+      }
+      return this.animationTiming;
+    },
+
+    /**
+     * Sets `transform` and `transformOrigin` properties along with the prefixed versions.
+     */
+    setPrefixedProperty: function(node, property, value) {
+      var map = {
+        'transform': ['webkitTransform'],
+        'transformOrigin': ['mozTransformOrigin', 'webkitTransformOrigin']
+      };
+      var prefixes = map[property];
+      for (var prefix, index = 0; prefix = prefixes[index]; index++) {
+        node.style[prefix] = value;
+      }
+      node.style[property] = value;
+    },
+
+    /**
+     * Called when the animation finishes.
+     */
+    complete: function() {}
+
+  };
+Polymer({
+        is: 'flip-left-enter-animation',
+
+        behaviors: [
+            Polymer.NeonAnimationBehavior
+        ],
+
+        configure: function(config) {
+            var node = config.node;
+
+            if (config.transformOrigin) {
+                this.setPrefixedProperty(node, 'transformOrigin', config.transformOrigin);
+            }
+
+            this._effect = new KeyframeEffect(node, [
+                    {offset: 0,   transform: 'perspective(1500px) rotateY(180deg)'},
+                    // {offset: 0.5, transform: 'perspective(1000px) rotateY(-90deg)'},
+                    {offset: 1,   transform: 'perspective(1500px) rotateY(0deg)'},
+            ], this.timingFromConfig(config));
+
+            return this._effect;
+        }
+    });
+Polymer({
+        is: 'flip-left-exit-animation',
+
+        behaviors: [
+            Polymer.NeonAnimationBehavior
+        ],
+
+        configure: function(config) {
+            var node = config.node;
+
+            if (config.transformOrigin) {
+                this.setPrefixedProperty(node, 'transformOrigin', config.transformOrigin);
+            }
+
+            this._effect = new KeyframeEffect(node, [
+                    {offset: 0,   transform: 'perspective(1500px) rotateY(0deg)'},
+                    // {offset: 0.5, transform: 'perspective(1000px) rotateY(-90deg)'},
+                    {offset: 1,   transform: 'perspective(1500px) rotateY(-180deg)'},
+            ], this.timingFromConfig(config));
+
+            return this._effect;
+        }
+    });
+defineCustomElement('flip-card', class extends Polymer.Element {
+            constructor() {
+                super();
+            }
+            flip() {
+                this.selectedSide = 1 - this.selectedSide;
+            }
+            static get properties() {
+                return {
+                    selectedSide: {
+                        type: Number,
+                        value: 0
+                    }
+                };
+            }
+        });
 (function() {
     'use strict';
 
@@ -13185,150 +14597,6 @@ Polymer({
       Event param: {{node: Object}} detail Contains the animated node.
       */
     });
-(function() {
-
-    function IronMeta(options) {
-      this.type = (options && options.type) || 'default';
-      this.key = options && options.key;
-      if ('value' in options) {
-        this.value = options.value;
-      }
-    }
-
-    IronMeta.types = {};
-
-    IronMeta.prototype = {
-      get value() {
-        var type = this.type;
-        var key = this.key;
-
-        if (type && key) {
-          return IronMeta.types[type] && IronMeta.types[type][key];
-        }
-      },
-
-      set value(value) {
-        var type = this.type;
-        var key = this.key;
-
-        if (type && key) {
-          var type = IronMeta.types[type] = IronMeta.types[type] || {};
-          if (value == null) {
-            delete type[key];
-          } else {
-            type[key] = value;
-          }
-        }
-      },
-
-      get list() {
-        var type = this.type;
-
-        if (type) {
-          return Object.keys(IronMeta.types[this.type]).map(function(key) {
-            return metaDatas[this.type][key];
-          }, this);
-        }
-      },
-
-      byKey(key) {
-        this.key = key;
-        return this.value;
-      }
-    };
-
-    Polymer.IronMeta = IronMeta;
-
-    var metaDatas = Polymer.IronMeta.types;
-
-    Polymer({
-
-      is: 'iron-meta',
-
-      properties: {
-
-        /**
-         * The type of meta-data.  All meta-data of the same type is stored
-         * together.
-         */
-        type: {
-          type: String,
-          value: 'default',
-        },
-
-        /**
-         * The key used to store `value` under the `type` namespace.
-         */
-        key: {
-          type: String,
-        },
-
-        /**
-         * The meta-data to store or retrieve.
-         */
-        value: {
-          type: String,
-          notify: true,
-        },
-
-        /**
-         * If true, `value` is set to the iron-meta instance itself.
-         */
-         self: {
-          type: Boolean,
-          observer: '_selfChanged'
-        },
-
-        __meta: {
-          type: Boolean,
-          computed: '__computeMeta(type, key, value)'
-        }
-      },
-
-      hostAttributes: {
-        hidden: true
-      },
-
-      __computeMeta: function(type, key, value) {
-        let meta = new Polymer.IronMeta({
-          type: type,
-          key: key
-        });
-
-        if (value !== undefined && value !== meta.value) {
-          meta.value = value;
-        } else if (this.value !== meta.value) {
-          this.value = meta.value;
-        }
-
-        return meta;
-      },
-
-      get list() {
-        return this.__meta && this.__meta.list;
-      },
-
-      _selfChanged: function(self) {
-        if (self) {
-          this.value = this;
-        }
-      },
-
-      /**
-       * Retrieves meta data value by key.
-       *
-       * @method byKey
-       * @param {string} key The key of the meta-data to be returned.
-       * @return {*}
-       */
-      byKey: function(key) {
-        return new Polymer.IronMeta({
-          type: this.type,
-          key: key
-        }).value;
-      }
-    });
-  })();
 /**
    * Singleton IronMeta instance.
    */
@@ -15103,6 +16371,358 @@ Polymer({
       }
     },
   });
+(function() {
+    'use strict';
+
+    var workingURL;
+
+    var urlDoc, urlBase, anchor;
+
+    /**
+     * @param {string} path
+     * @param {string=} base
+     * @return {!URL|!HTMLAnchorElement}
+     */
+    function resolveURL(path, base) {
+      if (workingURL === undefined) {
+        workingURL = false;
+        try {
+          var u = new URL('b', 'http://a');
+          u.pathname = 'c%20d';
+          workingURL = (u.href === 'http://a/c%20d');
+          workingURL = workingURL && (new URL('http://www.google.com/?foo bar').href === 'http://www.google.com/?foo%20bar');
+        } catch (e) {}
+      }
+      if (workingURL) {
+        return new URL(path, base);
+      }
+      if (!urlDoc) {
+        urlDoc = document.implementation.createHTMLDocument('url');
+        urlBase = urlDoc.createElement('base');
+        urlDoc.head.appendChild(urlBase);
+        anchor = /** @type {HTMLAnchorElement}*/(urlDoc.createElement('a'));
+      }
+      urlBase.href = base;
+      anchor.href = path.replace(/ /g, '%20');
+      return anchor;
+    }
+
+    Polymer({
+      is: 'iron-location',
+
+      properties: {
+        /**
+         * The pathname component of the URL.
+         */
+        path: {
+          type: String,
+          notify: true,
+          value: function() {
+            return window.decodeURIComponent(window.location.pathname);
+          }
+        },
+
+        /**
+         * The query string portion of the URL.
+         */
+        query: {
+          type: String,
+          notify: true,
+          value: function() {
+            return window.location.search.slice(1);
+          }
+        },
+
+        /**
+         * The hash component of the URL.
+         */
+        hash: {
+          type: String,
+          notify: true,
+          value: function() {
+            return window.decodeURIComponent(window.location.hash.slice(1));
+          }
+        },
+
+        /**
+         * If the user was on a URL for less than `dwellTime` milliseconds, it
+         * won't be added to the browser's history, but instead will be replaced
+         * by the next entry.
+         *
+         * This is to prevent large numbers of entries from clogging up the user's
+         * browser history. Disable by setting to a negative number.
+         */
+        dwellTime: {
+          type: Number,
+          value: 2000
+        },
+
+        /**
+         * A regexp that defines the set of URLs that should be considered part
+         * of this web app.
+         *
+         * Clicking on a link that matches this regex won't result in a full page
+         * navigation, but will instead just update the URL state in place.
+         *
+         * This regexp is given everything after the origin in an absolute
+         * URL. So to match just URLs that start with /search/ do:
+         *     url-space-regex="^/search/"
+         *
+         * @type {string|RegExp}
+         */
+        urlSpaceRegex: {
+          type: String,
+          value: ''
+        },
+
+        /**
+         * urlSpaceRegex, but coerced into a regexp.
+         *
+         * @type {RegExp}
+         */
+        _urlSpaceRegExp: {
+          computed: '_makeRegExp(urlSpaceRegex)'
+        },
+
+        _lastChangedAt: {
+          type: Number
+        },
+
+        _initialized: {
+          type: Boolean,
+          value: false
+        }
+      },
+
+      hostAttributes: {
+        hidden: true
+      },
+
+      observers: [
+        '_updateUrl(path, query, hash)'
+      ],
+
+      attached: function() {
+        this.listen(window, 'hashchange', '_hashChanged');
+        this.listen(window, 'location-changed', '_urlChanged');
+        this.listen(window, 'popstate', '_urlChanged');
+        this.listen(/** @type {!HTMLBodyElement} */(document.body), 'click', '_globalOnClick');
+        // Give a 200ms grace period to make initial redirects without any
+        // additions to the user's history.
+        this._lastChangedAt = window.performance.now() - (this.dwellTime - 200);
+        this._initialized = true;
+
+        this._urlChanged();
+      },
+
+      detached: function() {
+        this.unlisten(window, 'hashchange', '_hashChanged');
+        this.unlisten(window, 'location-changed', '_urlChanged');
+        this.unlisten(window, 'popstate', '_urlChanged');
+        this.unlisten(/** @type {!HTMLBodyElement} */(document.body), 'click', '_globalOnClick');
+        this._initialized = false;
+      },
+
+      _hashChanged: function() {
+        this.hash = window.decodeURIComponent(window.location.hash.substring(1));
+      },
+
+      _urlChanged: function() {
+        // We want to extract all info out of the updated URL before we
+        // try to write anything back into it.
+        //
+        // i.e. without _dontUpdateUrl we'd overwrite the new path with the old
+        // one when we set this.hash. Likewise for query.
+        this._dontUpdateUrl = true;
+        this._hashChanged();
+        this.path = window.decodeURIComponent(window.location.pathname);
+        this.query = window.location.search.substring(1);
+        this._dontUpdateUrl = false;
+        this._updateUrl();
+      },
+
+      _getUrl: function() {
+        var partiallyEncodedPath = window.encodeURI(
+            this.path).replace(/\#/g, '%23').replace(/\?/g, '%3F');
+        var partiallyEncodedQuery = '';
+        if (this.query) {
+          partiallyEncodedQuery = '?' + this.query.replace(/\#/g, '%23');
+        }
+        var partiallyEncodedHash = '';
+        if (this.hash) {
+          partiallyEncodedHash = '#' + window.encodeURI(this.hash);
+        }
+        return (
+            partiallyEncodedPath + partiallyEncodedQuery + partiallyEncodedHash);
+      },
+
+      _updateUrl: function() {
+        if (this._dontUpdateUrl || !this._initialized) {
+          return;
+        }
+
+        if (this.path === window.decodeURIComponent(window.location.pathname) &&
+            this.query === window.location.search.substring(1) &&
+            this.hash === window.decodeURIComponent(
+                window.location.hash.substring(1))) {
+          // Nothing to do, the current URL is a representation of our properties.
+          return;
+        }
+
+        var newUrl = this._getUrl();
+        // Need to use a full URL in case the containing page has a base URI.
+        var fullNewUrl = resolveURL(newUrl, window.location.protocol + '//' + window.location.host).href;
+        var now = window.performance.now();
+        var shouldReplace = this._lastChangedAt + this.dwellTime > now;
+        this._lastChangedAt = now;
+
+        if (shouldReplace) {
+          window.history.replaceState({}, '', fullNewUrl);
+        } else {
+          window.history.pushState({}, '', fullNewUrl);
+        }
+
+        this.fire('location-changed', {}, {node: window});
+      },
+
+      /**
+       * A necessary evil so that links work as expected. Does its best to
+       * bail out early if possible.
+       *
+       * @param {MouseEvent} event .
+       */
+      _globalOnClick: function(event) {
+        // If another event handler has stopped this event then there's nothing
+        // for us to do. This can happen e.g. when there are multiple
+        // iron-location elements in a page.
+        if (event.defaultPrevented) {
+          return;
+        }
+
+        var href = this._getSameOriginLinkHref(event);
+
+        if (!href) {
+          return;
+        }
+
+        event.preventDefault();
+
+        // If the navigation is to the current page we shouldn't add a history
+        // entry or fire a change event.
+        if (href === window.location.href) {
+          return;
+        }
+
+        window.history.pushState({}, '', href);
+        this.fire('location-changed', {}, {node: window});
+      },
+
+      /**
+       * Returns the absolute URL of the link (if any) that this click event
+       * is clicking on, if we can and should override the resulting full
+       * page navigation. Returns null otherwise.
+       *
+       * @param {MouseEvent} event .
+       * @return {string?} .
+       */
+      _getSameOriginLinkHref: function(event) {
+        // We only care about left-clicks.
+        if (event.button !== 0) {
+          return null;
+        }
+
+        // We don't want modified clicks, where the intent is to open the page
+        // in a new tab.
+        if (event.metaKey || event.ctrlKey) {
+          return null;
+        }
+
+        var eventPath = Polymer.dom(event).path;
+        var anchor = null;
+
+        for (var i = 0; i < eventPath.length; i++) {
+          var element = eventPath[i];
+
+          if (element.tagName === 'A' && element.href) {
+            anchor = element;
+            break;
+          }
+        }
+
+        // If there's no link there's nothing to do.
+        if (!anchor) {
+          return null;
+        }
+
+        // Target blank is a new tab, don't intercept.
+        if (anchor.target === '_blank') {
+          return null;
+        }
+
+        // If the link is for an existing parent frame, don't intercept.
+        if ((anchor.target === '_top' ||
+            anchor.target === '_parent') &&
+            window.top !== window) {
+          return null;
+        }
+
+        var href = anchor.href;
+
+        // It only makes sense for us to intercept same-origin navigations.
+        // pushState/replaceState don't work with cross-origin links.
+        var url;
+
+        if (document.baseURI != null) {
+          url = resolveURL(href, /** @type {string} */(document.baseURI));
+        } else {
+          url = resolveURL(href);
+        }
+
+        var origin;
+
+        // IE Polyfill
+        if (window.location.origin) {
+          origin = window.location.origin;
+        } else {
+          origin = window.location.protocol + '//' + window.location.host;
+        }
+
+        var urlOrigin;
+
+        if (url.origin) {
+          urlOrigin = url.origin;
+        } else {
+          urlOrigin = url.protocol + '//' + url.host;
+        }
+
+        if (urlOrigin !== origin) {
+          return null;
+        }
+
+        var normalizedHref = url.pathname + url.search + url.hash;
+
+        // pathname should start with '/', but may not if `new URL` is not supported
+        if (normalizedHref[0] !== '/') {
+          normalizedHref = '/' + normalizedHref;
+        }
+
+        // If we've been configured not to handle this url... don't handle it!
+        if (this._urlSpaceRegExp &&
+            !this._urlSpaceRegExp.test(normalizedHref)) {
+          return null;
+        }
+
+        // Need to use a full URL in case the containing page has a base URI.
+        var fullNormalizedHref = resolveURL(
+            normalizedHref, window.location.href).href;
+        return fullNormalizedHref;
+      },
+
+      _makeRegExp: function(urlSpaceRegex) {
+        return RegExp(urlSpaceRegex);
+      }
+    });
+  })();
 defineCustomElement('order-input', class extends Polymer.Element {
             ready() {
                 super.ready();
@@ -15129,340 +16749,24 @@ defineCustomElement('order-input', class extends Polymer.Element {
                     console.log('trying csv parser');
                     order =  new CsvParser().parse(text).split();
                 }
-                OrderSplitResults.show(order);
+                this._changeUrl(order);
             }
-            _requestOrder() {
-                // this method makes no sense to me.
-                // can we delete it?
-                window.postMessage('parseDom', '*');
+            _changeUrl(order) {
+                let query = 'tax=' + order.tax + '&fee=' + order.fee + '&tip=' + order.tipDollars;
+
+                for (var [person, val] of order.people) {
+                    query += '&' + encodeURIComponent(person) + '=' + Utils._prettifyNumber(val);
+                }
+                this.$.location.query = query;
             }
             _onCheckboxTap() {
                 localStorage.setItem('usePercentForTip', JSON.stringify(!this.usePercentForTip));
             }
         });
-/**
-   * `Polymer.NeonAnimatableBehavior` is implemented by elements containing animations for use with
-   * elements implementing `Polymer.NeonAnimationRunnerBehavior`.
-   * @polymerBehavior
-   */
-  Polymer.NeonAnimatableBehavior = {
-
-    properties: {
-
-      /**
-       * Animation configuration. See README for more info.
-       */
-      animationConfig: {
-        type: Object
-      },
-
-      /**
-       * Convenience property for setting an 'entry' animation. Do not set `animationConfig.entry`
-       * manually if using this. The animated node is set to `this` if using this property.
-       */
-      entryAnimation: {
-        observer: '_entryAnimationChanged',
-        type: String
-      },
-
-      /**
-       * Convenience property for setting an 'exit' animation. Do not set `animationConfig.exit`
-       * manually if using this. The animated node is set to `this` if using this property.
-       */
-      exitAnimation: {
-        observer: '_exitAnimationChanged',
-        type: String
-      }
-
-    },
-
-    _entryAnimationChanged: function() {
-      this.animationConfig = this.animationConfig || {};
-      this.animationConfig['entry'] = [{
-        name: this.entryAnimation,
-        node: this
-      }];
-    },
-
-    _exitAnimationChanged: function() {
-      this.animationConfig = this.animationConfig || {};
-      this.animationConfig['exit'] = [{
-        name: this.exitAnimation,
-        node: this
-      }];
-    },
-
-    _copyProperties: function(config1, config2) {
-      // shallowly copy properties from config2 to config1
-      for (var property in config2) {
-        config1[property] = config2[property];
-      }
-    },
-
-    _cloneConfig: function(config) {
-      var clone = {
-        isClone: true
-      };
-      this._copyProperties(clone, config);
-      return clone;
-    },
-
-    _getAnimationConfigRecursive: function(type, map, allConfigs) {
-      if (!this.animationConfig) {
-        return;
-      }
-
-      if(this.animationConfig.value && typeof this.animationConfig.value === 'function') {
-      	this._warn(this._logf('playAnimation', "Please put 'animationConfig' inside of your components 'properties' object instead of outside of it."));
-      	return;
-      }
-
-      // type is optional
-      var thisConfig;
-      if (type) {
-        thisConfig = this.animationConfig[type];
-      } else {
-        thisConfig = this.animationConfig;
-      }
-
-      if (!Array.isArray(thisConfig)) {
-        thisConfig = [thisConfig];
-      }
-
-      // iterate animations and recurse to process configurations from child nodes
-      if (thisConfig) {
-        for (var config, index = 0; config = thisConfig[index]; index++) {
-          if (config.animatable) {
-            config.animatable._getAnimationConfigRecursive(config.type || type, map, allConfigs);
-          } else {
-            if (config.id) {
-              var cachedConfig = map[config.id];
-              if (cachedConfig) {
-                // merge configurations with the same id, making a clone lazily
-                if (!cachedConfig.isClone) {
-                  map[config.id] = this._cloneConfig(cachedConfig)
-                  cachedConfig = map[config.id];
-                }
-                this._copyProperties(cachedConfig, config);
-              } else {
-                // put any configs with an id into a map
-                map[config.id] = config;
-              }
-            } else {
-              allConfigs.push(config);
-            }
-          }
-        }
-      }
-    },
-
-    /**
-     * An element implementing `Polymer.NeonAnimationRunnerBehavior` calls this method to configure
-     * an animation with an optional type. Elements implementing `Polymer.NeonAnimatableBehavior`
-     * should define the property `animationConfig`, which is either a configuration object
-     * or a map of animation type to array of configuration objects.
-     */
-    getAnimationConfig: function(type) {
-      var map = {};
-      var allConfigs = [];
-      this._getAnimationConfigRecursive(type, map, allConfigs);
-      // append the configurations saved in the map to the array
-      for (var key in map) {
-        allConfigs.push(map[key]);
-      }
-      return allConfigs;
-    }
-
-  };
-/**
-   * `Polymer.NeonAnimationRunnerBehavior` adds a method to run animations.
-   *
-   * @polymerBehavior Polymer.NeonAnimationRunnerBehavior
-   */
-  Polymer.NeonAnimationRunnerBehaviorImpl = {
-
-    _configureAnimations: function(configs) {
-      var results = [];
-      if (configs.length > 0) {
-        for (var config, index = 0; config = configs[index]; index++) {
-          var neonAnimation = document.createElement(config.name);
-          // is this element actually a neon animation?
-          if (neonAnimation.isNeonAnimation) {
-            var result = null;
-            // configuration or play could fail if polyfills aren't loaded
-            try {
-              result = neonAnimation.configure(config);
-              // Check if we have an Effect rather than an Animation
-              if (typeof result.cancel != 'function') {
-                result = document.timeline.play(result);
-              }
-            } catch (e) {
-              result = null;
-              console.warn('Couldnt play', '(', config.name, ').', e);
-            }
-            if (result) {
-              results.push({
-                neonAnimation: neonAnimation,
-                config: config,
-                animation: result,
-              });
-            }
-          } else {
-            console.warn(this.is + ':', config.name, 'not found!');
-          }
-        }
-      }
-      return results;
-    },
-
-    _shouldComplete: function(activeEntries) {
-      var finished = true;
-      for (var i = 0; i < activeEntries.length; i++) {
-        if (activeEntries[i].animation.playState != 'finished') {
-          finished = false;
-          break;
-        }
-      }
-      return finished;
-    },
-
-    _complete: function(activeEntries) {
-      for (var i = 0; i < activeEntries.length; i++) {
-        activeEntries[i].neonAnimation.complete(activeEntries[i].config);
-      }
-      for (var i = 0; i < activeEntries.length; i++) {
-        activeEntries[i].animation.cancel();
-      }
-    },
-
-    /**
-     * Plays an animation with an optional `type`.
-     * @param {string=} type
-     * @param {!Object=} cookie
-     */
-    playAnimation: function(type, cookie) {
-      var configs = this.getAnimationConfig(type);
-      if (!configs) {
-        return;
-      }
-      this._active = this._active || {};
-      if (this._active[type]) {
-        this._complete(this._active[type]);
-        delete this._active[type];
-      }
-
-      var activeEntries = this._configureAnimations(configs);
-
-      if (activeEntries.length == 0) {
-        this.fire('neon-animation-finish', cookie, {bubbles: false});
-        return;
-      }
-
-      this._active[type] = activeEntries;
-
-      for (var i = 0; i < activeEntries.length; i++) {
-        activeEntries[i].animation.onfinish = function() {
-          if (this._shouldComplete(activeEntries)) {
-            this._complete(activeEntries);
-            delete this._active[type];
-            this.fire('neon-animation-finish', cookie, {bubbles: false});
-          }
-        }.bind(this);
-      }
-    },
-
-    /**
-     * Cancels the currently running animations.
-     */
-    cancelAnimation: function() {
-      for (var k in this._animations) {
-        this._animations[k].cancel();
-      }
-      this._animations = {};
-    }
-  };
-
-  /** @polymerBehavior Polymer.NeonAnimationRunnerBehavior */
-  Polymer.NeonAnimationRunnerBehavior = [
-    Polymer.NeonAnimatableBehavior,
-    Polymer.NeonAnimationRunnerBehaviorImpl
-  ];
-/**
-   * Use `Polymer.NeonAnimationBehavior` to implement an animation.
-   * @polymerBehavior
-   */
-  Polymer.NeonAnimationBehavior = {
-
-    properties: {
-
-      /**
-       * Defines the animation timing.
-       */
-      animationTiming: {
-        type: Object,
-        value: function() {
-          return {
-            duration: 500,
-            easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
-            fill: 'both'
-          }
-        }
-      }
-
-    },
-
-    /**
-     * Can be used to determine that elements implement this behavior.
-     */
-    isNeonAnimation: true,
-
-    /**
-     * Do any animation configuration here.
-     */
-    // configure: function(config) {
-    // },
-
-    created: function() {
-      if (!document.body.animate) {
-        console.warn('No web animations detected. This element will not' +
-            ' function without a web animations polyfill.');
-      }
-    },
-
-    /**
-     * Returns the animation timing by mixing in properties from `config` to the defaults defined
-     * by the animation.
-     */
-    timingFromConfig: function(config) {
-      if (config.timing) {
-        for (var property in config.timing) {
-          this.animationTiming[property] = config.timing[property];
-        }
-      }
-      return this.animationTiming;
-    },
-
-    /**
-     * Sets `transform` and `transformOrigin` properties along with the prefixed versions.
-     */
-    setPrefixedProperty: function(node, property, value) {
-      var map = {
-        'transform': ['webkitTransform'],
-        'transformOrigin': ['mozTransformOrigin', 'webkitTransformOrigin']
-      };
-      var prefixes = map[property];
-      for (var prefix, index = 0; prefix = prefixes[index]; index++) {
-        node.style[prefix] = value;
-      }
-      node.style[property] = value;
-    },
-
-    /**
-     * Called when the animation finishes.
-     */
-    complete: function() {}
-
-  };
+// TODO: refactor this handler when not at risk of merge conflicts
+            document.addEventListener('set-order', () => {
+                document.querySelector('#mainFlipCard').flip();
+            });
 Polymer({
 
     is: 'fade-in-animation',
@@ -15827,22 +17131,20 @@ defineCustomElement('order-split-results-table', class extends Polymer.Element {
             _multiply(a, b) {
                 return this._prettifyNumber(a * b);
             }
-            ready() {
-                super.ready();
-                this.hidden = true; // hide until order property is set
-
-                var element = this;
-                window.OrderSplitResults = {
-                    show(order) {
-                        element.order = order;
-                    }
-                };
+            constructor() {
+                super();
+                this.hidden = true;
             }
+
             static get properties() {
                 return {
                     order: {
                         type: Object,
                         observer: '_onOrderChanged'
+                    },
+                    origin: {
+                        type: String,
+                        value: "https://mergemypullrequest.github.io/order-splitter/"
                     }
                 };
             }
@@ -15861,20 +17163,7 @@ defineCustomElement('order-split-results-table', class extends Polymer.Element {
              * @returns {string} A string of a number rounded and padded to 2 decimal places
              */
             _prettifyNumber(n) {
-                n = Math.round(n * 100) / 100; // round to 2 decimal places
-
-              // pad to 2 decimal places if necessary
-                var s = n.toString();
-
-                if (s.indexOf('.') === -1) {
-                    s += '.';
-                }
-
-                while (s.length < s.indexOf('.') + 3) {
-                    s += '0';
-                }
-
-                return s;
+                return Utils._prettifyNumber(n);
             }
             /**
              * Returns a listing of names to split costs
@@ -15924,7 +17213,13 @@ defineCustomElement('order-split-results-table', class extends Polymer.Element {
                 return breakdown;
             }
             _makeUrl(order) {
-                var link = window.location.origin + window.location.pathname;
+                let link;
+                if(this.origin) {
+                    link = this.origin;
+                }
+                else {
+                    link = window.location.origin + window.location.pathname;
+                }
                 if (link.indexOf('index.html') === -1) {
                     link += 'index.html';
                 }
@@ -15937,10 +17232,13 @@ defineCustomElement('order-split-results-table', class extends Polymer.Element {
 
                 return link;
             }
-
+            _handleQueryStringChanged(e, {value}) {
+                this.order = new QueryStringParser().parse(value).split();
+                document.dispatchEvent(new CustomEvent('set-order'));
+            }
         });
 // this is to help with debugging any SW caching issues if they appear
-            var scriptSha = 'c00d6d2';
+            var scriptSha = '20f0687';
             var htmlSha = document.querySelector('#sha').innerText;
             console.debug(`script version: ${scriptSha}`);
             console.debug(`html version:   ${htmlSha}`);
