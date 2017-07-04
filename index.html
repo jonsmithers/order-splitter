@@ -2077,7 +2077,13 @@
             span[slot="prefix"] {
                 padding-right: 2px;
             }
-        </style><div><textarea id=textarea rows=20 cols=60 placeholder="Paste order details here" autofocus></textarea><paper-input type=number label=Taxes id=tax><span slot=prefix>$</span></paper-input><paper-input type=number label=Fees id=fee><span slot=prefix>$</span></paper-input><div id=tipContainer><paper-input type=number label=Tip id=tip><span slot=prefix class$=[[_computeTipDollarClass(usePercentForTip)]]>$</span> <span slot=suffix class$=[[_computeTipPercentClass(usePercentForTip)]]>%</span></paper-input><paper-checkbox checked={{usePercentForTip}} on-tap=_onCheckboxTap>Percentage</paper-checkbox></div><paper-button id=split on-tap=_onSplitButtonTap>Split</paper-button></div><iron-location id=location></iron-location></template></dom-module><dom-module id=paper-tooltip assetpath="../bower_components/paper-tooltip/"><template><style>
+            div[contenteditable] {
+                border: 1px dotted black;
+                overflow-x: auto;
+                overflow-y: auto;
+                height: 500px;
+            }
+        </style><div><div id=input contenteditable=true on-input=_onInputChanged autofocus></div></div><iron-location id=location></iron-location></template></dom-module><dom-module id=paper-tooltip assetpath="../bower_components/paper-tooltip/"><template><style>
       :host {
         display: block;
         position: absolute;
@@ -2117,7 +2123,7 @@
             }
             span.chip {
                 @apply(--paper-font-common-base);
-                background-color: var(--paper-grey-300);
+                /* background-color: var(--paper-grey-300); */
                 padding: 5px;
                 border-radius: 14px;
                 line-height: 38px;
@@ -2125,7 +2131,12 @@
             td {
                 white-space: nowrap; /* maintain dignity on small-width windows */
             }
-        </style><div><table><tbody><tr><td style=font-weight:bold;>Everyone</td><td><span class=chip>$[[_prettifyNumber(order.total)]] total<paper-tooltip>subtotal + tax + fees + tip</paper-tooltip></span> =</td><td><span class=chip>$[[_prettifyNumber(order.subTotal)]] subtotal<paper-tooltip>sum of item costs</paper-tooltip></span></td><td>+ <span class=chip>$[[_prettifyNumber(order.tax)]] tax</span></td><td>+ <span class=chip>$[[_prettifyNumber(order.fee)]] fee</span></td><td>+ <span class=chip>$[[_prettifyNumber(order.tipDollars)]] tip</span></td></tr><template is=dom-repeat items=[[_computeBreakdownItems(order.people)]]><tr><td>[[item.name]]</td><td><span class=chip>$[[_computePersonTotal(item.name)]]</span> =</td><td><span class=chip>$[[item.price]] price</span></td><td>+ <span class=chip>$[[_multiply(item.price, order.taxPercent)]] tax<paper-tooltip>[[item.price]] x [[order.taxPercent]]</paper-tooltip></span></td><td>+ <span class=chip>$[[_prettifyNumber(order.feesPerPerson)]] fee<paper-tooltip>[[order.feesPerPerson]]</paper-tooltip></span></td><td>+ <span class=chip>$[[_multiply(item.price, order.tipPercent)]] tip<paper-tooltip>[[item.price]] x [[order.tipPercent]]</paper-tooltip></span></td></tr></template></tbody></table><paper-button on-tap=_onClipboardTap>Copy to Clipboard</paper-button><a href=[[_makeUrl(order)]]>link</a> <textarea id=textForClipboard value=[[_makeTextForClipboard(order.totals)]] hidden></textarea><iron-location on-query-changed=_handleQueryStringChanged></iron-location></div></template></dom-module><style>
+            div#main {
+                padding: 20px;
+                margin: 20px;
+                background: white;
+            }
+        </style><div id=main><table><tbody><tr><td style=font-weight:bold;>Everyone</td><td><span class=chip>$[[_prettifyNumber(order.total)]] total<paper-tooltip>subtotal + tax + fees + tip</paper-tooltip></span> =</td><td><span class=chip>$[[_prettifyNumber(order.subTotal)]] subtotal<paper-tooltip>sum of item costs</paper-tooltip></span></td><td>+ <span class=chip>$[[_prettifyNumber(order.tax)]] tax</span></td><td>+ <span class=chip>$[[_prettifyNumber(order.fee)]] fee</span></td><td>+ <span class=chip>$[[_prettifyNumber(order.tipDollars)]] tip</span></td></tr><template is=dom-repeat items=[[_computeBreakdownItems(order.people)]]><tr><td>[[item.name]]</td><td><span class=chip>$[[_computePersonTotal(item.name)]]</span> =</td><td><span class=chip>$[[item.price]] price</span></td><td>+ <span class=chip>$[[_multiply(item.price, order.taxPercent)]] tax<paper-tooltip>[[item.price]] x [[order.taxPercent]]</paper-tooltip></span></td><td>+ <span class=chip>$[[_prettifyNumber(order.feesPerPerson)]] fee<paper-tooltip>[[order.feesPerPerson]]</paper-tooltip></span></td><td>+ <span class=chip>$[[_multiply(item.price, order.tipPercent)]] tip<paper-tooltip>[[item.price]] x [[order.tipPercent]]</paper-tooltip></span></td></tr></template></tbody></table><paper-button on-tap=_onClipboardTap raised>Copy to Clipboard</paper-button><textarea id=textForClipboard value=[[_makeTextForClipboard(order.totals)]] hidden></textarea><iron-location on-query-changed=_handleQueryStringChanged></iron-location></div></template></dom-module><style>
             body {
                 background-color: #eaeaea;
                 font-family: 'Arial', sans-serif;
@@ -2192,5 +2203,5 @@
             .step-text {
                 font-size: 20px;
             }
-        </style></div><div align=right id=sha>58f8270</div><div align=right>7/3/2017, 11:44:44 AM</div><div class=wrapper><div class=left-panel><div class=logo-wrapper><img src=images/ordersplitter-logo.png alt="Order Splitter"><h1>Order Splitter</h1><span class=version>0.6.0</span></div><order-input></order-input></div><div class=right-panel><div class=step><h1>How it Works</h1><span class=number><h3>1</h3></span> <span class=step-text>Copy order details from OrderUp</span></div><div><pre>                        <example-order></example-order>
-                    </pre></div><div class=step><span class=number><h3>2</h3></span> <span class=step-text>Enter taxes, fees, and tip</span></div><div class=step><span class=number><h3>3</h3></span> <span class=step-text>Split order</span></div></div></div><p id=result></p><order-split-results-table id=table></order-split-results-table><script src=index.js></script></body></html>
+        </style></div><div align=right id=sha>f955bdf</div><div align=right>7/4/2017, 10:06:47 AM</div><order-split-results-table id=table></order-split-results-table><div class=wrapper><div class=left-panel><div class=logo-wrapper><img src=images/ordersplitter-logo.png alt="Order Splitter"><h1>Order Splitter</h1><span class=version>0.7.0</span></div><order-input></order-input></div><div class=right-panel><div class=step><h1>How it Works</h1><span class=number><h3>1</h3></span> <span class=step-text>Copy order details from OrderUp</span></div><div><pre>                        <example-order></example-order>
+                    </pre></div><div class=step><span class=number><h3>2</h3></span> <span class=step-text>Enter taxes, fees, and tip</span></div><div class=step><span class=number><h3>3</h3></span> <span class=step-text>Split order</span></div></div></div><script src=index.js></script></body></html>

@@ -1,44 +1,88 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
 class Order {
-    constructor() {
-        this.people = new Map();
-        this.tip = 0;
-        this.tax = 0;
-        this.nonTaxedFees = 0;
-        this.taxedFees = 0;
-        this.isTipPercentage = false;
-        this._tipDollars = 0;
-        this._tipPercentage = 0;
+    static split(config) {
+        return new Order(config).split();
+    }
+    constructor(config = {tip: 0, tax: 0, untaxedFees: 0, taxedFees: 0, isTipPercentage: false, people: {}}) {
+
+        // validation
+        {
+            var defaults = {
+                'isTipPercentage': false,
+                'untaxedFees':     0,
+                'people':          {},
+                'tax':             0,
+                'taxedFees':       0,
+                'tip':             0,
+            };
+            var typeValidationMap = {
+                'isTipPercentage': 'boolean',
+                'untaxedFees':     'number',
+                'people':          'object',
+                'tax':             'number',
+                'taxedFees':       'number',
+                'tip':             'number'
+            };
+
+            Object.entries(defaults).forEach(function([key, default0]) {
+                config[key] = config[key] || default0;
+            });
+
+            Object.entries(config).forEach(function([key, value]) {
+                var expectedType = typeValidationMap[key];
+                if (!expectedType) {
+                    throw new Error(`Unexpected key ${key}`);
+                }
+                if (typeof value !== expectedType) {
+                    throw new Error(`config.${key} must be of type ${expectedType}`);
+                }
+                delete typeValidationMap[key];
+            });
+            Object.keys(typeValidationMap).forEach(key => {
+                throw new Error(`Missing key ${key}`);
+            });
+            Object.values(config.people).forEach(personCost => {
+                if (typeof personCost !== 'number') {
+                    throw new Error('config.people\'s values must be numbers');
+                }
+            });
+        }
+
+        // convert object to Map
+        config.people = Object.entries(config.people).reduce((map, [key, value]) => map.set(key, value), new Map());
+
+        Object.assign(this, config);
     }
 
     withTip(tip, asPercentage=false) {
+        console.warn('withTip() is deprecated');
         this.isTipPercentage = asPercentage;
-        if(this.isTipPercentage) {
-            this._tipPercentage = tip/100;
-        }
-        else {
-            this._tipDollars = tip;
-        }
+        this.tip = tip;
+        this.isTipPercentage = asPercentage;
         return this;
     }
 
     withNonTaxedFees(...fees) {
-        this.nonTaxedFees = fees.reduce((acc, val) => acc+val);
+        console.warn("withNonTaxedFees() is deprecated");
+        this.untaxedFees = fees.reduce((acc, val) => acc+val);
         return this;
     }
 
     withTaxedFees(...fees) {
+        console.warn("withTaxedFees() is deprecated");
         this.taxedFees = fees.reduce((acc, val) => acc+val);
         return this;
     }
 
     withTax(tax) {
+        console.warn("withTax() is deprecated");
         this.tax = tax;
         return this;
     }
 
     withPerson(name, price) {
+        console.warn("withPerson() is deprecated");
         let newPrice = price;
         if(this.people.has(name)) {
             newPrice += this.people.get(name);
@@ -59,21 +103,26 @@ class Order {
     }
 
     get fee() {
-        return this.nonTaxedFees;
+        return this.untaxedFees;
     }
 
     get tipPercent() {
         if(this.isTipPercentage) {
-            return this._tipPercentage;
+            return this.tip;
+        } else {
+            if(this.subTotal === 0) {
+                return 0;
+            }
+            return this.tipDollars / this.subTotal;
         }
-        if(this.subTotal === 0) {
-            return 0;
-        }
-        return this._tipDollars / this.subTotal;
     }
 
     get tipDollars() {
-        return this.tipPercent * this.subTotal;
+        if (this.isTipPercentage) {
+            return this.tipPercent * this.subTotal;
+        } else {
+            return this.tip;
+        }
     }
 
     get feesPerPerson() {
@@ -84,12 +133,20 @@ class Order {
         return this.subTotal + this.fee + this.tipDollars + this.tax;
     }
 
+    get hasPeople() {
+        return !!Array.from(this.people.values()).length;
+    }
+
     split() {
 
+        this.totals = new Map();
+        if (!this.hasPeople) {
+            this.subTotal, this.totalPrice = 0;
+            return this;
+        }
         this.subTotal = Array.from(this.people.values()).reduce((sum, value) => sum+value);
         this.subTotal += this.taxedFees;
 
-        this.totals = new Map();
         for (let [name, price] of this.people.entries()) {
             let totalForPerson = price;
             totalForPerson += price * this.taxPercent;
@@ -110,7 +167,7 @@ class Order {
         ret.people = Array.from(this.people);
         ret.tipDollars = this.tipDollars;
         ret.tax = this.tax;
-        ret.nonTaxedFees = this.nonTaxedFees;
+        ret.untaxedFees = this.untaxedFees;
         ret.taxedFees = this.taxedFees;
         ret.isTipPercentage = this.isTipPercentage;
         return ret;
@@ -122,7 +179,7 @@ class Order {
         order.people = new Map(json.people);
         order.withTip(json.tipDollars, false)
             .withTax(json.tax)
-            .withNonTaxedFees(json.nonTaxedFees)
+            .withNonTaxedFees(json.untaxedFees)
             .withTaxedFees(json.taxedFees);
         return order.split();
     }
@@ -135,6 +192,68 @@ module.exports = Order;
 (function() {
     const Order = require('./order.js');
 
+    class OrderUpHtmlParser {
+        parse(containerElement) {
+
+            var highlight = element => {
+                element.style.background = 'repeating-linear-gradient(45deg, yellow, yellow 10px, #fafa0a 10px, #fafa0a 20px )';
+                element.title = 'OrderSplitter is using this value';
+            };
+
+            var untaxedFees = 0, tip, tax, people;
+
+            var summaryTable = Array.from(containerElement.querySelectorAll('#order-confirmation-page tr'));
+            if (summaryTable) {
+                [people] = summaryTable.map(tr => Array.from(tr.querySelectorAll('td'))).filter(tds => tds.length).reduce(function([people, lastItemCost], [left_td, center_td, right_td]) {
+                    let name, price;
+
+                    if (right_td && right_td.classList.contains('price-table')) {
+                        price = right_td.innerText;
+                        highlight(right_td);
+                        lastItemCost = Number(price.match('\\$([0-9.]+)')[1]);
+                    }
+
+                    if (center_td && (name = center_td.querySelector('li strong'))) {
+                        highlight(name);
+                        name = name.innerText;
+                        people[name] = lastItemCost;
+                        lastItemCost = null;
+                    }
+
+                    return [people, lastItemCost];
+                }, [{}, null]);
+            }
+
+            var infoTable = Array.from(containerElement.querySelectorAll('div.order-information tr'));
+            if (infoTable) {
+                infoTable.map(tr => Array.from(tr.querySelectorAll('td'))).filter(tds => tds.length).forEach(function([left, right]) {
+
+                    let match = right.textContent.match('\\$([0-9.]+)');
+                    var value = match && Number(match[1]);
+
+                    switch (left.textContent) {
+                        case 'Sales Tax':
+                            tax = value;
+                            highlight(right);
+                            break;
+                        case 'Processing Fee':
+                        case 'Delivery Fee':
+                            untaxedFees += value;
+                            highlight(right);
+                            break;
+                        case 'Tip':
+                            console.log('%cgot tip', 'font-size:15px');
+                            console.log(value);
+                            tip = value;
+                            highlight(right);
+                            break;
+                    }
+                });
+            }
+            return Order.split({people, untaxedFees, tip, tax});
+        }
+    }
+
     class QueryStringParser {
         /**
          * Parses input from a URL query string into an Order.
@@ -144,29 +263,33 @@ module.exports = Order;
          * @returns {Order} An order parsed from the URL query string
          */
         parse(queryString) {
-            var pairs = queryString.split('&');
-            let order = new Order();
-
-            for (var i = 0; i < pairs.length; i++) {
-                var pairValues = pairs[i].split('=');
-
-                pairValues[1] = Number(pairValues[1]);
-
-                if(pairValues[0] === 'fee') {
-                    order.withNonTaxedFees(pairValues[1]);
-                }
-                else if(pairValues[0] === 'tax') {
-                    order.withTax(pairValues[1]);
-                } 
-                else if(pairValues[0] === 'tip') {
-                    order.withTip(pairValues[1]);
-                } 
-                else {
-                    order.withPerson(decodeURIComponent(pairValues[0]), pairValues[1]);
-                }
+            if (!location.search.length) {
+                return undefined;
             }
+            var params = location.search.slice(1).split('&');
+            console.debug('params', params);
 
-            return order;
+            let people={}, untaxedFees, tax, tip;
+
+            params.map(param=>param.split('=')).forEach(function([key,value]) {
+                key = decodeURIComponent(key);
+                value = Number(decodeURIComponent(value));
+                switch (key) {
+                    case 'fee':
+                        untaxedFees = value;
+                        break;
+                    case 'tax':
+                        tax = value;
+                        break;
+                    case 'tip':
+                        tip = value;
+                        break;
+                    default:
+                        people[key] = value;
+                }
+            });
+
+            return Order.split({people, untaxedFees, tax, tip});
         }
     }
 
@@ -239,7 +362,7 @@ module.exports = Order;
             return order;
         }
     }
-    module.exports = {OrderUpParser, QueryStringParser, CsvParser};
+    module.exports = {OrderUpParser, QueryStringParser, CsvParser, OrderUpHtmlParser};
 })();
 
 }).call(this,require("pBGvAp"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../common/parsers.js","/../common")
@@ -2585,7 +2708,7 @@ else if(name==='id'){nodeInfo.id=value;return true;}}/**
        */},{key:"_contentForTemplate",value:function _contentForTemplate(template){var templateInfo=template.__templateInfo;return templateInfo&&templateInfo.content||template.content;}}]);return TemplateStamp;}(superClass);return TemplateStamp;});})();(function(){'use strict';/** @const {Object} */var CaseMap=Polymer.CaseMap;// Monotonically increasing unique ID used for de-duping effects triggered
 // from multiple properties in the same turn
 var dedupeId=0;// Property effect types; effects are stored on the prototype using these keys
-var TYPES={COMPUTE:'__computeEffects',REFLECT:'__reflectEffects',NOTIFY:'__notifyEffects',PROPAGATE:'__propagateEffects',OBSERVE:'__observeEffects',READ_ONLY:'__readOnly'};/**
+var TYPES={COMPUTE:'__computeEffects',REFLECT:'__reflectEffects',NOTIFY:'__notifyEffects',PROPAGATE:'__propagateEffects',OBSERVE:'__observeEffects',READ_ONLY:'__readOnly'/**
    * Ensures that the model has an own-property map of effects for the given type.
    * The model may be a prototype or an instance.
    *
@@ -2606,7 +2729,7 @@ var TYPES={COMPUTE:'__computeEffects',REFLECT:'__reflectEffects',NOTIFY:'__notif
    * @param {string} type Property effect type
    * @return {Object} The own-property map of effects for the given type
    * @private
-   */function ensureOwnEffectMap(model,type){var effects=model[type];if(!effects){effects=model[type]={};}else if(!model.hasOwnProperty(type)){effects=model[type]=Object.create(model[type]);for(var p in effects){var protoFx=effects[p];var instFx=effects[p]=Array(protoFx.length);for(var i=0;i<protoFx.length;i++){instFx[i]=protoFx[i];}}}return effects;}// -- effects ----------------------------------------------
+   */};function ensureOwnEffectMap(model,type){var effects=model[type];if(!effects){effects=model[type]={};}else if(!model.hasOwnProperty(type)){effects=model[type]=Object.create(model[type]);for(var p in effects){var protoFx=effects[p];var instFx=effects[p]=Array(protoFx.length);for(var i=0;i<protoFx.length;i++){instFx[i]=protoFx[i];}}}return effects;}// -- effects ----------------------------------------------
 /**
    * Runs all effects of a given type for the given set of property changes
    * on an instance.
@@ -5922,7 +6045,7 @@ if(Array.isArray(args)&&args.length===1){args=args[0];}switch(level){case'log':c
        * @return {string} String with formatting information for `console`
        *   logging.
        */},{key:"_logf",value:function _logf(){for(var _len7=arguments.length,args=Array(_len7),_key7=0;_key7<_len7;_key7++){args[_key7]=arguments[_key7];}return['[%s::%s]',this.is].concat(args);}},{key:"domHost",get:function get(){var root=this.getRootNode();return root instanceof DocumentFragment?root.host:root;}}]);return LegacyElement;}(legacyElementBase);return LegacyElement;});})();(function(){'use strict';var LegacyElementMixin=Polymer.LegacyElementMixin;var metaProps={attached:true,detached:true,ready:true,created:true,beforeRegister:true,registered:true,attributeChanged:true,// meta objects
-behaviors:true};/**
+behaviors:true/**
      * Applies a "legacy" behavior or array of behaviors to the provided class.
      *
      * Note: this method will automatically also apply the `Polymer.LegacyElementMixin`
@@ -5934,7 +6057,7 @@ behaviors:true};/**
      * @return {HTMLElement} Returns a new Element class extended by the
      * passed in `behaviors` and also by `Polymer.LegacyElementMixin`.
      * @memberof Polymer
-     */function mixinBehaviors(behaviors,klass){if(!behaviors){return klass;}// NOTE: ensure the bahevior is extending a class with
+     */};function mixinBehaviors(behaviors,klass){if(!behaviors){return klass;}// NOTE: ensure the bahevior is extending a class with
 // legacy element api. This is necessary since behaviors expect to be able
 // to access 1.x legacy api.
 klass=LegacyElementMixin(klass);if(!Array.isArray(behaviors)){behaviors=[behaviors];}var superBehaviors=klass.prototype.behaviors;// get flattened, deduped list of behaviors *not* already on super class
@@ -7461,7 +7584,33 @@ var url;if(document.baseURI!=null){url=resolveURL(href,/** @type {string} */docu
 if(window.location.origin){origin=window.location.origin;}else{origin=window.location.protocol+'//'+window.location.host;}var urlOrigin;if(url.origin){urlOrigin=url.origin;}else{urlOrigin=url.protocol+'//'+url.host;}if(urlOrigin!==origin){return null;}var normalizedHref=url.pathname+url.search+url.hash;// pathname should start with '/', but may not if `new URL` is not supported
 if(normalizedHref[0]!=='/'){normalizedHref='/'+normalizedHref;}// If we've been configured not to handle this url... don't handle it!
 if(this._urlSpaceRegExp&&!this._urlSpaceRegExp.test(normalizedHref)){return null;}// Need to use a full URL in case the containing page has a base URI.
-var fullNormalizedHref=resolveURL(normalizedHref,window.location.href).href;return fullNormalizedHref;},_makeRegExp:function _makeRegExp(urlSpaceRegex){return RegExp(urlSpaceRegex);}});})();(function(){var parsers=require('../common/parsers.js');defineCustomElement('order-input',function(_Polymer$Element3){_inherits(_class3,_Polymer$Element3);function _class3(){_classCallCheck(this,_class3);return _possibleConstructorReturn(this,(_class3.__proto__||Object.getPrototypeOf(_class3)).apply(this,arguments));}_createClass(_class3,[{key:"ready",value:function ready(){_get(_class3.prototype.__proto__||Object.getPrototypeOf(_class3.prototype),"ready",this).call(this);this.usePercentForTip=JSON.parse(localStorage.getItem('usePercentForTip'));}},{key:"_computeTipPercentClass",value:function _computeTipPercentClass(){return this.usePercentForTip?'':'hidden';}},{key:"_computeTipDollarClass",value:function _computeTipDollarClass(){return!this.usePercentForTip?'':'hidden';}},{key:"_onSplitButtonTap",value:function _onSplitButtonTap(){var text=this.$.textarea.value;var tax=Number(this.$.tax.value||0);var fee=Number(this.$.fee.value||0);var tip=Number(this.$.tip.value||0);var isTipPercentage=this.usePercentForTip;var order;try{order=new parsers.OrderUpParser().parse(text,fee,tax,tip,isTipPercentage).split();}catch(e){console.error('OrderUp parser failed',e);console.log('trying csv parser');order=new parsers.CsvParser().parse(text).split();}this._changeUrl(order);}},{key:"_changeUrl",value:function _changeUrl(order){var query='tax='+order.tax+'&fee='+order.fee+'&tip='+order.tipDollars;var _iteratorNormalCompletion2=true;var _didIteratorError2=false;var _iteratorError2=undefined;try{for(var _iterator2=order.people[Symbol.iterator](),_step2;!(_iteratorNormalCompletion2=(_step2=_iterator2.next()).done);_iteratorNormalCompletion2=true){var _step2$value=_slicedToArray(_step2.value,2),person=_step2$value[0],val=_step2$value[1];query+='&'+encodeURIComponent(person)+'='+Utils._prettifyNumber(val);}}catch(err){_didIteratorError2=true;_iteratorError2=err;}finally{try{if(!_iteratorNormalCompletion2&&_iterator2.return){_iterator2.return();}}finally{if(_didIteratorError2){throw _iteratorError2;}}}this.$.location.query=query;}},{key:"_onCheckboxTap",value:function _onCheckboxTap(){localStorage.setItem('usePercentForTip',JSON.stringify(!this.usePercentForTip));}}]);return _class3;}(Polymer.Element));})();/**
+var fullNormalizedHref=resolveURL(normalizedHref,window.location.href).href;return fullNormalizedHref;},_makeRegExp:function _makeRegExp(urlSpaceRegex){return RegExp(urlSpaceRegex);}});})();(function(){var parsers=require('../common/parsers.js');window.Order=require('../common/order.js');;defineCustomElement('order-input',function(_Polymer$Element3){_inherits(_class3,_Polymer$Element3);function _class3(){_classCallCheck(this,_class3);return _possibleConstructorReturn(this,(_class3.__proto__||Object.getPrototypeOf(_class3)).apply(this,arguments));}_createClass(_class3,[{key:"_onInputChanged",value:function _onInputChanged(){var header=this.$.input.querySelector('header');if(header)header.hidden=true;var order=new parsers.OrderUpHtmlParser().parse(this.$.input);console.log('order',order);this._changeUrl(order);}},{key:"ready",value:function ready(){_get(_class3.prototype.__proto__||Object.getPrototypeOf(_class3.prototype),"ready",this).call(this);this.usePercentForTip=JSON.parse(localStorage.getItem('usePercentForTip'));this.$.input.focus();}// _computeTipPercentClass() {
+//     return this.usePercentForTip ? '' : 'hidden';
+// }
+// _computeTipDollarClass() {
+//     return !this.usePercentForTip ? '' : 'hidden';
+// }
+// _onSplitButtonTap() {
+//     var text = this.$.textarea.value;
+//     var tax = Number(this.$.tax.value || 0);
+//     var fee = Number(this.$.fee.value || 0);
+//     var tip = Number(this.$.tip.value || 0);
+//     var isTipPercentage = this.usePercentForTip;
+//
+//     var order;
+//     try {
+//         order =  new parsers.OrderUpParser().parse(text, fee, tax, tip, isTipPercentage).split();
+//     } catch(e) {
+//         console.error('OrderUp parser failed', e);
+//         console.log('trying csv parser');
+//         order =  new parsers.CsvParser().parse(text).split();
+//     }
+//     this._changeUrl(order);
+// }
+// _onCheckboxTap() {
+//     localStorage.setItem('usePercentForTip', JSON.stringify(!this.usePercentForTip));
+// }
+},{key:"_changeUrl",value:function _changeUrl(order){if(!order||!order.hasPeople){this.$.location.query='';return;}var query='tax='+order.tax+'&fee='+order.fee+'&tip='+order.tipDollars;var _iteratorNormalCompletion2=true;var _didIteratorError2=false;var _iteratorError2=undefined;try{for(var _iterator2=order.people[Symbol.iterator](),_step2;!(_iteratorNormalCompletion2=(_step2=_iterator2.next()).done);_iteratorNormalCompletion2=true){var _step2$value=_slicedToArray(_step2.value,2),person=_step2$value[0],val=_step2$value[1];query+='&'+encodeURIComponent(person)+'='+Utils._prettifyNumber(val);}}catch(err){_didIteratorError2=true;_iteratorError2=err;}finally{try{if(!_iteratorNormalCompletion2&&_iterator2.return){_iterator2.return();}}finally{if(_didIteratorError2){throw _iteratorError2;}}}this.$.location.query=query;}}]);return _class3;}(Polymer.Element));})();/**
    * `Polymer.NeonAnimatableBehavior` is implemented by elements containing animations for use with
    * elements implementing `Polymer.NeonAnimationRunnerBehavior`.
    * @polymerBehavior
@@ -7554,7 +7703,7 @@ if(this._animationPlaying){this.cancelAnimation();this._showing=false;this._onAn
 if(this.marginTop!=14&&this.offset==14)offset=this.marginTop;var parentRect=this.offsetParent.getBoundingClientRect();var targetRect=this._target.getBoundingClientRect();var thisRect=this.getBoundingClientRect();var horizontalCenterOffset=(targetRect.width-thisRect.width)/2;var verticalCenterOffset=(targetRect.height-thisRect.height)/2;var targetLeft=targetRect.left-parentRect.left;var targetTop=targetRect.top-parentRect.top;var tooltipLeft,tooltipTop;switch(this.position){case'top':tooltipLeft=targetLeft+horizontalCenterOffset;tooltipTop=targetTop-thisRect.height-offset;break;case'bottom':tooltipLeft=targetLeft+horizontalCenterOffset;tooltipTop=targetTop+targetRect.height+offset;break;case'left':tooltipLeft=targetLeft-thisRect.width-offset;tooltipTop=targetTop+verticalCenterOffset;break;case'right':tooltipLeft=targetLeft+targetRect.width+offset;tooltipTop=targetTop+verticalCenterOffset;break;}// TODO(noms): This should use IronFitBehavior if possible.
 if(this.fitToVisibleBounds){// Clip the left/right side
 if(parentRect.left+tooltipLeft+thisRect.width>window.innerWidth){this.style.right='0px';this.style.left='auto';}else{this.style.left=Math.max(0,tooltipLeft)+'px';this.style.right='auto';}// Clip the top/bottom side.
-if(parentRect.top+tooltipTop+thisRect.height>window.innerHeight){this.style.bottom=parentRect.height+'px';this.style.top='auto';}else{this.style.top=Math.max(-parentRect.top,tooltipTop)+'px';this.style.bottom='auto';}}else{this.style.left=tooltipLeft+'px';this.style.top=tooltipTop+'px';}},_addListeners:function _addListeners(){if(this._target){this.listen(this._target,'mouseenter','show');this.listen(this._target,'focus','show');this.listen(this._target,'mouseleave','hide');this.listen(this._target,'blur','hide');this.listen(this._target,'tap','hide');}this.listen(this,'mouseenter','hide');},_findTarget:function _findTarget(){if(!this.manualMode)this._removeListeners();this._target=this.target;if(!this.manualMode)this._addListeners();},_manualModeChanged:function _manualModeChanged(){if(this.manualMode)this._removeListeners();else this._addListeners();},_onAnimationFinish:function _onAnimationFinish(){this._animationPlaying=false;if(!this._showing){this.toggleClass('hidden',true,this.$.tooltip);}},_removeListeners:function _removeListeners(){if(this._target){this.unlisten(this._target,'mouseenter','show');this.unlisten(this._target,'focus','show');this.unlisten(this._target,'mouseleave','hide');this.unlisten(this._target,'blur','hide');this.unlisten(this._target,'tap','hide');}this.unlisten(this,'mouseenter','hide');}});(function(){var parsers=require('../common/parsers.js');var Order=require('../common/order.js');var QueryStringParserLocal=parsers.QueryStringParser;defineCustomElement('order-split-results-table',function(_Polymer$Element4){_inherits(_class4,_Polymer$Element4);_createClass(_class4,[{key:"_onClipboardTap",value:function _onClipboardTap(){this.$.textForClipboard.hidden=false;this.$.textForClipboard.select();var successful=document.execCommand('copy');if(!successful){console.error('clipboard copy failed');}else{this.$.textForClipboard.hidden=true;}}},{key:"_computeBreakdownItems",value:function _computeBreakdownItems(people){return Array.from(this.order.people.entries()).map(function(entry){return{name:entry[0],price:entry[1]};});}},{key:"_computePersonTotal",value:function _computePersonTotal(name){return this._prettifyNumber(this.order.totals.get(name));}},{key:"_multiply",value:function _multiply(a,b){return this._prettifyNumber(a*b);}}]);function _class4(){_classCallCheck(this,_class4);var _this40=_possibleConstructorReturn(this,(_class4.__proto__||Object.getPrototypeOf(_class4)).call(this));_this40.hidden=true;return _this40;}_createClass(_class4,[{key:"_onOrderChanged",value:function _onOrderChanged(order){if(this.order.constructor!==Order){throw new Error('order must be of type Order');}this.hidden=false;console.log('order',order);}/**
+if(parentRect.top+tooltipTop+thisRect.height>window.innerHeight){this.style.bottom=parentRect.height+'px';this.style.top='auto';}else{this.style.top=Math.max(-parentRect.top,tooltipTop)+'px';this.style.bottom='auto';}}else{this.style.left=tooltipLeft+'px';this.style.top=tooltipTop+'px';}},_addListeners:function _addListeners(){if(this._target){this.listen(this._target,'mouseenter','show');this.listen(this._target,'focus','show');this.listen(this._target,'mouseleave','hide');this.listen(this._target,'blur','hide');this.listen(this._target,'tap','hide');}this.listen(this,'mouseenter','hide');},_findTarget:function _findTarget(){if(!this.manualMode)this._removeListeners();this._target=this.target;if(!this.manualMode)this._addListeners();},_manualModeChanged:function _manualModeChanged(){if(this.manualMode)this._removeListeners();else this._addListeners();},_onAnimationFinish:function _onAnimationFinish(){this._animationPlaying=false;if(!this._showing){this.toggleClass('hidden',true,this.$.tooltip);}},_removeListeners:function _removeListeners(){if(this._target){this.unlisten(this._target,'mouseenter','show');this.unlisten(this._target,'focus','show');this.unlisten(this._target,'mouseleave','hide');this.unlisten(this._target,'blur','hide');this.unlisten(this._target,'tap','hide');}this.unlisten(this,'mouseenter','hide');}});(function(){var parsers=require('../common/parsers.js');var Order=require('../common/order.js');var QueryStringParserLocal=parsers.QueryStringParser;defineCustomElement('order-split-results-table',function(_Polymer$Element4){_inherits(_class4,_Polymer$Element4);_createClass(_class4,[{key:"_onClipboardTap",value:function _onClipboardTap(){this.$.textForClipboard.hidden=false;this.$.textForClipboard.select();var successful=document.execCommand('copy');if(!successful){console.error('clipboard copy failed');}else{this.$.textForClipboard.hidden=true;}}},{key:"_computeBreakdownItems",value:function _computeBreakdownItems(people){if(!people){return[];}return Array.from(this.order.people.entries()).map(function(entry){return{name:entry[0],price:entry[1]};});}},{key:"_computePersonTotal",value:function _computePersonTotal(name){return this._prettifyNumber(this.order.totals.get(name));}},{key:"_multiply",value:function _multiply(a,b){return this._prettifyNumber(a*b);}}]);function _class4(){_classCallCheck(this,_class4);var _this40=_possibleConstructorReturn(this,(_class4.__proto__||Object.getPrototypeOf(_class4)).call(this));_this40.hidden=true;return _this40;}_createClass(_class4,[{key:"_onOrderChanged",value:function _onOrderChanged(order){console.log(order);if(order&&order.constructor!==Order){throw new Error('order must be of type Order');}this.hidden=!order;}/**
                  * Returns a string of a number in the format "#.##"
                  * @example
                  * _prettifyNumber(12); // returns "12.00"
@@ -7564,7 +7713,7 @@ if(parentRect.top+tooltipTop+thisRect.height>window.innerHeight){this.style.bott
                  * Returns a listing of names to split costs
                  * @param {object} totals - The totals property from the Order
                  * @returns {string} A view mapping names to split costs
-                 */},{key:"_makeTextForClipboard",value:function _makeTextForClipboard(totals){// get length of longest name
+                 */},{key:"_makeTextForClipboard",value:function _makeTextForClipboard(totals){if(!this.order){return;}// get length of longest name
 var longestName=-1;var _iteratorNormalCompletion3=true;var _didIteratorError3=false;var _iteratorError3=undefined;try{for(var _iterator3=totals[Symbol.iterator](),_step3;!(_iteratorNormalCompletion3=(_step3=_iterator3.next()).done);_iteratorNormalCompletion3=true){var _step3$value=_slicedToArray(_step3.value,2),person=_step3$value[0],price=_step3$value[1];longestName=Math.max(person.length,longestName);}// add 1 to longest name for a space after name
 }catch(err){_didIteratorError3=true;_iteratorError3=err;}finally{try{if(!_iteratorNormalCompletion3&&_iterator3.return){_iterator3.return();}}finally{if(_didIteratorError3){throw _iteratorError3;}}}longestName+=1;var output='';var name;var _iteratorNormalCompletion4=true;var _didIteratorError4=false;var _iteratorError4=undefined;try{for(var _iterator4=totals[Symbol.iterator](),_step4;!(_iteratorNormalCompletion4=(_step4=_iterator4.next()).done);_iteratorNormalCompletion4=true){var _step4$value=_slicedToArray(_step4.value,2),_person=_step4$value[0],_price=_step4$value[1];var _name=_person;for(var i=_person.length;i<longestName;i++){_name+=' ';}output+=_name+'$'+this._prettifyNumber(_price)+'\n';}}catch(err){_didIteratorError4=true;_iteratorError4=err;}finally{try{if(!_iteratorNormalCompletion4&&_iterator4.return){_iterator4.return();}}finally{if(_didIteratorError4){throw _iteratorError4;}}}return output+'\n'+this._makeUrl(this.order);}/**
                  * Returns a display breaking down the Order split calculations
@@ -7573,7 +7722,7 @@ var longestName=-1;var _iteratorNormalCompletion3=true;var _didIteratorError3=fa
                  */},{key:"_makeBreakdownDisplay",value:function _makeBreakdownDisplay(order){var breakdown='<table id="breakdown">';breakdown+='<tr><th>Person</th><th>Item Costs</th><th>Tax</th><th>Tip</th><th>Fees Per Person</th><th>Person Total</th></tr>';var _iteratorNormalCompletion5=true;var _didIteratorError5=false;var _iteratorError5=undefined;try{for(var _iterator5=order.people[Symbol.iterator](),_step5;!(_iteratorNormalCompletion5=(_step5=_iterator5.next()).done);_iteratorNormalCompletion5=true){var _step5$value=_slicedToArray(_step5.value,2),person=_step5$value[0],price=_step5$value[1];breakdown+='<tr><td>'+person+'</td><td>'+price+'</td><td> + '+// item costs
 price+' * '+order.taxPercent+'</td><td> + '+// taxes
 price+' * '+order.tipPercent+'</td><td> + '+// tip
-order.feesPerPerson+'</td><td> = '+this._prettifyNumber(order.totals.get(person))+'</td></tr>';}}catch(err){_didIteratorError5=true;_iteratorError5=err;}finally{try{if(!_iteratorNormalCompletion5&&_iterator5.return){_iterator5.return();}}finally{if(_didIteratorError5){throw _iteratorError5;}}}breakdown+='</table>';return breakdown;}},{key:"_makeUrl",value:function _makeUrl(order){var link=void 0;if(this.origin){link=this.origin;}else{link=window.location.origin+window.location.pathname;}if(link.indexOf('index.html')===-1){link+='index.html';}link+='?tax='+order.tax+'&fee='+order.fee+'&tip='+order.tipDollars;var _iteratorNormalCompletion6=true;var _didIteratorError6=false;var _iteratorError6=undefined;try{for(var _iterator6=order.people[Symbol.iterator](),_step6;!(_iteratorNormalCompletion6=(_step6=_iterator6.next()).done);_iteratorNormalCompletion6=true){var _step6$value=_slicedToArray(_step6.value,2),person=_step6$value[0],val=_step6$value[1];link+='&'+encodeURIComponent(person)+'='+this._prettifyNumber(val);}}catch(err){_didIteratorError6=true;_iteratorError6=err;}finally{try{if(!_iteratorNormalCompletion6&&_iterator6.return){_iterator6.return();}}finally{if(_didIteratorError6){throw _iteratorError6;}}}return link;}},{key:"_handleQueryStringChanged",value:function _handleQueryStringChanged(e,_ref2){var value=_ref2.value;this.order=new QueryStringParserLocal().parse(value).split();}}],[{key:"properties",get:function get(){return{order:{type:Object,observer:'_onOrderChanged'},origin:{type:String,value:"https://mergemypullrequest.github.io/order-splitter/"}};}}]);return _class4;}(Polymer.Element));})();// this is to help with debugging any SW caching issues if they appear
-var scriptSha='58f8270';var htmlSha=document.querySelector('#sha').innerText;console.debug("script version: "+scriptSha);console.debug("html version:   "+htmlSha);if(scriptSha!==htmlSha){alert('Whoops. The cached files on your machine are out of sync with each other. That\'s our bad. Please hard-refresh the page?');};
-}).call(this,require("pBGvAp"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_8ccb16d9.js","/")
+order.feesPerPerson+'</td><td> = '+this._prettifyNumber(order.totals.get(person))+'</td></tr>';}}catch(err){_didIteratorError5=true;_iteratorError5=err;}finally{try{if(!_iteratorNormalCompletion5&&_iterator5.return){_iterator5.return();}}finally{if(_didIteratorError5){throw _iteratorError5;}}}breakdown+='</table>';return breakdown;}},{key:"_makeUrl",value:function _makeUrl(order){if(!this.order){return;}var link=void 0;if(this.origin){link=this.origin;}else{link=window.location.origin+window.location.pathname;}if(link.indexOf('index.html')===-1){link+='index.html';}link+='?tax='+order.tax+'&fee='+order.fee+'&tip='+order.tipDollars;var _iteratorNormalCompletion6=true;var _didIteratorError6=false;var _iteratorError6=undefined;try{for(var _iterator6=order.people[Symbol.iterator](),_step6;!(_iteratorNormalCompletion6=(_step6=_iterator6.next()).done);_iteratorNormalCompletion6=true){var _step6$value=_slicedToArray(_step6.value,2),person=_step6$value[0],val=_step6$value[1];link+='&'+encodeURIComponent(person)+'='+this._prettifyNumber(val);}}catch(err){_didIteratorError6=true;_iteratorError6=err;}finally{try{if(!_iteratorNormalCompletion6&&_iterator6.return){_iterator6.return();}}finally{if(_didIteratorError6){throw _iteratorError6;}}}return link;}},{key:"_handleQueryStringChanged",value:function _handleQueryStringChanged(e,_ref2){var value=_ref2.value;this.order=new QueryStringParserLocal().parse();}}],[{key:"properties",get:function get(){return{order:{type:Object,observer:'_onOrderChanged'},origin:{type:String,value:"https://mergemypullrequest.github.io/order-splitter/"}};}}]);return _class4;}(Polymer.Element));})();// this is to help with debugging any SW caching issues if they appear
+var scriptSha='f955bdf';var htmlSha=document.querySelector('#sha').innerText;console.debug("script version: "+scriptSha);console.debug("html version:   "+htmlSha);if(scriptSha!==htmlSha){alert('Whoops. The cached files on your machine are out of sync with each other. That\'s our bad. Please hard-refresh the page?');};
+}).call(this,require("pBGvAp"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_d320c93.js","/")
 },{"../common/order.js":1,"../common/parsers.js":2,"buffer":4,"pBGvAp":6}]},{},[7])
