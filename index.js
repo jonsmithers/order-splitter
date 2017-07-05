@@ -340,7 +340,7 @@ module.exports = Order;
             const order = new Order();
 
             const lines = csv.split('\n');
-            for(const line of lines) {
+            for(let line of lines) {
                 if(line.trim() !== '') {
                     const [name, ...priceStrings] = line.split(',');
                     const price = priceStrings.map(ps => Number(ps.trim().replace('$',''))).reduce((p,acc) => p+acc, 0);
@@ -1764,7 +1764,7 @@ process.chdir = function (dir) {
 }).call(this,require("pBGvAp"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../node_modules/process/browser.js","/../node_modules/process")
 },{"buffer":4,"pBGvAp":6}],7:[function(require,module,exports){
 (function (process,global,Buffer,__argument0,__argument1,__argument2,__argument3,__filename,__dirname){
-"use strict";var _slicedToArray=function(){function sliceIterator(arr,i){var _arr=[];var _n=true;var _d=false;var _e=undefined;try{for(var _i=arr[Symbol.iterator](),_s;!(_n=(_s=_i.next()).done);_n=true){_arr.push(_s.value);if(i&&_arr.length===i)break;}}catch(err){_d=true;_e=err;}finally{try{if(!_n&&_i["return"])_i["return"]();}finally{if(_d)throw _e;}}return _arr;}return function(arr,i){if(Array.isArray(arr)){return arr;}else if(Symbol.iterator in Object(arr)){return sliceIterator(arr,i);}else{throw new TypeError("Invalid attempt to destructure non-iterable instance");}};}();var _get=function get(object,property,receiver){if(object===null)object=Function.prototype;var desc=Object.getOwnPropertyDescriptor(object,property);if(desc===undefined){var parent=Object.getPrototypeOf(object);if(parent===null){return undefined;}else{return get(parent,property,receiver);}}else if("value"in desc){return desc.value;}else{var getter=desc.get;if(getter===undefined){return undefined;}return getter.call(receiver);}};var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==Symbol.prototype?"symbol":typeof obj;};var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _toConsumableArray(arr){if(Array.isArray(arr)){for(var i=0,arr2=Array(arr.length);i<arr.length;i++){arr2[i]=arr[i];}return arr2;}else{return Array.from(arr);}}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}(function(){"use strict";function loadJs(url){return new Promise(function(resolve,reject){var scriptTag=document.createElement('script');scriptTag.src=url;scriptTag.onload=resolve;window.body.appendChild(scriptTag);});}if(!("customElements"in window)){loadJs(window.location.href+"bower_components/webcomponentsjs/webcomponents-lite.js");}})();function defineCustomElement(tag,elementClass){customElements.define(tag,function(_elementClass){_inherits(_class,_elementClass);function _class(){_classCallCheck(this,_class);return _possibleConstructorReturn(this,(_class.__proto__||Object.getPrototypeOf(_class)).apply(this,arguments));}_createClass(_class,null,[{key:"is",get:function get(){return tag;}}]);return _class;}(elementClass));}var Utils={_prettifyNumber:function _prettifyNumber(n){n=Math.round(n*100)/100;// round to 2 decimal places
+'use strict';var _slicedToArray=function(){function sliceIterator(arr,i){var _arr=[];var _n=true;var _d=false;var _e=undefined;try{for(var _i=arr[Symbol.iterator](),_s;!(_n=(_s=_i.next()).done);_n=true){_arr.push(_s.value);if(i&&_arr.length===i)break;}}catch(err){_d=true;_e=err;}finally{try{if(!_n&&_i["return"])_i["return"]();}finally{if(_d)throw _e;}}return _arr;}return function(arr,i){if(Array.isArray(arr)){return arr;}else if(Symbol.iterator in Object(arr)){return sliceIterator(arr,i);}else{throw new TypeError("Invalid attempt to destructure non-iterable instance");}};}();var _get=function get(object,property,receiver){if(object===null)object=Function.prototype;var desc=Object.getOwnPropertyDescriptor(object,property);if(desc===undefined){var parent=Object.getPrototypeOf(object);if(parent===null){return undefined;}else{return get(parent,property,receiver);}}else if("value"in desc){return desc.value;}else{var getter=desc.get;if(getter===undefined){return undefined;}return getter.call(receiver);}};var _typeof=typeof Symbol==="function"&&typeof Symbol.iterator==="symbol"?function(obj){return typeof obj;}:function(obj){return obj&&typeof Symbol==="function"&&obj.constructor===Symbol&&obj!==Symbol.prototype?"symbol":typeof obj;};var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||false;descriptor.configurable=true;if("value"in descriptor)descriptor.writable=true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};}();function _toConsumableArray(arr){if(Array.isArray(arr)){for(var i=0,arr2=Array(arr.length);i<arr.length;i++){arr2[i]=arr[i];}return arr2;}else{return Array.from(arr);}}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError("Cannot call a class as a function");}}function _possibleConstructorReturn(self,call){if(!self){throw new ReferenceError("this hasn't been initialised - super() hasn't been called");}return call&&(typeof call==="object"||typeof call==="function")?call:self;}function _inherits(subClass,superClass){if(typeof superClass!=="function"&&superClass!==null){throw new TypeError("Super expression must either be null or a function, not "+typeof superClass);}subClass.prototype=Object.create(superClass&&superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__=superClass;}if('customElements'in window){document.getElementById('webcomponent-polyfill').remove();}else{console.warn("polyfilling window.customElements");};function defineCustomElement(tag,elementClass){customElements.define(tag,function(_elementClass){_inherits(_class,_elementClass);function _class(){_classCallCheck(this,_class);return _possibleConstructorReturn(this,(_class.__proto__||Object.getPrototypeOf(_class)).apply(this,arguments));}_createClass(_class,null,[{key:'is',get:function get(){return tag;}}]);return _class;}(elementClass));}var Utils={_prettifyNumber:function _prettifyNumber(n){n=Math.round(n*100)/100;// round to 2 decimal places
 // pad to 2 decimal places if necessary
 var s=n.toString();if(s.indexOf('.')===-1){s+='.';}while(s.length<s.indexOf('.')+3){s+='0';}return s;}};(function(){console.debug('service worker is disabled for now.');navigator.serviceWorker.getRegistrations().then(function(registrations){var _iteratorNormalCompletion=true;var _didIteratorError=false;var _iteratorError=undefined;try{for(var _iterator=registrations[Symbol.iterator](),_step;!(_iteratorNormalCompletion=(_step=_iterator.next()).done);_iteratorNormalCompletion=true){var registration=_step.value;console.log('uninstalling old service worker');registration.unregister();}}catch(err){_didIteratorError=true;_iteratorError=err;}finally{try{if(!_iteratorNormalCompletion&&_iterator.return){_iterator.return();}}finally{if(_didIteratorError){throw _iteratorError;}}}});return;// no service worker until we iron bugs out of caching
 var queryParams=new Map(location.search.slice(1).split('&').map(function(t){return t.split('=');}));if(location.hostname==='localhost'&&queryParams.get('sw')!=='test'){console.log('service worker disabled on localhost');return;}if(!('serviceWorker'in navigator)){console.log('service worker not supported');return;}navigator.serviceWorker.register('./sw.js').then(function(registration){// Registration was successful 😊
@@ -1936,7 +1936,7 @@ var container=importDoc.body?importDoc.body:importDoc;cssText+=Polymer.ResolveUr
    * @memberof Polymer
    * @summary Custom element that provides a registry of relocatable DOM content
    *   by `id` that is agnostic to bundling.
-   */var DomModule=function(_HTMLElement){_inherits(DomModule,_HTMLElement);function DomModule(){_classCallCheck(this,DomModule);return _possibleConstructorReturn(this,(DomModule.__proto__||Object.getPrototypeOf(DomModule)).apply(this,arguments));}_createClass(DomModule,[{key:"attributeChangedCallback",value:function attributeChangedCallback(name,old,value){if(old!==value){this.register();}}/**
+   */var DomModule=function(_HTMLElement){_inherits(DomModule,_HTMLElement);function DomModule(){_classCallCheck(this,DomModule);return _possibleConstructorReturn(this,(DomModule.__proto__||Object.getPrototypeOf(DomModule)).apply(this,arguments));}_createClass(DomModule,[{key:'attributeChangedCallback',value:function attributeChangedCallback(name,old,value){if(old!==value){this.register();}}/**
      * The absolute URL of the original location of this `dom-module`.
      *
      * This value will differ from this element's `ownerDocument` in the
@@ -1946,7 +1946,7 @@ var container=importDoc.body?importDoc.body:importDoc;cssText+=Polymer.ResolveUr
      * - Uses the HTMLImports polyfill's `importForElement` API to ensure
      *   the path is relative to the import document's location since
      *   `ownerDocument` is not currently polyfilled
-     */},{key:"register",/**
+     */},{key:'register',/**
      * Registers the dom-module at a given id. This method should only be called
      * when a dom-module is imperatively created. For
      * example, `document.createElement('dom-module').register('foo')`.
@@ -1954,17 +1954,17 @@ var container=importDoc.body?importDoc.body:importDoc;cssText+=Polymer.ResolveUr
      */value:function register(id){id=id||this.id;if(id){this.id=id;// store id separate from lowercased id so that
 // in all cases mixedCase id will stored distinctly
 // and lowercase version is a fallback
-modules[id]=this;lcModules[id.toLowerCase()]=this;styleOutsideTemplateCheck(this);}}},{key:"assetpath",get:function get(){// Don't override existing assetpath.
+modules[id]=this;lcModules[id.toLowerCase()]=this;styleOutsideTemplateCheck(this);}}},{key:'assetpath',get:function get(){// Don't override existing assetpath.
 if(!this.__assetpath){// note: assetpath set via an attribute must be relative to this
 // element's location; accomodate polyfilled HTMLImports
-var owner=window.HTMLImports&&HTMLImports.importForElement?HTMLImports.importForElement(this)||document:this.ownerDocument;var url=Polymer.ResolveUrl.resolveUrl(this.getAttribute('assetpath')||'',owner.baseURI);this.__assetpath=Polymer.ResolveUrl.pathFromUrl(url);}return this.__assetpath;}}],[{key:"import",/**
+var owner=window.HTMLImports&&HTMLImports.importForElement?HTMLImports.importForElement(this)||document:this.ownerDocument;var url=Polymer.ResolveUrl.resolveUrl(this.getAttribute('assetpath')||'',owner.baseURI);this.__assetpath=Polymer.ResolveUrl.pathFromUrl(url);}return this.__assetpath;}}],[{key:'import',/**
      * Retrieves the element specified by the css `selector` in the module
      * registered by `id`. For example, this.import('foo', 'img');
      * @param {string} id The id of the dom-module in which to search.
      * @param {string=} selector The css selector by which to find the element.
      * @return {Element} Returns the element which matches `selector` in the
      * module registered at the specified `id`.
-     */value:function _import(id,selector){if(id){var m=findModule(id);if(m&&selector){return m.querySelector(selector);}return m;}return null;}},{key:"observedAttributes",get:function get(){return['id'];}}]);return DomModule;}(HTMLElement);DomModule.prototype['modules']=modules;customElements.define('dom-module',DomModule);// export
+     */value:function _import(id,selector){if(id){var m=findModule(id);if(m&&selector){return m.querySelector(selector);}return m;}return null;}},{key:'observedAttributes',get:function get(){return['id'];}}]);return DomModule;}(HTMLElement);DomModule.prototype['modules']=modules;customElements.define('dom-module',DomModule);// export
 Polymer.DomModule=DomModule;})();(function(){'use strict';/**
    * Module with utilities for manipulating structured data path strings.
    *
@@ -2253,21 +2253,21 @@ if(!model.__dataProto){model.__dataProto={};}else if(!model.hasOwnProperty(JSCom
      * @polymerMixinClass
      * @implements {Polymer_PropertyAccessors}
      * @unrestricted
-     */var PropertyAccessors=function(_superClass){_inherits(PropertyAccessors,_superClass);_createClass(PropertyAccessors,null,[{key:"createPropertiesForAttributes",/**
+     */var PropertyAccessors=function(_superClass){_inherits(PropertyAccessors,_superClass);_createClass(PropertyAccessors,null,[{key:'createPropertiesForAttributes',/**
        * Generates property accessors for all attributes in the standard
        * static `observedAttributes` array.
        *
        * Attribute names are mapped to property names using the `dash-case` to
        * `camelCase` convention
        *
-       */value:function createPropertiesForAttributes(){var a$=this.observedAttributes;for(var _i=0;_i<a$.length;_i++){this.prototype._createPropertyAccessor(caseMap.dashToCamelCase(a$[_i]));}}}]);function PropertyAccessors(){_classCallCheck(this,PropertyAccessors);var _this3=_possibleConstructorReturn(this,(PropertyAccessors.__proto__||Object.getPrototypeOf(PropertyAccessors)).call(this));_this3._initializeProperties();return _this3;}_createClass(PropertyAccessors,[{key:"attributeChangedCallback",value:function attributeChangedCallback(name,old,value){if(old!==value){this._attributeToProperty(name,value);}}/**
+       */value:function createPropertiesForAttributes(){var a$=this.observedAttributes;for(var _i=0;_i<a$.length;_i++){this.prototype._createPropertyAccessor(caseMap.dashToCamelCase(a$[_i]));}}}]);function PropertyAccessors(){_classCallCheck(this,PropertyAccessors);var _this3=_possibleConstructorReturn(this,(PropertyAccessors.__proto__||Object.getPrototypeOf(PropertyAccessors)).call(this));_this3._initializeProperties();return _this3;}_createClass(PropertyAccessors,[{key:'attributeChangedCallback',value:function attributeChangedCallback(name,old,value){if(old!==value){this._attributeToProperty(name,value);}}/**
        * Initializes the local storage for property accessors.
        *
        * Provided as an override point for performing any setup work prior
        * to initializing the property accessor system.
        *
        * @protected
-       */},{key:"_initializeProperties",value:function _initializeProperties(){this.__serializing=false;this.__dataCounter=0;this.__dataEnabled=false;this.__dataReady=false;this.__dataInvalid=false;// initialize data with prototype values saved when creating accessors
+       */},{key:'_initializeProperties',value:function _initializeProperties(){this.__serializing=false;this.__dataCounter=0;this.__dataEnabled=false;this.__dataReady=false;this.__dataInvalid=false;// initialize data with prototype values saved when creating accessors
 this.__data={};this.__dataPending=null;this.__dataOld=null;if(this.__dataProto){this._initializeProtoProperties(this.__dataProto);this.__dataProto=null;}// Capture instance properties; these will be set into accessors
 // during first flush. Don't set them here, since we want
 // these to overwrite defaults/constructor assignments
@@ -2282,7 +2282,7 @@ for(var p in this.__dataHasAccessor){if(this.hasOwnProperty(p)){this.__dataInsta
        * @param {Object} props Bag of property values that were overwritten
        *   when creating property accessors.
        * @protected
-       */},{key:"_initializeProtoProperties",value:function _initializeProtoProperties(props){for(var p in props){this._setProperty(p,props[p]);}}/**
+       */},{key:'_initializeProtoProperties',value:function _initializeProtoProperties(props){for(var p in props){this._setProperty(p,props[p]);}}/**
        * Called at ready time with bag of instance properties that overwrote
        * accessors when the element upgraded.
        *
@@ -2293,14 +2293,14 @@ for(var p in this.__dataHasAccessor){if(this.hasOwnProperty(p)){this.__dataInsta
        * @param {Object} props Bag of property values that were overwritten
        *   when creating property accessors.
        * @protected
-       */},{key:"_initializeInstanceProperties",value:function _initializeInstanceProperties(props){Object.assign(this,props);}/**
+       */},{key:'_initializeInstanceProperties',value:function _initializeInstanceProperties(props){Object.assign(this,props);}/**
        * Ensures the element has the given attribute. If it does not,
        * assigns the given value to the attribute.
        *
        *
        * @param {string} attribute Name of attribute to ensure is set.
        * @param {string} value of the attribute.
-       */},{key:"_ensureAttribute",value:function _ensureAttribute(attribute,value){if(!this.hasAttribute(attribute)){this._valueToNodeAttribute(this,value,attribute);}}/**
+       */},{key:'_ensureAttribute',value:function _ensureAttribute(attribute,value){if(!this.hasAttribute(attribute)){this._valueToNodeAttribute(this,value,attribute);}}/**
        * Deserializes an attribute to its associated property.
        *
        * This method calls the `_deserializeValue` method to convert the string to
@@ -2309,14 +2309,14 @@ for(var p in this.__dataHasAccessor){if(this.hasOwnProperty(p)){this.__dataInsta
        * @param {string} attribute Name of attribute to deserialize.
        * @param {string} value of the attribute.
        * @param {*} type type to deserialize to.
-       */},{key:"_attributeToProperty",value:function _attributeToProperty(attribute,value,type){// Don't deserialize back to property if currently reflecting
+       */},{key:'_attributeToProperty',value:function _attributeToProperty(attribute,value,type){// Don't deserialize back to property if currently reflecting
 if(!this.__serializing){var property=caseMap.dashToCamelCase(attribute);this[property]=this._deserializeValue(value,type);}}/**
        * Serializes a property to its associated attribute.
        *
        * @param {string} property Property name to reflect.
        * @param {string=} attribute Attribute name to reflect.
        * @param {*=} value Property value to refect.
-       */},{key:"_propertyToAttribute",value:function _propertyToAttribute(property,attribute,value){this.__serializing=true;value=arguments.length<3?this[property]:value;this._valueToNodeAttribute(this,value,attribute||caseMap.camelToDashCase(property));this.__serializing=false;}/**
+       */},{key:'_propertyToAttribute',value:function _propertyToAttribute(property,attribute,value){this.__serializing=true;value=arguments.length<3?this[property]:value;this._valueToNodeAttribute(this,value,attribute||caseMap.camelToDashCase(property));this.__serializing=false;}/**
        * Sets a typed value to an HTML attribute on a node.
        *
        * This method calls the `_serializeValue` method to convert the typed
@@ -2327,7 +2327,7 @@ if(!this.__serializing){var property=caseMap.dashToCamelCase(attribute);this[pro
        * @param {Element} node Element to set attribute to.
        * @param {*} value Value to serialize.
        * @param {string} attribute Attribute name to serialize to.
-       */},{key:"_valueToNodeAttribute",value:function _valueToNodeAttribute(node,value,attribute){var str=this._serializeValue(value);if(str===undefined){node.removeAttribute(attribute);}else{node.setAttribute(attribute,str);}}/**
+       */},{key:'_valueToNodeAttribute',value:function _valueToNodeAttribute(node,value,attribute){var str=this._serializeValue(value);if(str===undefined){node.removeAttribute(attribute);}else{node.setAttribute(attribute,str);}}/**
        * Converts a typed JavaScript value to a string.
        *
        * This method is called by Polymer when setting JS property values to
@@ -2336,7 +2336,7 @@ if(!this.__serializing){var property=caseMap.dashToCamelCase(attribute);this[pro
        *
        * @param {*} value Property value to serialize.
        * @return {string | undefined} String serialized from the provided property value.
-       */},{key:"_serializeValue",value:function _serializeValue(value){/* eslint-disable no-fallthrough */switch(typeof value==="undefined"?"undefined":_typeof(value)){case'boolean':return value?'':undefined;case'object':if(value instanceof Date){return value.toString();}else if(value){try{return JSON.stringify(value);}catch(x){return'';}}default:return value!=null?value.toString():undefined;}}/**
+       */},{key:'_serializeValue',value:function _serializeValue(value){/* eslint-disable no-fallthrough */switch(typeof value==='undefined'?'undefined':_typeof(value)){case'boolean':return value?'':undefined;case'object':if(value instanceof Date){return value.toString();}else if(value){try{return JSON.stringify(value);}catch(x){return'';}}default:return value!=null?value.toString():undefined;}}/**
        * Converts a string to a typed JavaScript value.
        *
        * This method is called by Polymer when reading HTML attribute values to
@@ -2352,10 +2352,10 @@ if(!this.__serializing){var property=caseMap.dashToCamelCase(attribute);this[pro
        * @param {string} value Attribute value to deserialize.
        * @param {*} type Type to deserialize the string to.
        * @return {*} Typed value deserialized from the provided string.
-       */},{key:"_deserializeValue",value:function _deserializeValue(value,type){/**
+       */},{key:'_deserializeValue',value:function _deserializeValue(value,type){/**
          * @type {*}
          */var outValue=void 0;switch(type){case Number:outValue=Number(value);break;case Boolean:outValue=value!==null;break;case Object:try{outValue=JSON.parse(value);}catch(x){// allow non-JSON literals like Strings and Numbers
-}break;case Array:try{outValue=JSON.parse(value);}catch(x){outValue=null;console.warn("Polymer::Attributes: couldn't decode Array as JSON: "+value);}break;case Date:outValue=new Date(value);break;case String:default:outValue=value;break;}return outValue;}/* eslint-enable no-fallthrough *//**
+}break;case Array:try{outValue=JSON.parse(value);}catch(x){outValue=null;console.warn('Polymer::Attributes: couldn\'t decode Array as JSON: '+value);}break;case Date:outValue=new Date(value);break;case String:default:outValue=value;break;}return outValue;}/* eslint-enable no-fallthrough *//**
        * Creates a setter/getter pair for the named property with its own
        * local storage.  The getter returns the value in the local storage,
        * and the setter calls `_setProperty`, which updates the local storage
@@ -2375,19 +2375,19 @@ if(!this.__serializing){var property=caseMap.dashToCamelCase(attribute);this[pro
        * @param {boolean=} readOnly When true, no setter is created; the
        *   protected `_setProperty` function must be used to set the property
        * @protected
-       */},{key:"_createPropertyAccessor",value:function _createPropertyAccessor(property,readOnly){if(!this.hasOwnProperty('__dataHasAccessor')){this.__dataHasAccessor=Object.assign({},this.__dataHasAccessor);}if(!this.__dataHasAccessor[property]){this.__dataHasAccessor[property]=true;saveAccessorValue(this,property);Object.defineProperty(this,property,{get:function get(){return this.__data[property];},set:readOnly?function(){}:function(value){this._setProperty(property,value);}});}}/**
+       */},{key:'_createPropertyAccessor',value:function _createPropertyAccessor(property,readOnly){if(!this.hasOwnProperty('__dataHasAccessor')){this.__dataHasAccessor=Object.assign({},this.__dataHasAccessor);}if(!this.__dataHasAccessor[property]){this.__dataHasAccessor[property]=true;saveAccessorValue(this,property);Object.defineProperty(this,property,{get:function get(){return this.__data[property];},set:readOnly?function(){}:function(value){this._setProperty(property,value);}});}}/**
        * Returns true if this library created an accessor for the given property.
        *
        * @param {string} property Property name
        * @return {boolean} True if an accessor was created
-       */},{key:"_hasAccessor",value:function _hasAccessor(property){return this.__dataHasAccessor&&this.__dataHasAccessor[property];}/**
+       */},{key:'_hasAccessor',value:function _hasAccessor(property){return this.__dataHasAccessor&&this.__dataHasAccessor[property];}/**
        * Updates the local storage for a property (via `_setPendingProperty`)
        * and enqueues a `_proeprtiesChanged` callback.
        *
        * @param {string} property Name of the property
        * @param {*} value Value to set
        * @protected
-       */},{key:"_setProperty",value:function _setProperty(property,value){if(this._setPendingProperty(property,value)){this._invalidateProperties();}}/**
+       */},{key:'_setProperty',value:function _setProperty(property,value){if(this._setPendingProperty(property,value)){this._invalidateProperties();}}/**
        * Updates the local storage for a property, records the previous value,
        * and adds it to the set of "pending changes" that will be passed to the
        * `_propertiesChanged` callback.  This method does not enqueue the
@@ -2397,26 +2397,26 @@ if(!this.__serializing){var property=caseMap.dashToCamelCase(attribute);this[pro
        * @param {*} value Value to set
        * @return {boolean} Returns true if the property changed
        * @protected
-       */},{key:"_setPendingProperty",value:function _setPendingProperty(property,value){var old=this.__data[property];if(this._shouldPropertyChange(property,value,old)){if(!this.__dataPending){this.__dataPending={};this.__dataOld={};}// Ensure old is captured from the last turn
+       */},{key:'_setPendingProperty',value:function _setPendingProperty(property,value){var old=this.__data[property];if(this._shouldPropertyChange(property,value,old)){if(!this.__dataPending){this.__dataPending={};this.__dataOld={};}// Ensure old is captured from the last turn
 if(!(property in this.__dataOld)){this.__dataOld[property]=old;}this.__data[property]=value;this.__dataPending[property]=value;return true;}}/**
        * Returns true if the specified property has a pending change.
        *
        * @param {string} prop Property name
        * @return {boolean} True if property has a pending change
        * @protected
-       */},{key:"_isPropertyPending",value:function _isPropertyPending(prop){return this.__dataPending&&prop in this.__dataPending;}/**
+       */},{key:'_isPropertyPending',value:function _isPropertyPending(prop){return this.__dataPending&&prop in this.__dataPending;}/**
        * Marks the properties as invalid, and enqueues an async
        * `_propertiesChanged` callback.
        *
        * @protected
-       */},{key:"_invalidateProperties",value:function _invalidateProperties(){var _this4=this;if(!this.__dataInvalid&&this.__dataReady){this.__dataInvalid=true;microtask.run(function(){if(_this4.__dataInvalid){_this4.__dataInvalid=false;_this4._flushProperties();}});}}/**
+       */},{key:'_invalidateProperties',value:function _invalidateProperties(){var _this4=this;if(!this.__dataInvalid&&this.__dataReady){this.__dataInvalid=true;microtask.run(function(){if(_this4.__dataInvalid){_this4.__dataInvalid=false;_this4._flushProperties();}});}}/**
        * Call to enable property accessor processing. Before this method is
        * called accessor values will be set but side effects are
        * queued. When called, any pending side effects occur immediately.
        * For elements, generally `connectedCallback` is a normal spot to do so.
        * It is safe to call this method multiple times as it only turns on
        * property accessors once.
-       */},{key:"_enableProperties",value:function _enableProperties(){if(!this.__dataEnabled){this.__dataEnabled=true;if(this.__dataInstanceProps){this._initializeInstanceProperties(this.__dataInstanceProps);this.__dataInstanceProps=null;}this.ready();}}/**
+       */},{key:'_enableProperties',value:function _enableProperties(){if(!this.__dataEnabled){this.__dataEnabled=true;if(this.__dataInstanceProps){this._initializeInstanceProperties(this.__dataInstanceProps);this.__dataInstanceProps=null;}this.ready();}}/**
        * Calls the `_propertiesChanged` callback with the current set of
        * pending changes (and old values recorded when pending changes were
        * set), and resets the pending set of changes. Generally, this method
@@ -2424,7 +2424,7 @@ if(!(property in this.__dataOld)){this.__dataOld[property]=old;}this.__data[prop
        *
        *
        * @protected
-       */},{key:"_flushProperties",value:function _flushProperties(){if(this.__dataPending){var changedProps=this.__dataPending;this.__dataPending=null;this.__dataCounter++;this._propertiesChanged(this.__data,changedProps,this.__dataOld);this.__dataCounter--;}}/**
+       */},{key:'_flushProperties',value:function _flushProperties(){if(this.__dataPending){var changedProps=this.__dataPending;this.__dataPending=null;this.__dataCounter++;this._propertiesChanged(this.__data,changedProps,this.__dataOld);this.__dataCounter--;}}/**
        * Lifecycle callback called the first time properties are being flushed.
        * Prior to `ready`, all property sets through accessors are queued and
        * their effects are flushed after this method returns.
@@ -2437,7 +2437,7 @@ if(!(property in this.__dataOld)){this.__dataOld[property]=old;}this.__data[prop
        * becomes enabled.
        *
        * @public
-       */},{key:"ready",value:function ready(){this.__dataReady=true;// Run normal flush
+       */},{key:'ready',value:function ready(){this.__dataReady=true;// Run normal flush
 this._flushProperties();}/**
        * Callback called when any properties with accessors created via
        * `_createPropertyAccessor` have been set.
@@ -2448,7 +2448,7 @@ this._flushProperties();}/**
        * @param {Object} oldProps Bag of previous values for each property
        *   in `changedProps`
        * @protected
-       */},{key:"_propertiesChanged",value:function _propertiesChanged(currentProps,changedProps,oldProps){}// eslint-disable-line no-unused-vars
+       */},{key:'_propertiesChanged',value:function _propertiesChanged(currentProps,changedProps,oldProps){}// eslint-disable-line no-unused-vars
 /**
        * Method called to determine whether a property value should be
        * considered as a change and cause the `_propertiesChanged` callback
@@ -2467,7 +2467,7 @@ this._flushProperties();}/**
        * @return {boolean} Whether the property should be considered a change
        *   and enqueue a `_proeprtiesChanged` callback
        * @protected
-       */},{key:"_shouldPropertyChange",value:function _shouldPropertyChange(property,value,old){return(// Strict equality check
+       */},{key:'_shouldPropertyChange',value:function _shouldPropertyChange(property,value,old){return(// Strict equality check
 old!==value&&(// This ensures (old==NaN, value==NaN) always returns false
 old===old||value===value));}}]);return PropertyAccessors;}(superClass);return PropertyAccessors;});})();(function(){'use strict';// 1.x backwards-compatible auto-wrapper for template type extensions
 // This is a clear layering violation and gives favored-nation status to
@@ -2500,7 +2500,7 @@ context=context._methodHost||context;var handler=function handler(e){if(context[
    */Polymer.TemplateStamp=Polymer.dedupingMixin(function(superClass){/**
      * @polymerMixinClass
      * @implements {Polymer_TemplateStamp}
-     */var TemplateStamp=function(_superClass2){_inherits(TemplateStamp,_superClass2);function TemplateStamp(){_classCallCheck(this,TemplateStamp);return _possibleConstructorReturn(this,(TemplateStamp.__proto__||Object.getPrototypeOf(TemplateStamp)).apply(this,arguments));}_createClass(TemplateStamp,[{key:"_stampTemplate",/**
+     */var TemplateStamp=function(_superClass2){_inherits(TemplateStamp,_superClass2);function TemplateStamp(){_classCallCheck(this,TemplateStamp);return _possibleConstructorReturn(this,(TemplateStamp.__proto__||Object.getPrototypeOf(TemplateStamp)).apply(this,arguments));}_createClass(TemplateStamp,[{key:'_stampTemplate',/**
        * Clones the provided template content and returns a document fragment
        * containing the cloned dom.
        *
@@ -2535,19 +2535,19 @@ dom.__noInsertionPoint=!templateInfo.hasInsertionPoint;var nodes=dom.nodeList=ne
        * @param {*=} context Context the method will be called on (defaults
        *   to `node`)
        * @return {Function} Generated handler function
-       */},{key:"_addMethodEventListenerToNode",value:function _addMethodEventListenerToNode(node,eventName,methodName,context){context=context||node;var handler=createNodeEventHandler(context,eventName,methodName);this._addEventListenerToNode(node,eventName,handler);return handler;}/**
+       */},{key:'_addMethodEventListenerToNode',value:function _addMethodEventListenerToNode(node,eventName,methodName,context){context=context||node;var handler=createNodeEventHandler(context,eventName,methodName);this._addEventListenerToNode(node,eventName,handler);return handler;}/**
        * Override point for adding custom or simulated event handling.
        *
        * @param {Node} node Node to add event listener to
        * @param {string} eventName Name of event
        * @param {Function} handler Listener function to add
-       */},{key:"_addEventListenerToNode",value:function _addEventListenerToNode(node,eventName,handler){node.addEventListener(eventName,handler);}/**
+       */},{key:'_addEventListenerToNode',value:function _addEventListenerToNode(node,eventName,handler){node.addEventListener(eventName,handler);}/**
        * Override point for adding custom or simulated event handling.
        *
        * @param {Node} node Node to remove event listener from
        * @param {string} eventName Name of event
        * @param {Function} handler Listener function to remove
-       */},{key:"_removeEventListenerFromNode",value:function _removeEventListenerFromNode(node,eventName,handler){node.removeEventListener(eventName,handler);}}],[{key:"_parseTemplate",/**
+       */},{key:'_removeEventListenerFromNode',value:function _removeEventListenerFromNode(node,eventName,handler){node.removeEventListener(eventName,handler);}}],[{key:'_parseTemplate',/**
        * Scans a template to produce template metadata.
        *
        * Template-specific metadata are stored in the object returned, and node-
@@ -2622,7 +2622,7 @@ dom.__noInsertionPoint=!templateInfo.hasInsertionPoint;var nodes=dom.nodeList=ne
        *   template, for parsing nested templates
        * @return {Object} Parsed template metadata
        */value:function _parseTemplate(template,outerTemplateInfo){// since a template may be re-used, memo-ize metadata
-if(!template._templateInfo){var templateInfo=template._templateInfo={};templateInfo.nodeInfoList=[];templateInfo.stripWhiteSpace=outerTemplateInfo&&outerTemplateInfo.stripWhiteSpace||template.hasAttribute('strip-whitespace');this._parseTemplateContent(template,templateInfo,{parent:null});}return template._templateInfo;}},{key:"_parseTemplateContent",value:function _parseTemplateContent(template,templateInfo,nodeInfo){return this._parseTemplateNode(template.content,templateInfo,nodeInfo);}/**
+if(!template._templateInfo){var templateInfo=template._templateInfo={};templateInfo.nodeInfoList=[];templateInfo.stripWhiteSpace=outerTemplateInfo&&outerTemplateInfo.stripWhiteSpace||template.hasAttribute('strip-whitespace');this._parseTemplateContent(template,templateInfo,{parent:null});}return template._templateInfo;}},{key:'_parseTemplateContent',value:function _parseTemplateContent(template,templateInfo,nodeInfo){return this._parseTemplateNode(template.content,templateInfo,nodeInfo);}/**
        * Parses template node and adds template and node metadata based on
        * the current node, and its `childNodes` and `attributes`.
        *
@@ -2634,7 +2634,7 @@ if(!template._templateInfo){var templateInfo=template._templateInfo={};templateI
        * @param {Object} nodeInfo Node metadata for current template.
        * @return {boolean} `true` if the visited node added node-specific
        *   metadata to `nodeInfo`
-       */},{key:"_parseTemplateNode",value:function _parseTemplateNode(node,templateInfo,nodeInfo){var noted=void 0;if(node.localName=='template'&&!node.hasAttribute('preserve-content')){noted=this._parseTemplateNestedTemplate(node,templateInfo,nodeInfo)||noted;}else if(node.localName==='slot'){// For ShadyDom optimization, indicating there is an insertion point
+       */},{key:'_parseTemplateNode',value:function _parseTemplateNode(node,templateInfo,nodeInfo){var noted=void 0;if(node.localName=='template'&&!node.hasAttribute('preserve-content')){noted=this._parseTemplateNestedTemplate(node,templateInfo,nodeInfo)||noted;}else if(node.localName==='slot'){// For ShadyDom optimization, indicating there is an insertion point
 templateInfo.hasInsertionPoint=true;}if(node.firstChild){noted=this._parseTemplateChildNodes(node,templateInfo,nodeInfo)||noted;}if(node.hasAttributes&&node.hasAttributes()){noted=this._parseTemplateNodeAttributes(node,templateInfo,nodeInfo)||noted;}return noted;}/**
        * Parses template child nodes for the given root node.
        *
@@ -2646,7 +2646,7 @@ templateInfo.hasInsertionPoint=true;}if(node.firstChild){noted=this._parseTempla
        * @param {Node} root Root node whose `childNodes` will be parsed
        * @param {Object} templateInfo Template metadata for current template
        * @param {Object} nodeInfo Node metadata for current template.
-       */},{key:"_parseTemplateChildNodes",value:function _parseTemplateChildNodes(root,templateInfo,nodeInfo){for(var node=root.firstChild,parentIndex=0,next;node;node=next){// Wrap templates
+       */},{key:'_parseTemplateChildNodes',value:function _parseTemplateChildNodes(root,templateInfo,nodeInfo){for(var node=root.firstChild,parentIndex=0,next;node;node=next){// Wrap templates
 if(node.localName=='template'){node=wrapTemplateExtension(node);}// collapse adjacent textNodes: fixes an IE issue that can cause
 // text nodes to be inexplicably split =(
 // note that root.normalize() should work but does not so we do this
@@ -2669,7 +2669,7 @@ if(node.parentNode){parentIndex++;}}}/**
        * @param {Object} nodeInfo Node metadata for current template.
        * @return {boolean} `true` if the visited node added node-specific
        *   metadata to `nodeInfo`
-       */},{key:"_parseTemplateNestedTemplate",value:function _parseTemplateNestedTemplate(node,outerTemplateInfo,nodeInfo){var templateInfo=this._parseTemplate(node,outerTemplateInfo);var content=templateInfo.content=node.content.ownerDocument.createDocumentFragment();content.appendChild(node.content);nodeInfo.templateInfo=templateInfo;return true;}/**
+       */},{key:'_parseTemplateNestedTemplate',value:function _parseTemplateNestedTemplate(node,outerTemplateInfo,nodeInfo){var templateInfo=this._parseTemplate(node,outerTemplateInfo);var content=templateInfo.content=node.content.ownerDocument.createDocumentFragment();content.appendChild(node.content);nodeInfo.templateInfo=templateInfo;return true;}/**
        * Parses template node attributes and adds node metadata to `nodeInfo`
        * for nodes of interest.
        *
@@ -2678,7 +2678,7 @@ if(node.parentNode){parentIndex++;}}}/**
        * @param {Object} nodeInfo Node metadata for current template.
        * @return {boolean} `true` if the visited node added node-specific
        *   metadata to `nodeInfo`
-       */},{key:"_parseTemplateNodeAttributes",value:function _parseTemplateNodeAttributes(node,templateInfo,nodeInfo){// Make copy of original attribute list, since the order may change
+       */},{key:'_parseTemplateNodeAttributes',value:function _parseTemplateNodeAttributes(node,templateInfo,nodeInfo){// Make copy of original attribute list, since the order may change
 // as attributes are added and removed
 var noted=void 0;var attrs=Array.from(node.attributes);for(var i=attrs.length-1,a;a=attrs[i];i--){noted=this._parseTemplateNodeAttribute(node,templateInfo,nodeInfo,a.name,a.value)||noted;}return noted;}/**
        * Parses a single template node attribute and adds node metadata to
@@ -2694,7 +2694,7 @@ var noted=void 0;var attrs=Array.from(node.attributes);for(var i=attrs.length-1,
        * @param {*} value Attribute value
        * @return {boolean} `true` if the visited node added node-specific
        *   metadata to `nodeInfo`
-       */},{key:"_parseTemplateNodeAttribute",value:function _parseTemplateNodeAttribute(node,templateInfo,nodeInfo,name,value){// events (on-*)
+       */},{key:'_parseTemplateNodeAttribute',value:function _parseTemplateNodeAttribute(node,templateInfo,nodeInfo,name,value){// events (on-*)
 if(name.slice(0,3)==='on-'){node.removeAttribute(name);nodeInfo.events=nodeInfo.events||[];nodeInfo.events.push({name:name.slice(3),value:value});return true;}// static id
 else if(name==='id'){nodeInfo.id=value;return true;}}/**
        * Returns the `content` document fragment for a given template.
@@ -2705,7 +2705,7 @@ else if(name==='id'){nodeInfo.id=value;return true;}}/**
        *
        * @param {HTMLTemplateElement} template Template to retrieve `content` for
        * @return {DocumentFragment} Content fragment
-       */},{key:"_contentForTemplate",value:function _contentForTemplate(template){var templateInfo=template.__templateInfo;return templateInfo&&templateInfo.content||template.content;}}]);return TemplateStamp;}(superClass);return TemplateStamp;});})();(function(){'use strict';/** @const {Object} */var CaseMap=Polymer.CaseMap;// Monotonically increasing unique ID used for de-duping effects triggered
+       */},{key:'_contentForTemplate',value:function _contentForTemplate(template){var templateInfo=template.__templateInfo;return templateInfo&&templateInfo.content||template.content;}}]);return TemplateStamp;}(superClass);return TemplateStamp;});})();(function(){'use strict';/** @const {Object} */var CaseMap=Polymer.CaseMap;// Monotonically increasing unique ID used for de-duping effects triggered
 // from multiple properties in the same turn
 var dedupeId=0;// Property effect types; effects are stored on the prototype using these keys
 var TYPES={COMPUTE:'__computeEffects',REFLECT:'__reflectEffects',NOTIFY:'__notifyEffects',PROPAGATE:'__propagateEffects',OBSERVE:'__observeEffects',READ_ONLY:'__readOnly'/**
@@ -3029,7 +3029,7 @@ if(binding.literal&&binding.kind=='property'){node[target]=binding.literal;}}}/*
    *   method names should be included as a dependency to the effect. Note,
    *   defaults to true if the signature is static (sig.static is true).
    * @private
-   */function createMethodEffect(model,sig,type,effectFn,methodInfo,dynamicFn){dynamicFn=sig.static||dynamicFn&&((typeof dynamicFn==="undefined"?"undefined":_typeof(dynamicFn))!=='object'||dynamicFn[sig.methodName]);var info={methodName:sig.methodName,args:sig.args,methodInfo:methodInfo,dynamicFn:dynamicFn};for(var i=0,arg;i<sig.args.length&&(arg=sig.args[i]);i++){if(!arg.literal){model._addPropertyEffect(arg.rootProperty,type,{fn:effectFn,info:info,trigger:arg});}}if(dynamicFn){model._addPropertyEffect(sig.methodName,type,{fn:effectFn,info:info});}}/**
+   */function createMethodEffect(model,sig,type,effectFn,methodInfo,dynamicFn){dynamicFn=sig.static||dynamicFn&&((typeof dynamicFn==='undefined'?'undefined':_typeof(dynamicFn))!=='object'||dynamicFn[sig.methodName]);var info={methodName:sig.methodName,args:sig.args,methodInfo:methodInfo,dynamicFn:dynamicFn};for(var i=0,arg;i<sig.args.length&&(arg=sig.args[i]);i++){if(!arg.literal){model._addPropertyEffect(arg.rootProperty,type,{fn:effectFn,info:info,trigger:arg});}}if(dynamicFn){model._addPropertyEffect(sig.methodName,type,{fn:effectFn,info:info});}}/**
    * Calls a method with arguments marshaled from properties on the instance
    * based on the method signature contained in the effect metadata.
    *
@@ -3183,24 +3183,24 @@ inst.__data[splicesPath]={indexSplices:null};}/**
      * @polymerMixinClass
      * @unrestricted
      * @implements {Polymer_PropertyEffects}
-     */var PropertyEffects=function(_propertyEffectsBase){_inherits(PropertyEffects,_propertyEffectsBase);function PropertyEffects(){_classCallCheck(this,PropertyEffects);return _possibleConstructorReturn(this,(PropertyEffects.__proto__||Object.getPrototypeOf(PropertyEffects)).apply(this,arguments));}_createClass(PropertyEffects,[{key:"_initializeProperties",/**
+     */var PropertyEffects=function(_propertyEffectsBase){_inherits(PropertyEffects,_propertyEffectsBase);function PropertyEffects(){_classCallCheck(this,PropertyEffects);return _possibleConstructorReturn(this,(PropertyEffects.__proto__||Object.getPrototypeOf(PropertyEffects)).apply(this,arguments));}_createClass(PropertyEffects,[{key:'_initializeProperties',/**
        * Overrides `Polymer.PropertyAccessors` implementation to initialize
        * additional property-effect related properties.
        *
        * @override
-       */value:function _initializeProperties(){_get(PropertyEffects.prototype.__proto__||Object.getPrototypeOf(PropertyEffects.prototype),"_initializeProperties",this).call(this);hostStack.registerHost(this);this.__dataClientsReady=false;this.__dataPendingClients=null;this.__dataToNotify=null;this.__dataLinkedPaths=null;this.__dataHasPaths=false;// May be set on instance prior to upgrade
+       */value:function _initializeProperties(){_get(PropertyEffects.prototype.__proto__||Object.getPrototypeOf(PropertyEffects.prototype),'_initializeProperties',this).call(this);hostStack.registerHost(this);this.__dataClientsReady=false;this.__dataPendingClients=null;this.__dataToNotify=null;this.__dataLinkedPaths=null;this.__dataHasPaths=false;// May be set on instance prior to upgrade
 this.__dataCompoundStorage=this.__dataCompoundStorage||null;this.__dataHost=this.__dataHost||null;this.__dataTemp={};}/**
        * Overrides `Polymer.PropertyAccessors` implementation to provide a
        * more efficient implementation of initializing properties from
        * the prototype on the instance.
        *
        * @override
-       */},{key:"_initializeProtoProperties",value:function _initializeProtoProperties(props){this.__data=Object.create(props);this.__dataPending=Object.create(props);this.__dataOld={};}/**
+       */},{key:'_initializeProtoProperties',value:function _initializeProtoProperties(props){this.__data=Object.create(props);this.__dataPending=Object.create(props);this.__dataOld={};}/**
        * Overrides `Polymer.PropertyAccessors` implementation to avoid setting
        * `_setProperty`'s `shouldNotify: true`.
        *
        * @override
-       */},{key:"_initializeInstanceProperties",value:function _initializeInstanceProperties(props){var readOnly=this.__readOnly;for(var prop in props){if(!readOnly||!readOnly[prop]){this.__dataPending=this.__dataPending||{};this.__dataOld=this.__dataOld||{};this.__data[prop]=this.__dataPending[prop]=props[prop];}}}// Prototype setup ----------------------------------------
+       */},{key:'_initializeInstanceProperties',value:function _initializeInstanceProperties(props){var readOnly=this.__readOnly;for(var prop in props){if(!readOnly||!readOnly[prop]){this.__dataPending=this.__dataPending||{};this.__dataOld=this.__dataOld||{};this.__data[prop]=this.__dataPending[prop]=props[prop];}}}// Prototype setup ----------------------------------------
 /**
        * Equivalent to static `addPropertyEffect` API but can be called on
        * an instance to add effects at runtime.  See that method for
@@ -3210,14 +3210,14 @@ this.__dataCompoundStorage=this.__dataCompoundStorage||null;this.__dataHost=this
        * @param {string} type Effect type, from this.PROPERTY_EFFECT_TYPES
        * @param {Object=} effect Effect metadata object
        * @protected
-       */},{key:"_addPropertyEffect",value:function _addPropertyEffect(property,type,effect){this._createPropertyAccessor(property,type==TYPES.READ_ONLY);// effects are accumulated into arrays per property based on type
+       */},{key:'_addPropertyEffect',value:function _addPropertyEffect(property,type,effect){this._createPropertyAccessor(property,type==TYPES.READ_ONLY);// effects are accumulated into arrays per property based on type
 var effects=ensureOwnEffectMap(this,type)[property];if(!effects){effects=this[type][property]=[];}effects.push(effect);}/**
        * Removes the given property effect.
        *
        * @param {string} property Property the effect was associated with
        * @param {string} type Effect type, from this.PROPERTY_EFFECT_TYPES
        * @param {Object=} effect Effect metadata object to remove
-       */},{key:"_removePropertyEffect",value:function _removePropertyEffect(property,type,effect){var effects=ensureOwnEffectMap(this,type)[property];var idx=effects.indexOf(effect);if(idx>=0){effects.splice(idx,1);}}/**
+       */},{key:'_removePropertyEffect',value:function _removePropertyEffect(property,type,effect){var effects=ensureOwnEffectMap(this,type)[property];var idx=effects.indexOf(effect);if(idx>=0){effects.splice(idx,1);}}/**
        * Returns whether the current prototype/instance has a property effect
        * of a certain type.
        *
@@ -3225,35 +3225,35 @@ var effects=ensureOwnEffectMap(this,type)[property];if(!effects){effects=this[ty
        * @param {string=} type Effect type, from this.PROPERTY_EFFECT_TYPES
        * @return {boolean} True if the prototype/instance has an effect of this type
        * @protected
-       */},{key:"_hasPropertyEffect",value:function _hasPropertyEffect(property,type){var effects=this[type];return Boolean(effects&&effects[property]);}/**
+       */},{key:'_hasPropertyEffect',value:function _hasPropertyEffect(property,type){var effects=this[type];return Boolean(effects&&effects[property]);}/**
        * Returns whether the current prototype/instance has a "read only"
        * accessor for the given property.
        *
        * @param {string} property Property name
        * @return {boolean} True if the prototype/instance has an effect of this type
        * @protected
-       */},{key:"_hasReadOnlyEffect",value:function _hasReadOnlyEffect(property){return this._hasPropertyEffect(property,TYPES.READ_ONLY);}/**
+       */},{key:'_hasReadOnlyEffect',value:function _hasReadOnlyEffect(property){return this._hasPropertyEffect(property,TYPES.READ_ONLY);}/**
        * Returns whether the current prototype/instance has a "notify"
        * property effect for the given property.
        *
        * @param {string} property Property name
        * @return {boolean} True if the prototype/instance has an effect of this type
        * @protected
-       */},{key:"_hasNotifyEffect",value:function _hasNotifyEffect(property){return this._hasPropertyEffect(property,TYPES.NOTIFY);}/**
+       */},{key:'_hasNotifyEffect',value:function _hasNotifyEffect(property){return this._hasPropertyEffect(property,TYPES.NOTIFY);}/**
        * Returns whether the current prototype/instance has a "reflect to attribute"
        * property effect for the given property.
        *
        * @param {string} property Property name
        * @return {boolean} True if the prototype/instance has an effect of this type
        * @protected
-       */},{key:"_hasReflectEffect",value:function _hasReflectEffect(property){return this._hasPropertyEffect(property,TYPES.REFLECT);}/**
+       */},{key:'_hasReflectEffect',value:function _hasReflectEffect(property){return this._hasPropertyEffect(property,TYPES.REFLECT);}/**
        * Returns whether the current prototype/instance has a "computed"
        * property effect for the given property.
        *
        * @param {string} property Property name
        * @return {boolean} True if the prototype/instance has an effect of this type
        * @protected
-       */},{key:"_hasComputedEffect",value:function _hasComputedEffect(property){return this._hasPropertyEffect(property,TYPES.COMPUTE);}// Runtime ----------------------------------------
+       */},{key:'_hasComputedEffect',value:function _hasComputedEffect(property){return this._hasPropertyEffect(property,TYPES.COMPUTE);}// Runtime ----------------------------------------
 /**
        * Sets a pending property or path.  If the root property of the path in
        * question had no accessor, the path is set, otherwise it is enqueued
@@ -3281,7 +3281,7 @@ var effects=ensureOwnEffectMap(this,type)[property];if(!effects){effects=this[ty
        * @return {boolean} Returns true if the property/path was enqueued in
        *   the pending changes bag.
        * @protected
-       */},{key:"_setPendingPropertyOrPath",value:function _setPendingPropertyOrPath(path,value,shouldNotify,isPathNotification){if(isPathNotification||Polymer.Path.root(Array.isArray(path)?path[0]:path)!==path){// Dirty check changes being set to a path against the actual object,
+       */},{key:'_setPendingPropertyOrPath',value:function _setPendingPropertyOrPath(path,value,shouldNotify,isPathNotification){if(isPathNotification||Polymer.Path.root(Array.isArray(path)?path[0]:path)!==path){// Dirty check changes being set to a path against the actual object,
 // since this is the entry point for paths into the system; from here
 // the only dirty checks are against the `__dataTemp` cache to prevent
 // duplicate work in the same turn only. Note, if this was a notification
@@ -3290,7 +3290,7 @@ var effects=ensureOwnEffectMap(this,type)[property];if(!effects){effects=this[ty
 // already dirty checked at the point of entry and the underlying
 // object has already been updated
 if(!isPathNotification){var old=Polymer.Path.get(this,path);path=/** @type {string} */Polymer.Path.set(this,path,value);// Use property-accessor's simpler dirty check
-if(!path||!_get(PropertyEffects.prototype.__proto__||Object.getPrototypeOf(PropertyEffects.prototype),"_shouldPropertyChange",this).call(this,path,value,old)){return false;}}this.__dataHasPaths=true;if(this._setPendingProperty(path,value,shouldNotify)){computeLinkedPaths(this,path,value);return true;}}else{if(this.__dataHasAccessor&&this.__dataHasAccessor[path]){return this._setPendingProperty(path,value,shouldNotify);}else{this[path]=value;}}return false;}/**
+if(!path||!_get(PropertyEffects.prototype.__proto__||Object.getPrototypeOf(PropertyEffects.prototype),'_shouldPropertyChange',this).call(this,path,value,old)){return false;}}this.__dataHasPaths=true;if(this._setPendingProperty(path,value,shouldNotify)){computeLinkedPaths(this,path,value);return true;}}else{if(this.__dataHasAccessor&&this.__dataHasAccessor[path]){return this._setPendingProperty(path,value,shouldNotify);}else{this[path]=value;}}return false;}/**
        * Applies a value to a non-Polymer element/node's property.
        *
        * The implementation makes a best-effort at binding interop:
@@ -3309,11 +3309,11 @@ if(!path||!_get(PropertyEffects.prototype.__proto__||Object.getPrototypeOf(Prope
        * @param {string} prop The property to set
        * @param {*} value The value to set
        * @protected
-       */},{key:"_setUnmanagedPropertyToNode",value:function _setUnmanagedPropertyToNode(node,prop,value){// It is a judgment call that resetting primitives is
+       */},{key:'_setUnmanagedPropertyToNode',value:function _setUnmanagedPropertyToNode(node,prop,value){// It is a judgment call that resetting primitives is
 // "bad" and resettings objects is also "good"; alternatively we could
 // implement a whitelist of tag & property values that should never
 // be reset (e.g. <input>.value && <select>.value)
-if(value!==node[prop]||(typeof value==="undefined"?"undefined":_typeof(value))=='object'){node[prop]=value;}}/**
+if(value!==node[prop]||(typeof value==='undefined'?'undefined':_typeof(value))=='object'){node[prop]=value;}}/**
        * Overrides the `PropertyAccessors` implementation to introduce special
        * dirty check logic depending on the property & value being set:
        *
@@ -3342,7 +3342,7 @@ if(value!==node[prop]||(typeof value==="undefined"?"undefined":_typeof(value))==
        * paths if needed: https://github.com/Polymer/polymer/issues/4227
        *
        * @override
-       */},{key:"_setPendingProperty",value:function _setPendingProperty(property,value,shouldNotify){var isPath=this.__dataHasPaths&&Polymer.Path.isPath(property);var prevProps=isPath?this.__dataTemp:this.__data;if(this._shouldPropertyChange(property,value,prevProps[property])){if(!this.__dataPending){this.__dataPending={};this.__dataOld={};}// Ensure old is captured from the last turn
+       */},{key:'_setPendingProperty',value:function _setPendingProperty(property,value,shouldNotify){var isPath=this.__dataHasPaths&&Polymer.Path.isPath(property);var prevProps=isPath?this.__dataTemp:this.__data;if(this._shouldPropertyChange(property,value,prevProps[property])){if(!this.__dataPending){this.__dataPending={};this.__dataOld={};}// Ensure old is captured from the last turn
 if(!(property in this.__dataOld)){this.__dataOld[property]=this.__data[property];}// Paths are stored in temporary cache (cleared at end of turn),
 // which is used for dirty-checking, all others stored in __data
 if(isPath){this.__dataTemp[property]=value;}else{this.__data[property]=value;}// All changes go into pending property bag, passed to _propertiesChanged
@@ -3352,26 +3352,26 @@ if(isPath||this.__notifyEffects&&this.__notifyEffects[property]){this.__dataToNo
        * to true, for per-property notification tracking.
        *
        * @override
-       */},{key:"_setProperty",value:function _setProperty(property,value){if(this._setPendingProperty(property,value,true)){this._invalidateProperties();}}/**
+       */},{key:'_setProperty',value:function _setProperty(property,value){if(this._setPendingProperty(property,value,true)){this._invalidateProperties();}}/**
        * Overrides `PropertyAccessor`'s default async queuing of
        * `_propertiesChanged`: if `__dataReady` is false (has not yet been
        * manually flushed), the function no-ops; otherwise flushes
        * `_propertiesChanged` synchronously.
        *
        * @override
-       */},{key:"_invalidateProperties",value:function _invalidateProperties(){if(this.__dataReady){this._flushProperties();}}/**
+       */},{key:'_invalidateProperties',value:function _invalidateProperties(){if(this.__dataReady){this._flushProperties();}}/**
        * Enqueues the given client on a list of pending clients, whose
        * pending property changes can later be flushed via a call to
        * `_flushClients`.
        *
        * @param {Object} client PropertyEffects client to enqueue
        * @protected
-       */},{key:"_enqueueClient",value:function _enqueueClient(client){this.__dataPendingClients=this.__dataPendingClients||[];if(client!==this){this.__dataPendingClients.push(client);}}/**
+       */},{key:'_enqueueClient',value:function _enqueueClient(client){this.__dataPendingClients=this.__dataPendingClients||[];if(client!==this){this.__dataPendingClients.push(client);}}/**
        * Flushes any clients previously enqueued via `_enqueueClient`, causing
        * their `_flushProperties` method to run.
        *
        * @protected
-       */},{key:"_flushClients",value:function _flushClients(){if(!this.__dataClientsReady){this.__dataClientsReady=true;this._readyClients();// Override point where accessors are turned on; importantly,
+       */},{key:'_flushClients',value:function _flushClients(){if(!this.__dataClientsReady){this.__dataClientsReady=true;this._readyClients();// Override point where accessors are turned on; importantly,
 // this is after clients have fully readied, providing a guarantee
 // that any property effects occur only after all clients are ready.
 this.__dataReady=true;}else{this.__enableOrFlushClients();}}// NOTE: We ensure clients either enable or flush as appropriate. This
@@ -3386,13 +3386,13 @@ this.__dataReady=true;}else{this.__enableOrFlushClients();}}// NOTE: We ensure c
 //   (a) a template is runtime stamped and not yet connected/enabled
 //   (b) a host sets a property, causing stamped dom to flush
 //   (c) the stamped dom enables.
-},{key:"__enableOrFlushClients",value:function __enableOrFlushClients(){var clients=this.__dataPendingClients;if(clients){this.__dataPendingClients=null;for(var i=0;i<clients.length;i++){var client=clients[i];if(!client.__dataEnabled){client._enableProperties();}else if(client.__dataPending){client._flushProperties();}}}}/**
+},{key:'__enableOrFlushClients',value:function __enableOrFlushClients(){var clients=this.__dataPendingClients;if(clients){this.__dataPendingClients=null;for(var i=0;i<clients.length;i++){var client=clients[i];if(!client.__dataEnabled){client._enableProperties();}else if(client.__dataPending){client._flushProperties();}}}}/**
        * Perform any initial setup on client dom. Called before the first
        * `_flushProperties` call on client dom and before any element
        * observers are called.
        *
        * @protected
-       */},{key:"_readyClients",value:function _readyClients(){this.__enableOrFlushClients();}/**
+       */},{key:'_readyClients',value:function _readyClients(){this.__enableOrFlushClients();}/**
        * Sets a bag of property changes to this instance, and
        * synchronously processes all effects of the properties as a batch.
        *
@@ -3405,7 +3405,7 @@ this.__dataReady=true;}else{this.__enableOrFlushClients();}}// NOTE: We ensure c
        *   `props` will be set. By default, `setProperties` will not set
        *   `readOnly: true` root properties.
        * @public
-       */},{key:"setProperties",value:function setProperties(props,setReadOnly){for(var path in props){if(setReadOnly||!this.__readOnly||!this.__readOnly[path]){//TODO(kschaaf): explicitly disallow paths in setProperty?
+       */},{key:'setProperties',value:function setProperties(props,setReadOnly){for(var path in props){if(setReadOnly||!this.__readOnly||!this.__readOnly[path]){//TODO(kschaaf): explicitly disallow paths in setProperty?
 // wildcard observers currently only pass the first changed path
 // in the `info` object, and you could do some odd things batching
 // paths, e.g. {'foo.bar': {...}, 'foo': null}
@@ -3416,7 +3416,7 @@ this._setPendingPropertyOrPath(path,props[path],true);}}this._invalidateProperti
        * that was not enabled as a result of flushing properties.
        *
        * @override
-       */},{key:"ready",value:function ready(){// It is important that `super.ready()` is not called here as it
+       */},{key:'ready',value:function ready(){// It is important that `super.ready()` is not called here as it
 // immediately turns on accessors. Instead, we wait until `readyClients`
 // to enable accessors to provide a guarantee that clients are ready
 // before processing any accessors side effects.
@@ -3431,7 +3431,7 @@ if(this.__dataPending){this._flushProperties();}}/**
        * a specific order (compute, propagate, reflect, observe, notify).
        *
        * @override
-       */},{key:"_propertiesChanged",value:function _propertiesChanged(currentProps,changedProps,oldProps){// ----------------------------
+       */},{key:'_propertiesChanged',value:function _propertiesChanged(currentProps,changedProps,oldProps){// ----------------------------
 // let c = Object.getOwnPropertyNames(changedProps || {});
 // window.debug && console.group(this.localName + '#' + this.id + ': ' + c);
 // if (window.debug) { debugger; }
@@ -3456,14 +3456,14 @@ if(this.__dataCounter==1){this.__dataTemp={};}// ----------------------------
        * @param {Object} oldProps Bag of previous values for changed properties
        * @param {boolean} hasPaths True with `props` contains one or more paths
        * @protected
-       */},{key:"_propagatePropertyChanges",value:function _propagatePropertyChanges(changedProps,oldProps,hasPaths){if(this.__propagateEffects){runEffects(this,this.__propagateEffects,changedProps,oldProps,hasPaths);}var templateInfo=this.__templateInfo;while(templateInfo){runEffects(this,templateInfo.propertyEffects,changedProps,oldProps,hasPaths,templateInfo.nodeList);templateInfo=templateInfo.nextTemplateInfo;}}/**
+       */},{key:'_propagatePropertyChanges',value:function _propagatePropertyChanges(changedProps,oldProps,hasPaths){if(this.__propagateEffects){runEffects(this,this.__propagateEffects,changedProps,oldProps,hasPaths);}var templateInfo=this.__templateInfo;while(templateInfo){runEffects(this,templateInfo.propertyEffects,changedProps,oldProps,hasPaths,templateInfo.nodeList);templateInfo=templateInfo.nextTemplateInfo;}}/**
        * Aliases one data path as another, such that path notifications from one
        * are routed to the other.
        *
        * @param {string | !Array<string|number>} to Target path to link.
        * @param {string | !Array<string|number>} from Source path to link.
        * @public
-       */},{key:"linkPaths",value:function linkPaths(to,from){to=Polymer.Path.normalize(to);from=Polymer.Path.normalize(from);this.__dataLinkedPaths=this.__dataLinkedPaths||{};this.__dataLinkedPaths[to]=from;}/**
+       */},{key:'linkPaths',value:function linkPaths(to,from){to=Polymer.Path.normalize(to);from=Polymer.Path.normalize(from);this.__dataLinkedPaths=this.__dataLinkedPaths||{};this.__dataLinkedPaths[to]=from;}/**
        * Removes a data path alias previously established with `_linkPaths`.
        *
        * Note, the path to unlink should be the target (`to`) used when
@@ -3471,7 +3471,7 @@ if(this.__dataCounter==1){this.__dataTemp={};}// ----------------------------
        *
        * @param {string | !Array<string|number>} path Target path to unlink.
        * @public
-       */},{key:"unlinkPaths",value:function unlinkPaths(path){path=Polymer.Path.normalize(path);if(this.__dataLinkedPaths){delete this.__dataLinkedPaths[path];}}/**
+       */},{key:'unlinkPaths',value:function unlinkPaths(path){path=Polymer.Path.normalize(path);if(this.__dataLinkedPaths){delete this.__dataLinkedPaths[path];}}/**
        * Notify that an array has changed.
        *
        * Example:
@@ -3499,7 +3499,7 @@ if(this.__dataCounter==1){this.__dataTemp={};}// ----------------------------
        *   reported in index order (raw results from `Object.observe` are not
        *   ordered and must be normalized/merged before notifying).
        * @public
-      */},{key:"notifySplices",value:function notifySplices(path,splices){var info={};var array=/** @type {Array} */Polymer.Path.get(this,path,info);_notifySplices(this,array,info.path,splices);}/**
+      */},{key:'notifySplices',value:function notifySplices(path,splices){var info={};var array=/** @type {Array} */Polymer.Path.get(this,path,info);_notifySplices(this,array,info.path,splices);}/**
        * Convenience method for reading a value from a path.
        *
        * Note, if any part in the path is undefined, this method returns
@@ -3517,7 +3517,7 @@ if(this.__dataCounter==1){this.__dataTemp={};}// ----------------------------
        * @return {*} Value at the path, or `undefined` if any part of the path
        *   is undefined.
        * @public
-       */},{key:"get",value:function get(path,root){return Polymer.Path.get(root||this,path);}/**
+       */},{key:'get',value:function get(path,root){return Polymer.Path.get(root||this,path);}/**
        * Convenience method for setting a value to a path and notifying any
        * elements bound to the same path.
        *
@@ -3536,7 +3536,7 @@ if(this.__dataCounter==1){this.__dataTemp={};}// ----------------------------
        * @param {Object=} root Root object from which the path is evaluated.
        *   When specified, no notification will occur.
        * @public
-      */},{key:"set",value:function set(path,value,root){if(root){Polymer.Path.set(root,path,value);}else{if(!this.__readOnly||!this.__readOnly[/** @type {string} */path]){if(this._setPendingPropertyOrPath(path,value,true)){this._invalidateProperties();}}}}/**
+      */},{key:'set',value:function set(path,value,root){if(root){Polymer.Path.set(root,path,value);}else{if(!this.__readOnly||!this.__readOnly[/** @type {string} */path]){if(this._setPendingPropertyOrPath(path,value,true)){this._invalidateProperties();}}}}/**
        * Adds items onto the end of the array at the path specified.
        *
        * The arguments after `path` and return value match that of
@@ -3549,7 +3549,7 @@ if(this.__dataCounter==1){this.__dataTemp={};}// ----------------------------
        * @param {...*} items Items to push onto array
        * @return {number} New length of the array.
        * @public
-       */},{key:"push",value:function push(path){var info={};var array=/** @type {Array}*/Polymer.Path.get(this,path,info);var len=array.length;for(var _len=arguments.length,items=Array(_len>1?_len-1:0),_key=1;_key<_len;_key++){items[_key-1]=arguments[_key];}var ret=array.push.apply(array,items);if(items.length){notifySplice(this,array,info.path,len,items.length,[]);}return ret;}/**
+       */},{key:'push',value:function push(path){var info={};var array=/** @type {Array}*/Polymer.Path.get(this,path,info);var len=array.length;for(var _len=arguments.length,items=Array(_len>1?_len-1:0),_key=1;_key<_len;_key++){items[_key-1]=arguments[_key];}var ret=array.push.apply(array,items);if(items.length){notifySplice(this,array,info.path,len,items.length,[]);}return ret;}/**
        * Removes an item from the end of array at the path specified.
        *
        * The arguments after `path` and return value match that of
@@ -3561,7 +3561,7 @@ if(this.__dataCounter==1){this.__dataTemp={};}// ----------------------------
        * @param {string} path Path to array.
        * @return {*} Item that was removed.
        * @public
-       */},{key:"pop",value:function pop(path){var info={};var array=/** @type {Array} */Polymer.Path.get(this,path,info);var hadLength=Boolean(array.length);var ret=array.pop();if(hadLength){notifySplice(this,array,info.path,array.length,0,[ret]);}return ret;}/**
+       */},{key:'pop',value:function pop(path){var info={};var array=/** @type {Array} */Polymer.Path.get(this,path,info);var hadLength=Boolean(array.length);var ret=array.pop();if(hadLength){notifySplice(this,array,info.path,array.length,0,[ret]);}return ret;}/**
        * Starting from the start index specified, removes 0 or more items
        * from the array and inserts 0 or more new items in their place.
        *
@@ -3577,7 +3577,7 @@ if(this.__dataCounter==1){this.__dataTemp={};}// ----------------------------
        * @param {...*} items Items to insert into array.
        * @return {Array} Array of removed items.
        * @public
-       */},{key:"splice",value:function splice(path,start,deleteCount){var info={};var array=/** @type {Array} */Polymer.Path.get(this,path,info);// Normalize fancy native splice handling of crazy start values
+       */},{key:'splice',value:function splice(path,start,deleteCount){var info={};var array=/** @type {Array} */Polymer.Path.get(this,path,info);// Normalize fancy native splice handling of crazy start values
 if(start<0){start=array.length-Math.floor(-start);}else{start=Math.floor(start);}if(!start){start=0;}for(var _len2=arguments.length,items=Array(_len2>3?_len2-3:0),_key2=3;_key2<_len2;_key2++){items[_key2-3]=arguments[_key2];}var ret=array.splice.apply(array,[start,deleteCount].concat(items));if(items.length||ret.length){notifySplice(this,array,info.path,start,items.length,ret);}return ret;}/**
        * Removes an item from the beginning of array at the path specified.
        *
@@ -3590,7 +3590,7 @@ if(start<0){start=array.length-Math.floor(-start);}else{start=Math.floor(start);
        * @param {string} path Path to array.
        * @return {*} Item that was removed.
        * @public
-       */},{key:"shift",value:function shift(path){var info={};var array=/** @type {Array} */Polymer.Path.get(this,path,info);var hadLength=Boolean(array.length);var ret=array.shift();if(hadLength){notifySplice(this,array,info.path,0,0,[ret]);}return ret;}/**
+       */},{key:'shift',value:function shift(path){var info={};var array=/** @type {Array} */Polymer.Path.get(this,path,info);var hadLength=Boolean(array.length);var ret=array.shift();if(hadLength){notifySplice(this,array,info.path,0,0,[ret]);}return ret;}/**
        * Adds items onto the beginning of the array at the path specified.
        *
        * The arguments after `path` and return value match that of
@@ -3603,7 +3603,7 @@ if(start<0){start=array.length-Math.floor(-start);}else{start=Math.floor(start);
        * @param {...*} items Items to insert info array
        * @return {number} New length of the array.
        * @public
-       */},{key:"unshift",value:function unshift(path){var info={};var array=/** @type {Array} */Polymer.Path.get(this,path,info);for(var _len3=arguments.length,items=Array(_len3>1?_len3-1:0),_key3=1;_key3<_len3;_key3++){items[_key3-1]=arguments[_key3];}var ret=array.unshift.apply(array,items);if(items.length){notifySplice(this,array,info.path,0,items.length,[]);}return ret;}/**
+       */},{key:'unshift',value:function unshift(path){var info={};var array=/** @type {Array} */Polymer.Path.get(this,path,info);for(var _len3=arguments.length,items=Array(_len3>1?_len3-1:0),_key3=1;_key3<_len3;_key3++){items[_key3-1]=arguments[_key3];}var ret=array.unshift.apply(array,items);if(items.length){notifySplice(this,array,info.path,0,items.length,[]);}return ret;}/**
        * Notify that a path has changed.
        *
        * Example:
@@ -3614,7 +3614,7 @@ if(start<0){start=array.length-Math.floor(-start);}else{start=Math.floor(start);
        * @param {string} path Path that should be notified.
        * @param {*=} value Value at the path (optional).
        * @public
-      */},{key:"notifyPath",value:function notifyPath(path,value){/** @type {string} */var propPath=void 0;if(arguments.length==1){// Get value if not supplied
+      */},{key:'notifyPath',value:function notifyPath(path,value){/** @type {string} */var propPath=void 0;if(arguments.length==1){// Get value if not supplied
 var info={};value=Polymer.Path.get(this,path,info);propPath=info.path;}else if(Array.isArray(path)){// Normalize path if needed
 propPath=Polymer.Path.normalize(path);}else{propPath=/** @type{string} */path;}if(this._setPendingPropertyOrPath(propPath,value,true,true)){this._invalidateProperties();}}/**
        * Equivalent to static `createReadOnlyProperty` API but can be called on
@@ -3625,7 +3625,7 @@ propPath=Polymer.Path.normalize(path);}else{propPath=/** @type{string} */path;}i
        * @param {boolean=} protectedSetter Creates a custom protected setter
        *   when `true`.
        * @protected
-       */},{key:"_createReadOnlyProperty",value:function _createReadOnlyProperty(property,protectedSetter){this._addPropertyEffect(property,TYPES.READ_ONLY);if(protectedSetter){this['_set'+upper(property)]=function(value){this._setProperty(property,value);};}}/**
+       */},{key:'_createReadOnlyProperty',value:function _createReadOnlyProperty(property,protectedSetter){this._addPropertyEffect(property,TYPES.READ_ONLY);if(protectedSetter){this['_set'+upper(property)]=function(value){this._setProperty(property,value);};}}/**
        * Equivalent to static `createPropertyObserver` API but can be called on
        * an instance to add effects at runtime.  See that method for
        * full API docs.
@@ -3635,7 +3635,7 @@ propPath=Polymer.Path.normalize(path);}else{propPath=/** @type{string} */path;}i
        * @param {boolean=} dynamicFn Whether the method name should be included as
        *   a dependency to the effect.
        * @protected
-       */},{key:"_createPropertyObserver",value:function _createPropertyObserver(property,methodName,dynamicFn){var info={property:property,methodName:methodName,dynamicFn:dynamicFn};this._addPropertyEffect(property,TYPES.OBSERVE,{fn:runObserverEffect,info:info,trigger:{name:property}});if(dynamicFn){this._addPropertyEffect(methodName,TYPES.OBSERVE,{fn:runObserverEffect,info:info,trigger:{name:methodName}});}}/**
+       */},{key:'_createPropertyObserver',value:function _createPropertyObserver(property,methodName,dynamicFn){var info={property:property,methodName:methodName,dynamicFn:dynamicFn};this._addPropertyEffect(property,TYPES.OBSERVE,{fn:runObserverEffect,info:info,trigger:{name:property}});if(dynamicFn){this._addPropertyEffect(methodName,TYPES.OBSERVE,{fn:runObserverEffect,info:info,trigger:{name:methodName}});}}/**
        * Equivalent to static `createMethodObserver` API but can be called on
        * an instance to add effects at runtime.  See that method for
        * full API docs.
@@ -3644,21 +3644,21 @@ propPath=Polymer.Path.normalize(path);}else{propPath=/** @type{string} */path;}i
        * @param {boolean|Object=} dynamicFn Boolean or object map indicating
        *   whether method names should be included as a dependency to the effect.
        * @protected
-       */},{key:"_createMethodObserver",value:function _createMethodObserver(expression,dynamicFn){var sig=parseMethod(expression);if(!sig){throw new Error("Malformed observer expression '"+expression+"'");}createMethodEffect(this,sig,TYPES.OBSERVE,runMethodEffect,null,dynamicFn);}/**
+       */},{key:'_createMethodObserver',value:function _createMethodObserver(expression,dynamicFn){var sig=parseMethod(expression);if(!sig){throw new Error("Malformed observer expression '"+expression+"'");}createMethodEffect(this,sig,TYPES.OBSERVE,runMethodEffect,null,dynamicFn);}/**
        * Equivalent to static `createNotifyingProperty` API but can be called on
        * an instance to add effects at runtime.  See that method for
        * full API docs.
        *
        * @param {string} property Property name
        * @protected
-       */},{key:"_createNotifyingProperty",value:function _createNotifyingProperty(property){this._addPropertyEffect(property,TYPES.NOTIFY,{fn:runNotifyEffect,info:{eventName:CaseMap.camelToDashCase(property)+'-changed',property:property}});}/**
+       */},{key:'_createNotifyingProperty',value:function _createNotifyingProperty(property){this._addPropertyEffect(property,TYPES.NOTIFY,{fn:runNotifyEffect,info:{eventName:CaseMap.camelToDashCase(property)+'-changed',property:property}});}/**
        * Equivalent to static `createReflectedProperty` API but can be called on
        * an instance to add effects at runtime.  See that method for
        * full API docs.
        *
        * @param {string} property Property name
        * @protected
-       */},{key:"_createReflectedProperty",value:function _createReflectedProperty(property){var attr=CaseMap.camelToDashCase(property);if(attr[0]==='-'){console.warn('Property '+property+' cannot be reflected to attribute '+attr+' because "-" is not a valid starting attribute name. Use a lowercase first letter for the property thisead.');}else{this._addPropertyEffect(property,TYPES.REFLECT,{fn:runReflectEffect,info:{attrName:attr}});}}/**
+       */},{key:'_createReflectedProperty',value:function _createReflectedProperty(property){var attr=CaseMap.camelToDashCase(property);if(attr[0]==='-'){console.warn('Property '+property+' cannot be reflected to attribute '+attr+' because "-" is not a valid starting attribute name. Use a lowercase first letter for the property thisead.');}else{this._addPropertyEffect(property,TYPES.REFLECT,{fn:runReflectEffect,info:{attrName:attr}});}}/**
        * Equivalent to static `createComputedProperty` API but can be called on
        * an instance to add effects at runtime.  See that method for
        * full API docs.
@@ -3668,7 +3668,7 @@ propPath=Polymer.Path.normalize(path);}else{propPath=/** @type{string} */path;}i
        * @param {boolean|Object=} dynamicFn Boolean or object map indicating
        *   whether method names should be included as a dependency to the effect.
        * @protected
-       */},{key:"_createComputedProperty",value:function _createComputedProperty(property,expression,dynamicFn){var sig=parseMethod(expression);if(!sig){throw new Error("Malformed computed expression '"+expression+"'");}createMethodEffect(this,sig,TYPES.COMPUTE,runComputedEffect,property,dynamicFn);}// -- static class methods ------------
+       */},{key:'_createComputedProperty',value:function _createComputedProperty(property,expression,dynamicFn){var sig=parseMethod(expression);if(!sig){throw new Error("Malformed computed expression '"+expression+"'");}createMethodEffect(this,sig,TYPES.COMPUTE,runComputedEffect,property,dynamicFn);}// -- static class methods ------------
 /**
        * Ensures an accessor exists for the specified property, and adds
        * to a list of "property effects" that will run when the accessor for
@@ -3703,7 +3703,7 @@ propPath=Polymer.Path.normalize(path);}else{propPath=/** @type{string} */path;}i
        * @param {string} type Effect type, from this.PROPERTY_EFFECT_TYPES
        * @param {Object=} effect Effect metadata object
        * @protected
-       */},{key:"_bindTemplate",// -- binding ----------------------------------------------
+       */},{key:'_bindTemplate',// -- binding ----------------------------------------------
 /**
        * Equivalent to static `bindTemplate` API but can be called on
        * an instance to add effects at runtime.  See that method for
@@ -3740,7 +3740,7 @@ templateInfo=Object.create(templateInfo);templateInfo.wasPreBound=wasPreBound;if
        * @param {string} prop Property that should trigger the effect
        * @param {Object=} effect Effect metadata object
        * @protected
-       */},{key:"_stampTemplate",/**
+       */},{key:'_stampTemplate',/**
        * Stamps the provided template and performs instance-time setup for
        * Polymer template features, including data bindings, declarative event
        * listeners, and the `this.$` map of `id`'s to nodes.  A document fragment
@@ -3760,7 +3760,7 @@ templateInfo=Object.create(templateInfo);templateInfo.wasPreBound=wasPreBound;if
        * @protected
        */value:function _stampTemplate(template){// Ensures that created dom is `_enqueueClient`'d to this element so
 // that it can be flushed on next call to `_flushProperties`
-hostStack.beginHosting(this);var dom=_get(PropertyEffects.prototype.__proto__||Object.getPrototypeOf(PropertyEffects.prototype),"_stampTemplate",this).call(this,template);hostStack.endHosting(this);var templateInfo=this._bindTemplate(template,true);// Add template-instance-specific data to instanced templateInfo
+hostStack.beginHosting(this);var dom=_get(PropertyEffects.prototype.__proto__||Object.getPrototypeOf(PropertyEffects.prototype),'_stampTemplate',this).call(this,template);hostStack.endHosting(this);var templateInfo=this._bindTemplate(template,true);// Add template-instance-specific data to instanced templateInfo
 templateInfo.nodeList=dom.nodeList;// Capture child nodes to allow unstamping of non-prototypical templates
 if(!templateInfo.wasPreBound){var nodes=templateInfo.childNodes=[];for(var n=dom.firstChild;n;n=n.nextSibling){nodes.push(n);}}dom.templateInfo=templateInfo;// Setup compound storage, 2-way listeners, and dataHost for bindings
 setupBindings(this,templateInfo);// Flush properties into template nodes if already booted
@@ -3771,7 +3771,7 @@ if(this.__dataReady){runEffects(this,templateInfo.propertyEffects,this.__data,nu
        * @param {DocumentFragment} dom DocumentFragment previously returned
        *   from `_stampTemplate` associated with the nodes to be removed
        * @protected
-       */},{key:"_removeBoundDom",value:function _removeBoundDom(dom){// Unlink template info
+       */},{key:'_removeBoundDom',value:function _removeBoundDom(dom){// Unlink template info
 var templateInfo=dom.templateInfo;if(templateInfo.previousTemplateInfo){templateInfo.previousTemplateInfo.nextTemplateInfo=templateInfo.nextTemplateInfo;}if(templateInfo.nextTemplateInfo){templateInfo.nextTemplateInfo.previousTemplateInfo=templateInfo.previousTemplateInfo;}if(this.__templateInfoLast==templateInfo){this.__templateInfoLast=templateInfo.previousTemplateInfo;}templateInfo.previousTemplateInfo=templateInfo.nextTemplateInfo=null;// Remove stamped nodes
 var nodes=templateInfo.childNodes;for(var i=0;i<nodes.length;i++){var node=nodes[i];node.parentNode.removeChild(node);}}/**
        * Overrides default `TemplateStamp` implementation to add support for
@@ -3788,7 +3788,7 @@ var nodes=templateInfo.childNodes;for(var i=0;i<nodes.length;i++){var node=nodes
        * @return {boolean} `true` if the visited node added node-specific
        *   metadata to `nodeInfo`
        * @protected
-       */},{key:"PROPERTY_EFFECT_TYPES",get:function get(){return TYPES;}}],[{key:"addPropertyEffect",value:function addPropertyEffect(property,type,effect){this.prototype._addPropertyEffect(property,type,effect);}/**
+       */},{key:'PROPERTY_EFFECT_TYPES',get:function get(){return TYPES;}}],[{key:'addPropertyEffect',value:function addPropertyEffect(property,type,effect){this.prototype._addPropertyEffect(property,type,effect);}/**
        * Creates a single-property observer for the given property.
        *
        * @param {string} property Property name
@@ -3796,7 +3796,7 @@ var nodes=templateInfo.childNodes;for(var i=0;i<nodes.length;i++){var node=nodes
        * @param {boolean=} dynamicFn Whether the method name should be included as
        *   a dependency to the effect.
        * @protected
-       */},{key:"createPropertyObserver",value:function createPropertyObserver(property,methodName,dynamicFn){this.prototype._createPropertyObserver(property,methodName,dynamicFn);}/**
+       */},{key:'createPropertyObserver',value:function createPropertyObserver(property,methodName,dynamicFn){this.prototype._createPropertyObserver(property,methodName,dynamicFn);}/**
        * Creates a multi-property "method observer" based on the provided
        * expression, which should be a string in the form of a normal Javascript
        * function signature: `'methodName(arg1, [..., argn])'`.  Each argument
@@ -3807,13 +3807,13 @@ var nodes=templateInfo.childNodes;for(var i=0;i<nodes.length;i++){var node=nodes
        * @param {boolean|Object=} dynamicFn Boolean or object map indicating
        *   whether method names should be included as a dependency to the effect.
        * @protected
-       */},{key:"createMethodObserver",value:function createMethodObserver(expression,dynamicFn){this.prototype._createMethodObserver(expression,dynamicFn);}/**
+       */},{key:'createMethodObserver',value:function createMethodObserver(expression,dynamicFn){this.prototype._createMethodObserver(expression,dynamicFn);}/**
        * Causes the setter for the given property to dispatch `<property>-changed`
        * events to notify of changes to the property.
        *
        * @param {string} property Property name
        * @protected
-       */},{key:"createNotifyingProperty",value:function createNotifyingProperty(property){this.prototype._createNotifyingProperty(property);}/**
+       */},{key:'createNotifyingProperty',value:function createNotifyingProperty(property){this.prototype._createNotifyingProperty(property);}/**
        * Creates a read-only accessor for the given property.
        *
        * To set the property, use the protected `_setProperty` API.
@@ -3827,13 +3827,13 @@ var nodes=templateInfo.childNodes;for(var i=0;i<nodes.length;i++){var node=nodes
        * @param {boolean=} protectedSetter Creates a custom protected setter
        *   when `true`.
        * @protected
-       */},{key:"createReadOnlyProperty",value:function createReadOnlyProperty(property,protectedSetter){this.prototype._createReadOnlyProperty(property,protectedSetter);}/**
+       */},{key:'createReadOnlyProperty',value:function createReadOnlyProperty(property,protectedSetter){this.prototype._createReadOnlyProperty(property,protectedSetter);}/**
        * Causes the setter for the given property to reflect the property value
        * to a (dash-cased) attribute of the same name.
        *
        * @param {string} property Property name
        * @protected
-       */},{key:"createReflectedProperty",value:function createReflectedProperty(property){this.prototype._createReflectedProperty(property);}/**
+       */},{key:'createReflectedProperty',value:function createReflectedProperty(property){this.prototype._createReflectedProperty(property);}/**
        * Creates a computed property whose value is set to the result of the
        * method described by the given `expression` each time one or more
        * arguments to the method changes.  The expression should be a string
@@ -3845,7 +3845,7 @@ var nodes=templateInfo.childNodes;for(var i=0;i<nodes.length;i++){var node=nodes
        * @param {boolean|Object=} dynamicFn Boolean or object map indicating whether
        *   method names should be included as a dependency to the effect.
        * @protected
-       */},{key:"createComputedProperty",value:function createComputedProperty(property,expression,dynamicFn){this.prototype._createComputedProperty(property,expression,dynamicFn);}/**
+       */},{key:'createComputedProperty',value:function createComputedProperty(property,expression,dynamicFn){this.prototype._createComputedProperty(property,expression,dynamicFn);}/**
        * Parses the provided template to ensure binding effects are created
        * for them, and then ensures property accessors are created for any
        * dependent properties in the template.  Binding effects for bound
@@ -3856,7 +3856,7 @@ var nodes=templateInfo.childNodes;for(var i=0;i<nodes.length;i++){var node=nodes
        *   bindings
        * @return {Object} Template metadata object
        * @protected
-       */},{key:"bindTemplate",value:function bindTemplate(template){return this.prototype._bindTemplate(template);}},{key:"_addTemplatePropertyEffect",value:function _addTemplatePropertyEffect(templateInfo,prop,effect){var hostProps=templateInfo.hostProps=templateInfo.hostProps||{};hostProps[prop]=true;var effects=templateInfo.propertyEffects=templateInfo.propertyEffects||{};var propEffects=effects[prop]=effects[prop]||[];propEffects.push(effect);}},{key:"_parseTemplateNode",value:function _parseTemplateNode(node,templateInfo,nodeInfo){var noted=_get(PropertyEffects.__proto__||Object.getPrototypeOf(PropertyEffects),"_parseTemplateNode",this).call(this,node,templateInfo,nodeInfo);if(node.nodeType===Node.TEXT_NODE){var parts=this._parseBindings(node.textContent,templateInfo);if(parts){// Initialize the textContent with any literal parts
+       */},{key:'bindTemplate',value:function bindTemplate(template){return this.prototype._bindTemplate(template);}},{key:'_addTemplatePropertyEffect',value:function _addTemplatePropertyEffect(templateInfo,prop,effect){var hostProps=templateInfo.hostProps=templateInfo.hostProps||{};hostProps[prop]=true;var effects=templateInfo.propertyEffects=templateInfo.propertyEffects||{};var propEffects=effects[prop]=effects[prop]||[];propEffects.push(effect);}},{key:'_parseTemplateNode',value:function _parseTemplateNode(node,templateInfo,nodeInfo){var noted=_get(PropertyEffects.__proto__||Object.getPrototypeOf(PropertyEffects),'_parseTemplateNode',this).call(this,node,templateInfo,nodeInfo);if(node.nodeType===Node.TEXT_NODE){var parts=this._parseBindings(node.textContent,templateInfo);if(parts){// Initialize the textContent with any literal parts
 // NOTE: default to a space here so the textNode remains; some browsers
 // (IE) evacipate an empty textNode following cloneNode/importNode.
 node.textContent=literalFromParts(parts)||' ';addBinding(this,templateInfo,nodeInfo,'text','textContent',parts);noted=true;}}return noted;}/**
@@ -3874,7 +3874,7 @@ node.textContent=literalFromParts(parts)||' ';addBinding(this,templateInfo,nodeI
        * @return {boolean} `true` if the visited node added node-specific
        *   metadata to `nodeInfo`
        * @protected
-       */},{key:"_parseTemplateNodeAttribute",value:function _parseTemplateNodeAttribute(node,templateInfo,nodeInfo,name,value){var parts=this._parseBindings(value,templateInfo);if(parts){// Attribute or property
+       */},{key:'_parseTemplateNodeAttribute',value:function _parseTemplateNodeAttribute(node,templateInfo,nodeInfo,name,value){var parts=this._parseBindings(value,templateInfo);if(parts){// Attribute or property
 var origName=name;var kind='property';if(name[name.length-1]=='$'){name=name.slice(0,-1);kind='attribute';}// Initialize attribute bindings with any literal parts
 var literal=literalFromParts(parts);if(literal&&kind=='attribute'){node.setAttribute(name,literal);}// Clear attribute before removing, since IE won't allow removing
 // `value` attribute if it previously had a value (can't
@@ -3885,7 +3885,7 @@ node.removeAttribute(origName);// Case hackery: attributes are lower-case, but b
 // (properties) are case sensitive. Gambit is to map dash-case to
 // camel-case: `foo-bar` becomes `fooBar`.
 // Attribute bindings are excepted.
-if(kind==='property'){name=Polymer.CaseMap.dashToCamelCase(name);}addBinding(this,templateInfo,nodeInfo,kind,name,parts,literal);return true;}else{return _get(PropertyEffects.__proto__||Object.getPrototypeOf(PropertyEffects),"_parseTemplateNodeAttribute",this).call(this,node,templateInfo,nodeInfo,name,value);}}/**
+if(kind==='property'){name=Polymer.CaseMap.dashToCamelCase(name);}addBinding(this,templateInfo,nodeInfo,kind,name,parts,literal);return true;}else{return _get(PropertyEffects.__proto__||Object.getPrototypeOf(PropertyEffects),'_parseTemplateNodeAttribute',this).call(this,node,templateInfo,nodeInfo,name,value);}}/**
        * Overrides default `TemplateStamp` implementation to add support for
        * binding the properties that a nested template depends on to the template
        * as `_host_<property>`.
@@ -3897,7 +3897,7 @@ if(kind==='property'){name=Polymer.CaseMap.dashToCamelCase(name);}addBinding(thi
        * @return {boolean} `true` if the visited node added node-specific
        *   metadata to `nodeInfo`
        * @protected
-       */},{key:"_parseTemplateNestedTemplate",value:function _parseTemplateNestedTemplate(node,templateInfo,nodeInfo){var noted=_get(PropertyEffects.__proto__||Object.getPrototypeOf(PropertyEffects),"_parseTemplateNestedTemplate",this).call(this,node,templateInfo,nodeInfo);// Merge host props into outer template and add bindings
+       */},{key:'_parseTemplateNestedTemplate',value:function _parseTemplateNestedTemplate(node,templateInfo,nodeInfo){var noted=_get(PropertyEffects.__proto__||Object.getPrototypeOf(PropertyEffects),'_parseTemplateNestedTemplate',this).call(this,node,templateInfo,nodeInfo);// Merge host props into outer template and add bindings
 var hostProps=nodeInfo.templateInfo.hostProps;var mode='{';for(var source in hostProps){var parts=[{mode:mode,source:source,dependencies:[source]}];addBinding(this,templateInfo,nodeInfo,'property','_host_'+source,parts);}return noted;}/**
        * Called to parse text in a template (either attribute values or
        * textContent) into binding metadata.
@@ -3930,7 +3930,7 @@ var hostProps=nodeInfo.templateInfo.hostProps;var mode='{';for(var source in hos
        * @param {Object} templateInfo Current template metadata
        * @return {Array<Object>} Array of binding part metadata
        * @protected
-       */},{key:"_parseBindings",value:function _parseBindings(text,templateInfo){var parts=[];var lastIndex=0;var m=void 0;// Example: "literal1{{prop}}literal2[[!compute(foo,bar)]]final"
+       */},{key:'_parseBindings',value:function _parseBindings(text,templateInfo){var parts=[];var lastIndex=0;var m=void 0;// Example: "literal1{{prop}}literal2[[!compute(foo,bar)]]final"
 // Regex matches:
 //        Iteration 1:  Iteration 2:
 // m[1]: '{{'          '[['
@@ -3954,7 +3954,7 @@ if(lastIndex&&lastIndex<text.length){var literal=text.substring(lastIndex);if(li
        * @param {boolean} hasPaths True with `props` contains one or more paths
        * @return {*} Value the binding part evaluated to
        * @protected
-       */},{key:"_evaluateBinding",value:function _evaluateBinding(inst,part,path,props,oldProps,hasPaths){var value=void 0;if(part.signature){value=runMethodEffect(inst,path,props,oldProps,part.signature);}else if(path!=part.source){value=Polymer.Path.get(inst,part.source);}else{if(hasPaths&&Polymer.Path.isPath(path)){value=Polymer.Path.get(inst,path);}else{value=inst.__data[path];}}if(part.negate){value=!value;}return value;}}]);return PropertyEffects;}(propertyEffectsBase);return PropertyEffects;});/**
+       */},{key:'_evaluateBinding',value:function _evaluateBinding(inst,part,path,props,oldProps,hasPaths){var value=void 0;if(part.signature){value=runMethodEffect(inst,path,props,oldProps,part.signature);}else if(path!=part.source){value=Polymer.Path.get(inst,part.source);}else{if(hasPaths&&Polymer.Path.isPath(path)){value=Polymer.Path.get(inst,path);}else{value=inst.__data[path];}}if(part.negate){value=!value;}return value;}}]);return PropertyEffects;}(propertyEffectsBase);return PropertyEffects;});/**
    * Helper api for enqueing client dom created by a host element.
    *
    * By default elements are flushed via `_flushProperties` when
@@ -4227,7 +4227,7 @@ var cssText=Polymer.StyleGather.cssFromTemplate(template,baseURI)+Polymer.StyleG
      * @polymerMixinClass
      * @unrestricted
      * @implements {Polymer_ElementMixin}
-     */var PolymerElement=function(_polymerElementBase){_inherits(PolymerElement,_polymerElementBase);function PolymerElement(){_classCallCheck(this,PolymerElement);return _possibleConstructorReturn(this,(PolymerElement.__proto__||Object.getPrototypeOf(PolymerElement)).apply(this,arguments));}_createClass(PolymerElement,[{key:"_initializeProperties",/**
+     */var PolymerElement=function(_polymerElementBase){_inherits(PolymerElement,_polymerElementBase);function PolymerElement(){_classCallCheck(this,PolymerElement);return _possibleConstructorReturn(this,(PolymerElement.__proto__||Object.getPrototypeOf(PolymerElement)).apply(this,arguments));}_createClass(PolymerElement,[{key:'_initializeProperties',/**
        * Overrides the default `Polymer.PropertyAccessors` to ensure class
        * metaprogramming related to property accessors and effects has
        * completed (calls `finalize`).
@@ -4238,7 +4238,7 @@ var cssText=Polymer.StyleGather.cssFromTemplate(template,baseURI)+Polymer.StyleG
        * @override
        */value:function _initializeProperties(){Polymer.telemetry.instanceCount++;this.constructor.finalize();var importPath=this.constructor.importPath;// note: finalize template when we have access to `localName` to
 // avoid dependence on `is` for polyfilling styling.
-if(this._template&&!this._template.__polymerFinalized){this._template.__polymerFinalized=true;var baseURI=importPath?Polymer.ResolveUrl.resolveUrl(importPath):'';finalizeTemplate(this.__proto__,this._template,baseURI,this.localName);}_get(PolymerElement.prototype.__proto__||Object.getPrototypeOf(PolymerElement.prototype),"_initializeProperties",this).call(this);// set path defaults
+if(this._template&&!this._template.__polymerFinalized){this._template.__polymerFinalized=true;var baseURI=importPath?Polymer.ResolveUrl.resolveUrl(importPath):'';finalizeTemplate(this.__proto__,this._template,baseURI,this.localName);}_get(PolymerElement.prototype.__proto__||Object.getPrototypeOf(PolymerElement.prototype),'_initializeProperties',this).call(this);// set path defaults
 this.rootPath=Polymer.rootPath;this.importPath=importPath;// apply property defaults...
 var p$=propertyDefaultsForClass(this.constructor);if(!p$){return;}for(var p in p$){var info=p$[p];// Don't set default value if there is already an own property, which
 // happens when a `properties` property with default but no effects had
@@ -4254,16 +4254,16 @@ if(this._hasAccessor(p)){this._setPendingProperty(p,value,true);}else{this[p]=va
        * when using the ShadyCSS scoping/custom properties polyfill.
        *
        * @override
-       */},{key:"connectedCallback",value:function connectedCallback(){if(window.ShadyCSS&&this._template){window.ShadyCSS.styleElement(this);}this._enableProperties();}/**
+       */},{key:'connectedCallback',value:function connectedCallback(){if(window.ShadyCSS&&this._template){window.ShadyCSS.styleElement(this);}this._enableProperties();}/**
        * Provides a default implementation of the standard Custom Elements
        * `disconnectedCallback`.
        *
        * @override
-       */},{key:"disconnectedCallback",value:function disconnectedCallback(){}/**
+       */},{key:'disconnectedCallback',value:function disconnectedCallback(){}/**
        * Stamps the element template.
        *
        * @override
-       */},{key:"ready",value:function ready(){if(this._template){this.root=this._stampTemplate(this._template);this.$=this.root.$;}_get(PolymerElement.prototype.__proto__||Object.getPrototypeOf(PolymerElement.prototype),"ready",this).call(this);}/**
+       */},{key:'ready',value:function ready(){if(this._template){this.root=this._stampTemplate(this._template);this.$=this.root.$;}_get(PolymerElement.prototype.__proto__||Object.getPrototypeOf(PolymerElement.prototype),'ready',this).call(this);}/**
        * Implements `PropertyEffects`'s `_readyClients` call. Attaches
        * element dom by calling `_attachDom` with the dom stamped from the
        * element's template via `_stampTemplate`. Note that this allows
@@ -4271,11 +4271,11 @@ if(this._hasAccessor(p)){this._setPendingProperty(p,value,true);}else{this[p]=va
        * running.
        *
        * @override
-       */},{key:"_readyClients",value:function _readyClients(){if(this._template){this.root=this._attachDom(this.root);}// The super._readyClients here sets the clients initialized flag.
+       */},{key:'_readyClients',value:function _readyClients(){if(this._template){this.root=this._attachDom(this.root);}// The super._readyClients here sets the clients initialized flag.
 // We must wait to do this until after client dom is created/attached
 // so that this flag can be checked to prevent notifications fired
 // during this process from being handled before clients are ready.
-_get(PolymerElement.prototype.__proto__||Object.getPrototypeOf(PolymerElement.prototype),"_readyClients",this).call(this);}/**
+_get(PolymerElement.prototype.__proto__||Object.getPrototypeOf(PolymerElement.prototype),'_readyClients',this).call(this);}/**
        * Attaches an element's stamped dom to itself. By default,
        * this method creates a `shadowRoot` and adds the dom to it.
        * However, this method may be overridden to allow an element
@@ -4285,7 +4285,7 @@ _get(PolymerElement.prototype.__proto__||Object.getPrototypeOf(PolymerElement.pr
        * @suppress {missingReturn}
        * @param {NodeList} dom to attach to the element.
        * @return {Node} node to which the dom has been attached.
-       */},{key:"_attachDom",value:function _attachDom(dom){if(this.attachShadow){if(dom){if(!this.shadowRoot){this.attachShadow({mode:'open'});}this.shadowRoot.appendChild(dom);return this.shadowRoot;}}else{throw new Error('ShadowDOM not available. '+// TODO(sorvell): move to compile-time conditional when supported
+       */},{key:'_attachDom',value:function _attachDom(dom){if(this.attachShadow){if(dom){if(!this.shadowRoot){this.attachShadow({mode:'open'});}this.shadowRoot.appendChild(dom);return this.shadowRoot;}}else{throw new Error('ShadowDOM not available. '+// TODO(sorvell): move to compile-time conditional when supported
 'Polymer.Element can create dom as children instead of in '+'ShadowDOM by setting `this.root = this;\` before \`ready\`.');}}/**
        * Provides a default implementation of the standard Custom Elements
        * `attributeChangedCallback`.
@@ -4296,7 +4296,7 @@ _get(PolymerElement.prototype.__proto__||Object.getPrototypeOf(PolymerElement.pr
        * properties.
        *
        * @override
-       */},{key:"attributeChangedCallback",value:function attributeChangedCallback(name,old,value){if(old!==value){var property=caseMap.dashToCamelCase(name);var type=propertiesForClass(this.constructor)[property].type;if(!this._hasReadOnlyEffect(property)){this._attributeToProperty(name,value,type);}}}/**
+       */},{key:'attributeChangedCallback',value:function attributeChangedCallback(name,old,value){if(old!==value){var property=caseMap.dashToCamelCase(name);var type=propertiesForClass(this.constructor)[property].type;if(!this._hasReadOnlyEffect(property)){this._attributeToProperty(name,value,type);}}}/**
        * When using the ShadyCSS scoping and custom property shim, causes all
        * shimmed styles in this element (and its subtree) to be updated
        * based on current custom property values.
@@ -4311,7 +4311,7 @@ _get(PolymerElement.prototype.__proto__||Object.getPrototypeOf(PolymerElement.pr
        *
        * @param {Object=} properties Bag of custom property key/values to
        *   apply to this element.
-       */},{key:"updateStyles",value:function updateStyles(properties){if(window.ShadyCSS){window.ShadyCSS.styleSubtree(this,properties);}}/**
+       */},{key:'updateStyles',value:function updateStyles(properties){if(window.ShadyCSS){window.ShadyCSS.styleSubtree(this,properties);}}/**
        * Rewrites a given URL relative to a base URL. The base URL defaults to
        * the original location of the document containing the `dom-module` for
        * this element. This method will return the same URL before and after
@@ -4321,14 +4321,14 @@ _get(PolymerElement.prototype.__proto__||Object.getPrototypeOf(PolymerElement.pr
        * @param {string=} base Optional base URL to resolve against, defaults
        * to the element's `importPath`
        * @return {string} Rewritten URL relative to base
-       */},{key:"resolveUrl",value:function resolveUrl(url,base){if(!base&&this.importPath){base=Polymer.ResolveUrl.resolveUrl(this.importPath);}return Polymer.ResolveUrl.resolveUrl(url,base);}/**
+       */},{key:'resolveUrl',value:function resolveUrl(url,base){if(!base&&this.importPath){base=Polymer.ResolveUrl.resolveUrl(this.importPath);}return Polymer.ResolveUrl.resolveUrl(url,base);}/**
        * Overrides `PropertyAccessors` to add map of dynamic functions on
        * template info, for consumption by `PropertyEffects` template binding
        * code. This map determines which method templates should have accessors
        * created for them.
        *
        * @override
-       */}],[{key:"finalize",/**
+       */}],[{key:'finalize',/**
        * Called automatically when the first element instance is created to
        * ensure that class finalization work has been completed.
        * May be called by users to eagerly perform class finalization work
@@ -4375,14 +4375,14 @@ _get(PolymerElement.prototype.__proto__||Object.getPrototypeOf(PolymerElement.pr
        *   }
        *
        * @return {HTMLTemplateElement|string} Template to be stamped
-       */},{key:"_parseTemplateContent",value:function _parseTemplateContent(template,templateInfo,nodeInfo){templateInfo.dynamicFns=templateInfo.dynamicFns||propertiesForClass(this);return _get(PolymerElement.__proto__||Object.getPrototypeOf(PolymerElement),"_parseTemplateContent",this).call(this,template,templateInfo,nodeInfo);}},{key:"observedAttributes",/**
+       */},{key:'_parseTemplateContent',value:function _parseTemplateContent(template,templateInfo,nodeInfo){templateInfo.dynamicFns=templateInfo.dynamicFns||propertiesForClass(this);return _get(PolymerElement.__proto__||Object.getPrototypeOf(PolymerElement),'_parseTemplateContent',this).call(this,template,templateInfo,nodeInfo);}},{key:'observedAttributes',/**
        * Standard Custom Elements V1 API.  The default implementation returns
        * a list of dash-cased attributes based on a flattening of all properties
        * declared in `static get properties()` for this element and any
        * superclasses.
        *
        * @return {Array} Observed attribute list
-       */get:function get(){if(!this.hasOwnProperty(JSCompiler_renameProperty('__observedAttributes',this))){var list=[];var properties=propertiesForClass(this);for(var prop in properties){list.push(Polymer.CaseMap.camelToDashCase(prop));}this.__observedAttributes=list;}return this.__observedAttributes;}},{key:"template",get:function get(){if(!this.hasOwnProperty(JSCompiler_renameProperty('_template',this))){this._template=Polymer.DomModule.import(this.is,'template')||// note: implemented so a subclass can retrieve the super
+       */get:function get(){if(!this.hasOwnProperty(JSCompiler_renameProperty('__observedAttributes',this))){var list=[];var properties=propertiesForClass(this);for(var prop in properties){list.push(Polymer.CaseMap.camelToDashCase(prop));}this.__observedAttributes=list;}return this.__observedAttributes;}},{key:'template',get:function get(){if(!this.hasOwnProperty(JSCompiler_renameProperty('_template',this))){this._template=Polymer.DomModule.import(this.is,'template')||// note: implemented so a subclass can retrieve the super
 // template; call the super impl this way so that `this` points
 // to the superclass.
 Object.getPrototypeOf(this.prototype).constructor.template;}return this._template;}/**
@@ -4395,7 +4395,7 @@ Object.getPrototypeOf(this.prototype).constructor.template;}return this._templat
        * Note, this path should contain a trailing `/`.
        *
        * @return {string} The import path for this element class
-       */},{key:"importPath",get:function get(){if(!this.hasOwnProperty(JSCompiler_renameProperty('_importPath',this))){var module=Polymer.DomModule.import(this.is);this._importPath=module?module.assetpath:''||Object.getPrototypeOf(this.prototype).constructor.importPath;}return this._importPath;}}]);return PolymerElement;}(polymerElementBase);return PolymerElement;});/**
+       */},{key:'importPath',get:function get(){if(!this.hasOwnProperty(JSCompiler_renameProperty('_importPath',this))){var module=Polymer.DomModule.import(this.is);this._importPath=module?module.assetpath:''||Object.getPrototypeOf(this.prototype).constructor.importPath;}return this._importPath;}}]);return PolymerElement;}(polymerElementBase);return PolymerElement;});/**
    * Provides basic tracking of element definitions (registrations) and
    * instance counts.
    *
@@ -4457,7 +4457,7 @@ Object.getPrototypeOf(this.prototype).constructor.template;}return this._templat
    *   key meta-programming features including template stamping, data-binding,
    *   attribute deserialization, and property change observation
    */var Element=Polymer.ElementMixin(HTMLElement);Polymer.Element=Element;})();(function(){'use strict';// Common implementation for mixin & behavior
-function mutablePropertyChange(inst,property,value,old,mutableData){var isObject=void 0;if(mutableData){isObject=(typeof value==="undefined"?"undefined":_typeof(value))==='object'&&value!==null;// Pull `old` for Objects from temp cache, but treat `null` as a primitive
+function mutablePropertyChange(inst,property,value,old,mutableData){var isObject=void 0;if(mutableData){isObject=(typeof value==='undefined'?'undefined':_typeof(value))==='object'&&value!==null;// Pull `old` for Objects from temp cache, but treat `null` as a primitive
 if(isObject){old=inst.__dataTemp[property];}}// Strict equality check, but return false for NaN===NaN
 var shouldChange=old!==value&&(old===old||value===value);// Objects are stored in temporary cache (cleared at end of
 // turn), which is used for dirty-checking
@@ -4499,7 +4499,7 @@ if(isObject&&shouldChange){inst.__dataTemp[property]=value;}return shouldChange;
    */Polymer.MutableData=Polymer.dedupingMixin(function(superClass){/**
      * @polymerMixinClass
      * @implements {Polymer_MutableData}
-     */var MutableData=function(_superClass3){_inherits(MutableData,_superClass3);function MutableData(){_classCallCheck(this,MutableData);return _possibleConstructorReturn(this,(MutableData.__proto__||Object.getPrototypeOf(MutableData)).apply(this,arguments));}_createClass(MutableData,[{key:"_shouldPropertyChange",/**
+     */var MutableData=function(_superClass3){_inherits(MutableData,_superClass3);function MutableData(){_classCallCheck(this,MutableData);return _possibleConstructorReturn(this,(MutableData.__proto__||Object.getPrototypeOf(MutableData)).apply(this,arguments));}_createClass(MutableData,[{key:'_shouldPropertyChange',/**
        * Overrides `Polymer.PropertyEffects` to provide option for skipping
        * strict equality checking for Objects and Arrays.
        *
@@ -4554,7 +4554,7 @@ if(isObject&&shouldChange){inst.__dataTemp[property]=value;}return shouldChange;
    */Polymer.OptionalMutableData=Polymer.dedupingMixin(function(superClass){/**
      * @polymerMixinClass
      * @implements {Polymer_OptionalMutableData}
-     */var OptionalMutableData=function(_superClass4){_inherits(OptionalMutableData,_superClass4);function OptionalMutableData(){_classCallCheck(this,OptionalMutableData);return _possibleConstructorReturn(this,(OptionalMutableData.__proto__||Object.getPrototypeOf(OptionalMutableData)).apply(this,arguments));}_createClass(OptionalMutableData,[{key:"_shouldPropertyChange",/**
+     */var OptionalMutableData=function(_superClass4){_inherits(OptionalMutableData,_superClass4);function OptionalMutableData(){_classCallCheck(this,OptionalMutableData);return _possibleConstructorReturn(this,(OptionalMutableData.__proto__||Object.getPrototypeOf(OptionalMutableData)).apply(this,arguments));}_createClass(OptionalMutableData,[{key:'_shouldPropertyChange',/**
        * Overrides `Polymer.PropertyEffects` to provide option for skipping
        * strict equality checking for Objects and Arrays.
        *
@@ -4571,7 +4571,7 @@ if(isObject&&shouldChange){inst.__dataTemp[property]=value;}return shouldChange;
        * @param {*} old Previous property value
        * @return {boolean} Whether the property should be considered a change
        * @protected
-       */value:function _shouldPropertyChange(property,value,old){return mutablePropertyChange(this,property,value,old,this.mutableData);}}],[{key:"properties",get:function get(){return{/**
+       */value:function _shouldPropertyChange(property,value,old){return mutablePropertyChange(this,property,value,old,this.mutableData);}}],[{key:'properties',get:function get(){return{/**
            * Instance-level flag for configuring the dirty-checking strategy
            * for this element.  When true, Objects and Arrays will skip dirty
            * checking, otherwise strict equality checking will be used.
@@ -4593,7 +4593,7 @@ var options=_this10.__templatizeOptions;if(props&&options.instanceProps||!option
        * sets any properties stored in `__hostProps`.
        * @private
        * @param {Object} props Object of property name-value pairs to set.
-       */_createClass(TemplateInstanceBase,[{key:"_configureProperties",value:function _configureProperties(props){var options=this.__templatizeOptions;if(props){for(var iprop in options.instanceProps){if(iprop in props){this._setPendingProperty(iprop,props[iprop]);}}}for(var hprop in this.__hostProps){this._setPendingProperty(hprop,this.__dataHost['_host_'+hprop]);}}/**
+       */_createClass(TemplateInstanceBase,[{key:'_configureProperties',value:function _configureProperties(props){var options=this.__templatizeOptions;if(props){for(var iprop in options.instanceProps){if(iprop in props){this._setPendingProperty(iprop,props[iprop]);}}}for(var hprop in this.__hostProps){this._setPendingProperty(hprop,this.__dataHost['_host_'+hprop]);}}/**
        * Forwards a host property to this instance.  This method should be
        * called on instances from the `options.forwardHostProp` callback
        * to propagate changes of host properties to each instance.
@@ -4602,9 +4602,9 @@ var options=_this10.__templatizeOptions;if(props&&options.instanceProps||!option
        *
        * @param {string} prop Property or path name
        * @param {*} value Value of the property to forward
-       */},{key:"forwardHostProp",value:function forwardHostProp(prop,value){if(this._setPendingPropertyOrPath(prop,value,false,true)){this.__dataHost._enqueueClient(this);}}/**
+       */},{key:'forwardHostProp',value:function forwardHostProp(prop,value){if(this._setPendingPropertyOrPath(prop,value,false,true)){this.__dataHost._enqueueClient(this);}}/**
        * @override
-       */},{key:"_addEventListenerToNode",value:function _addEventListenerToNode(node,eventName,handler){var _this11=this;if(this._methodHost&&this.__templatizeOptions.parentModel){// If this instance should be considered a parent model, decorate
+       */},{key:'_addEventListenerToNode',value:function _addEventListenerToNode(node,eventName,handler){var _this11=this;if(this._methodHost&&this.__templatizeOptions.parentModel){// If this instance should be considered a parent model, decorate
 // events this template instance as `model`
 this._methodHost._addEventListenerToNode(node,eventName,function(e){e.model=_this11;handler(e);});}else{// Otherwise delegate to the template's host (which could be)
 // another template instance
@@ -4615,20 +4615,20 @@ var templateHost=this.__dataHost.__dataHost;if(templateHost){templateHost._addEv
        * @param {boolean} hide Set to true to hide the children;
        * set to false to show them.
        * @protected
-       */},{key:"_showHideChildren",value:function _showHideChildren(hide){var c=this.children;for(var i=0;i<c.length;i++){var n=c[i];// Ignore non-changes
+       */},{key:'_showHideChildren',value:function _showHideChildren(hide){var c=this.children;for(var i=0;i<c.length;i++){var n=c[i];// Ignore non-changes
 if(Boolean(hide)!=Boolean(n.__hideTemplateChildren__)){if(n.nodeType===Node.TEXT_NODE){if(hide){n.__polymerTextContent__=n.textContent;n.textContent='';}else{n.textContent=n.__polymerTextContent__;}}else if(n.style){if(hide){n.__polymerDisplay__=n.style.display;n.style.display='none';}else{n.style.display=n.__polymerDisplay__;}}}n.__hideTemplateChildren__=hide;if(n._showHideChildren){n._showHideChildren(hide);}}}/**
        * Overrides default property-effects implementation to intercept
        * textContent bindings while children are "hidden" and cache in
        * private storage for later retrieval.
        *
        * @override
-       */},{key:"_setUnmanagedPropertyToNode",value:function _setUnmanagedPropertyToNode(node,prop,value){if(node.__hideTemplateChildren__&&node.nodeType==Node.TEXT_NODE&&prop=='textContent'){node.__polymerTextContent__=value;}else{_get(TemplateInstanceBase.prototype.__proto__||Object.getPrototypeOf(TemplateInstanceBase.prototype),"_setUnmanagedPropertyToNode",this).call(this,node,prop,value);}}/**
+       */},{key:'_setUnmanagedPropertyToNode',value:function _setUnmanagedPropertyToNode(node,prop,value){if(node.__hideTemplateChildren__&&node.nodeType==Node.TEXT_NODE&&prop=='textContent'){node.__polymerTextContent__=value;}else{_get(TemplateInstanceBase.prototype.__proto__||Object.getPrototypeOf(TemplateInstanceBase.prototype),'_setUnmanagedPropertyToNode',this).call(this,node,prop,value);}}/**
        * Find the parent model of this template instance.  The parent model
        * is either another templatize instance that had option `parentModel: true`,
        * or else the host element.
        *
        * @return {Polymer.PropertyEffectsInterface} The parent model of this instance
-       */},{key:"parentModel",get:function get(){var model=this.__parentModel;if(!model){var options=void 0;model=this;do{// A template instance's `__dataHost` is a <template>
+       */},{key:'parentModel',get:function get(){var model=this.__parentModel;if(!model){var options=void 0;model=this;do{// A template instance's `__dataHost` is a <template>
 // `model.__dataHost.__dataHost` is the template's host
 model=model.__dataHost.__dataHost;}while((options=model.__templatizeOptions)&&!options.parentModel);this.__parentModel=model;}return model;}}]);return TemplateInstanceBase;}(base);var MutableTemplateInstanceBase=Polymer.MutableData(TemplateInstanceBase);function findMethodHost(template){// Technically this should be the owner of the outermost template.
 // In shadow dom, this is always getRootNode().host, but we can
@@ -4782,15 +4782,15 @@ var Debouncer=function(){function Debouncer(){_classCallCheck(this,Debouncer);th
      *
      * @param {!AsyncModule} asyncModule Object with Async interface.
      * @param {function()} callback Callback to run.
-     */_createClass(Debouncer,[{key:"setConfig",value:function setConfig(asyncModule,callback){var _this15=this;this._asyncModule=asyncModule;this._callback=callback;this._timer=this._asyncModule.run(function(){_this15._timer=null;_this15._callback();});}/**
+     */_createClass(Debouncer,[{key:'setConfig',value:function setConfig(asyncModule,callback){var _this15=this;this._asyncModule=asyncModule;this._callback=callback;this._timer=this._asyncModule.run(function(){_this15._timer=null;_this15._callback();});}/**
      * Cancels an active debouncer and returns a reference to itself.
-     */},{key:"cancel",value:function cancel(){if(this.isActive()){this._asyncModule.cancel(this._timer);this._timer=null;}}/**
+     */},{key:'cancel',value:function cancel(){if(this.isActive()){this._asyncModule.cancel(this._timer);this._timer=null;}}/**
      * Flushes an active debouncer and returns a reference to itself.
-     */},{key:"flush",value:function flush(){if(this.isActive()){this.cancel();this._callback();}}/**
+     */},{key:'flush',value:function flush(){if(this.isActive()){this.cancel();this._callback();}}/**
      * Returns true if the debouncer is active.
      *
      * @return {boolean} True if active.
-     */},{key:"isActive",value:function isActive(){return this._timer!=null;}/**
+     */},{key:'isActive',value:function isActive(){return this._timer!=null;}/**
    * Creates a debouncer if no debouncer is passed as a parameter
    * or it cancels an active debouncer otherwise. The following
    * example shows how a debouncer can be called multiple times within a
@@ -4819,7 +4819,7 @@ var Debouncer=function(){function Debouncer(){_classCallCheck(this,Debouncer);th
    * @param {!AsyncModule} asyncModule Object with Async interface
    * @param {function()} callback Callback to run.
    * @return {!Debouncer} Returns a debouncer object.
-   */}],[{key:"debounce",value:function debounce(debouncer,asyncModule,callback){if(debouncer instanceof Debouncer){debouncer.cancel();}else{debouncer=new Debouncer();}debouncer.setConfig(asyncModule,callback);return debouncer;}}]);return Debouncer;}();/**
+   */}],[{key:'debounce',value:function debounce(debouncer,asyncModule,callback){if(debouncer instanceof Debouncer){debouncer.cancel();}else{debouncer=new Debouncer();}debouncer.setConfig(asyncModule,callback);return debouncer;}}]);return Debouncer;}();/**
    * @memberof Polymer
    */Polymer.Debouncer=Debouncer;})();(function(){'use strict';var debouncerQueue=[];/**
    * Adds a `Polymer.Debouncer` to a list of globally flushable tasks.
@@ -4929,9 +4929,9 @@ var Debouncer=function(){function Debouncer(){_classCallCheck(this,Debouncer);th
    * @mixes Polymer.MutableData
    * @summary Custom element for stamping instance of a template bound to
    *   items in an array.
-   */var DomRepeat=function(_domRepeatBase){_inherits(DomRepeat,_domRepeatBase);_createClass(DomRepeat,null,[{key:"is",// Not needed to find template; can be removed once the analyzer
+   */var DomRepeat=function(_domRepeatBase){_inherits(DomRepeat,_domRepeatBase);_createClass(DomRepeat,null,[{key:'is',// Not needed to find template; can be removed once the analyzer
 // can find the tag name from customElements.define call
-get:function get(){return'dom-repeat';}},{key:"template",get:function get(){return null;}},{key:"properties",get:function get(){/**
+get:function get(){return'dom-repeat';}},{key:'template',get:function get(){return null;}},{key:'properties',get:function get(){/**
        * Fired whenever DOM is added or removed by this template (by
        * default, rendering occurs lazily).  To force immediate rendering, call
        * `render`.
@@ -4995,37 +4995,37 @@ get:function get(){return'dom-repeat';}},{key:"template",get:function get(){retu
          * higher number will allow lower latency and higher throughput for
          * things like event handlers, but will result in a longer time for the
          * remaining items to complete rendering.
-         */targetFramerate:{type:Number,value:20},_targetFrameTime:{type:Number,computed:'__computeFrameTime(targetFramerate)'}};}},{key:"observers",get:function get(){return['__itemsChanged(items.*)'];}}]);function DomRepeat(){_classCallCheck(this,DomRepeat);var _this16=_possibleConstructorReturn(this,(DomRepeat.__proto__||Object.getPrototypeOf(DomRepeat)).call(this));_this16.__instances=[];_this16.__limit=Infinity;_this16.__pool=[];_this16.__renderDebouncer=null;_this16.__itemsIdxToInstIdx={};_this16.__chunkCount=null;_this16.__lastChunkTime=null;_this16.__needFullRefresh=false;_this16.__sortFn=null;_this16.__filterFn=null;_this16.__observePaths=null;_this16.__ctor=null;return _this16;}_createClass(DomRepeat,[{key:"disconnectedCallback",value:function disconnectedCallback(){_get(DomRepeat.prototype.__proto__||Object.getPrototypeOf(DomRepeat.prototype),"disconnectedCallback",this).call(this);this.__isDetached=true;for(var i=0;i<this.__instances.length;i++){this.__detachInstance(i);}}},{key:"connectedCallback",value:function connectedCallback(){_get(DomRepeat.prototype.__proto__||Object.getPrototypeOf(DomRepeat.prototype),"connectedCallback",this).call(this);// only perform attachment if the element was previously detached.
-if(this.__isDetached){this.__isDetached=false;var parent=this.parentNode;for(var i=0;i<this.__instances.length;i++){this.__attachInstance(i,parent);}}}},{key:"__ensureTemplatized",value:function __ensureTemplatized(){var _this17=this;// Templatizing (generating the instance constructor) needs to wait
+         */targetFramerate:{type:Number,value:20},_targetFrameTime:{type:Number,computed:'__computeFrameTime(targetFramerate)'}};}},{key:'observers',get:function get(){return['__itemsChanged(items.*)'];}}]);function DomRepeat(){_classCallCheck(this,DomRepeat);var _this16=_possibleConstructorReturn(this,(DomRepeat.__proto__||Object.getPrototypeOf(DomRepeat)).call(this));_this16.__instances=[];_this16.__limit=Infinity;_this16.__pool=[];_this16.__renderDebouncer=null;_this16.__itemsIdxToInstIdx={};_this16.__chunkCount=null;_this16.__lastChunkTime=null;_this16.__needFullRefresh=false;_this16.__sortFn=null;_this16.__filterFn=null;_this16.__observePaths=null;_this16.__ctor=null;return _this16;}_createClass(DomRepeat,[{key:'disconnectedCallback',value:function disconnectedCallback(){_get(DomRepeat.prototype.__proto__||Object.getPrototypeOf(DomRepeat.prototype),'disconnectedCallback',this).call(this);this.__isDetached=true;for(var i=0;i<this.__instances.length;i++){this.__detachInstance(i);}}},{key:'connectedCallback',value:function connectedCallback(){_get(DomRepeat.prototype.__proto__||Object.getPrototypeOf(DomRepeat.prototype),'connectedCallback',this).call(this);// only perform attachment if the element was previously detached.
+if(this.__isDetached){this.__isDetached=false;var parent=this.parentNode;for(var i=0;i<this.__instances.length;i++){this.__attachInstance(i,parent);}}}},{key:'__ensureTemplatized',value:function __ensureTemplatized(){var _this17=this;// Templatizing (generating the instance constructor) needs to wait
 // until ready, since won't have its template content handed back to
 // it until then
 if(!this.__ctor){var template=this.template=this.querySelector('template');if(!template){// // Wait until childList changes and template should be there by then
 var observer=new MutationObserver(function(){if(_this17.querySelector('template')){observer.disconnect();_this17.__render();}else{throw new Error('dom-repeat requires a <template> child');}});observer.observe(this,{childList:true});return false;}// Template instance props that should be excluded from forwarding
-var instanceProps={};instanceProps[this.as]=true;instanceProps[this.indexAs]=true;instanceProps[this.itemsIndexAs]=true;this.__ctor=Polymer.Templatize.templatize(template,this,{mutableData:this.mutableData,parentModel:true,instanceProps:instanceProps,forwardHostProp:function forwardHostProp(prop,value){var i$=this.__instances;for(var i=0,inst;i<i$.length&&(inst=i$[i]);i++){inst.forwardHostProp(prop,value);}},notifyInstanceProp:function notifyInstanceProp(inst,prop,value){if(Polymer.Path.matches(this.as,prop)){var idx=inst[this.itemsIndexAs];if(prop==this.as){this.items[idx]=value;}var path=Polymer.Path.translate(this.as,'items.'+idx,prop);this.notifyPath(path,value);}}});}return true;}},{key:"__getMethodHost",value:function __getMethodHost(){// Technically this should be the owner of the outermost template.
+var instanceProps={};instanceProps[this.as]=true;instanceProps[this.indexAs]=true;instanceProps[this.itemsIndexAs]=true;this.__ctor=Polymer.Templatize.templatize(template,this,{mutableData:this.mutableData,parentModel:true,instanceProps:instanceProps,forwardHostProp:function forwardHostProp(prop,value){var i$=this.__instances;for(var i=0,inst;i<i$.length&&(inst=i$[i]);i++){inst.forwardHostProp(prop,value);}},notifyInstanceProp:function notifyInstanceProp(inst,prop,value){if(Polymer.Path.matches(this.as,prop)){var idx=inst[this.itemsIndexAs];if(prop==this.as){this.items[idx]=value;}var path=Polymer.Path.translate(this.as,'items.'+idx,prop);this.notifyPath(path,value);}}});}return true;}},{key:'__getMethodHost',value:function __getMethodHost(){// Technically this should be the owner of the outermost template.
 // In shadow dom, this is always getRootNode().host, but we can
 // approximate this via cooperation with our dataHost always setting
 // `_methodHost` as long as there were bindings (or id's) on this
 // instance causing it to get a dataHost.
-return this.__dataHost._methodHost||this.__dataHost;}},{key:"__sortChanged",value:function __sortChanged(sort){var methodHost=this.__getMethodHost();this.__sortFn=sort&&(typeof sort=='function'?sort:function(){return methodHost[sort].apply(methodHost,arguments);});this.__needFullRefresh=true;if(this.items){this.__debounceRender(this.__render);}}},{key:"__filterChanged",value:function __filterChanged(filter){var methodHost=this.__getMethodHost();this.__filterFn=filter&&(typeof filter=='function'?filter:function(){return methodHost[filter].apply(methodHost,arguments);});this.__needFullRefresh=true;if(this.items){this.__debounceRender(this.__render);}}},{key:"__computeFrameTime",value:function __computeFrameTime(rate){return Math.ceil(1000/rate);}},{key:"__initializeChunking",value:function __initializeChunking(){if(this.initialCount){this.__limit=this.initialCount;this.__chunkCount=this.initialCount;this.__lastChunkTime=performance.now();}}},{key:"__tryRenderChunk",value:function __tryRenderChunk(){// Debounced so that multiple calls through `_render` between animation
+return this.__dataHost._methodHost||this.__dataHost;}},{key:'__sortChanged',value:function __sortChanged(sort){var methodHost=this.__getMethodHost();this.__sortFn=sort&&(typeof sort=='function'?sort:function(){return methodHost[sort].apply(methodHost,arguments);});this.__needFullRefresh=true;if(this.items){this.__debounceRender(this.__render);}}},{key:'__filterChanged',value:function __filterChanged(filter){var methodHost=this.__getMethodHost();this.__filterFn=filter&&(typeof filter=='function'?filter:function(){return methodHost[filter].apply(methodHost,arguments);});this.__needFullRefresh=true;if(this.items){this.__debounceRender(this.__render);}}},{key:'__computeFrameTime',value:function __computeFrameTime(rate){return Math.ceil(1000/rate);}},{key:'__initializeChunking',value:function __initializeChunking(){if(this.initialCount){this.__limit=this.initialCount;this.__chunkCount=this.initialCount;this.__lastChunkTime=performance.now();}}},{key:'__tryRenderChunk',value:function __tryRenderChunk(){// Debounced so that multiple calls through `_render` between animation
 // frames only queue one new rAF (e.g. array mutation & chunked render)
-if(this.items&&this.__limit<this.items.length){this.__debounceRender(this.__requestRenderChunk);}}},{key:"__requestRenderChunk",value:function __requestRenderChunk(){var _this18=this;requestAnimationFrame(function(){return _this18.__renderChunk();});}},{key:"__renderChunk",value:function __renderChunk(){// Simple auto chunkSize throttling algorithm based on feedback loop:
+if(this.items&&this.__limit<this.items.length){this.__debounceRender(this.__requestRenderChunk);}}},{key:'__requestRenderChunk',value:function __requestRenderChunk(){var _this18=this;requestAnimationFrame(function(){return _this18.__renderChunk();});}},{key:'__renderChunk',value:function __renderChunk(){// Simple auto chunkSize throttling algorithm based on feedback loop:
 // measure actual time between frames and scale chunk count by ratio
 // of target/actual frame time
-var currChunkTime=performance.now();var ratio=this._targetFrameTime/(currChunkTime-this.__lastChunkTime);this.__chunkCount=Math.round(this.__chunkCount*ratio)||1;this.__limit+=this.__chunkCount;this.__lastChunkTime=currChunkTime;this.__debounceRender(this.__render);}},{key:"__observeChanged",value:function __observeChanged(){this.__observePaths=this.observe&&this.observe.replace('.*','.').split(' ');}},{key:"__itemsChanged",value:function __itemsChanged(change){if(this.items&&!Array.isArray(this.items)){console.warn('dom-repeat expected array for `items`, found',this.items);}// If path was to an item (e.g. 'items.3' or 'items.3.foo'), forward the
+var currChunkTime=performance.now();var ratio=this._targetFrameTime/(currChunkTime-this.__lastChunkTime);this.__chunkCount=Math.round(this.__chunkCount*ratio)||1;this.__limit+=this.__chunkCount;this.__lastChunkTime=currChunkTime;this.__debounceRender(this.__render);}},{key:'__observeChanged',value:function __observeChanged(){this.__observePaths=this.observe&&this.observe.replace('.*','.').split(' ');}},{key:'__itemsChanged',value:function __itemsChanged(change){if(this.items&&!Array.isArray(this.items)){console.warn('dom-repeat expected array for `items`, found',this.items);}// If path was to an item (e.g. 'items.3' or 'items.3.foo'), forward the
 // path to that instance synchronously (retuns false for non-item paths)
 if(!this.__handleItemPath(change.path,change.value)){// Otherwise, the array was reset ('items') or spliced ('items.splices'),
 // so queue a full refresh
-this.__needFullRefresh=true;this.__initializeChunking();this.__debounceRender(this.__render);}}},{key:"__handleObservedPaths",value:function __handleObservedPaths(path){if(this.__observePaths){path=path.substring(path.indexOf('.')+1);var paths=this.__observePaths;for(var i=0;i<paths.length;i++){if(path.indexOf(paths[i])===0){this.__needFullRefresh=true;this.__debounceRender(this.__render,this.delay);return true;}}}}/**
+this.__needFullRefresh=true;this.__initializeChunking();this.__debounceRender(this.__render);}}},{key:'__handleObservedPaths',value:function __handleObservedPaths(path){if(this.__observePaths){path=path.substring(path.indexOf('.')+1);var paths=this.__observePaths;for(var i=0;i<paths.length;i++){if(path.indexOf(paths[i])===0){this.__needFullRefresh=true;this.__debounceRender(this.__render,this.delay);return true;}}}}/**
      * @param {function()} fn Function to debounce.
      * @param {number=} delay Delay in ms to debounce by.
-     */},{key:"__debounceRender",value:function __debounceRender(fn,delay){this.__renderDebouncer=Polymer.Debouncer.debounce(this.__renderDebouncer,delay>0?Polymer.Async.timeOut.after(delay):Polymer.Async.microTask,fn.bind(this));Polymer.enqueueDebouncer(this.__renderDebouncer);}/**
+     */},{key:'__debounceRender',value:function __debounceRender(fn,delay){this.__renderDebouncer=Polymer.Debouncer.debounce(this.__renderDebouncer,delay>0?Polymer.Async.timeOut.after(delay):Polymer.Async.microTask,fn.bind(this));Polymer.enqueueDebouncer(this.__renderDebouncer);}/**
      * Forces the element to render its content. Normally rendering is
      * asynchronous to a provoking change. This is done for efficiency so
      * that multiple changes trigger only a single render. The render method
      * should be called if, for example, template rendering is required to
      * validate application state.
-     */},{key:"render",value:function render(){// Queue this repeater, then flush all in order
-this.__needFullRefresh=true;this.__debounceRender(this.__render);Polymer.flush();}},{key:"__render",value:function __render(){if(!this.__ensureTemplatized()){// No template found yet
+     */},{key:'render',value:function render(){// Queue this repeater, then flush all in order
+this.__needFullRefresh=true;this.__debounceRender(this.__render);Polymer.flush();}},{key:'__render',value:function __render(){if(!this.__ensureTemplatized()){// No template found yet
 return;}this.__applyFullRefresh();// Reset the pool
 // TODO(kschaaf): Reuse pool across turns and nested templates
 // Now that objects/arrays are re-evaluated when set, we can safely
@@ -5034,17 +5034,17 @@ return;}this.__applyFullRefresh();// Reset the pool
 this.__pool.length=0;// Set rendered item count
 this._setRenderedItemCount(this.__instances.length);// Notify users
 this.dispatchEvent(new CustomEvent('dom-change',{bubbles:true,composed:true}));// Check to see if we need to render more items
-this.__tryRenderChunk();}},{key:"__applyFullRefresh",value:function __applyFullRefresh(){var _this19=this;var items=this.items||[];var isntIdxToItemsIdx=new Array(items.length);for(var i=0;i<items.length;i++){isntIdxToItemsIdx[i]=i;}// Apply user filter
+this.__tryRenderChunk();}},{key:'__applyFullRefresh',value:function __applyFullRefresh(){var _this19=this;var items=this.items||[];var isntIdxToItemsIdx=new Array(items.length);for(var i=0;i<items.length;i++){isntIdxToItemsIdx[i]=i;}// Apply user filter
 if(this.__filterFn){isntIdxToItemsIdx=isntIdxToItemsIdx.filter(function(i,idx,array){return _this19.__filterFn(items[i],idx,array);});}// Apply user sort
 if(this.__sortFn){isntIdxToItemsIdx.sort(function(a,b){return _this19.__sortFn(items[a],items[b]);});}// items->inst map kept for item path forwarding
 var itemsIdxToInstIdx=this.__itemsIdxToInstIdx={};var instIdx=0;// Generate instances and assign items
 var limit=Math.min(isntIdxToItemsIdx.length,this.__limit);for(;instIdx<limit;instIdx++){var inst=this.__instances[instIdx];var itemIdx=isntIdxToItemsIdx[instIdx];var item=items[itemIdx];itemsIdxToInstIdx[itemIdx]=instIdx;if(inst&&instIdx<this.__limit){inst._setPendingProperty(this.as,item);inst._setPendingProperty(this.indexAs,instIdx);inst._setPendingProperty(this.itemsIndexAs,itemIdx);inst._flushProperties();}else{this.__insertInstance(item,instIdx,itemIdx);}}// Remove any extra instances from previous state
-for(var _i3=this.__instances.length-1;_i3>=instIdx;_i3--){this.__detachAndRemoveInstance(_i3);}}},{key:"__detachInstance",value:function __detachInstance(idx){var inst=this.__instances[idx];for(var i=0;i<inst.children.length;i++){var el=inst.children[i];inst.root.appendChild(el);}return inst;}},{key:"__attachInstance",value:function __attachInstance(idx,parent){var inst=this.__instances[idx];parent.insertBefore(inst.root,this);}},{key:"__detachAndRemoveInstance",value:function __detachAndRemoveInstance(idx){var inst=this.__detachInstance(idx);if(inst){this.__pool.push(inst);}this.__instances.splice(idx,1);}},{key:"__stampInstance",value:function __stampInstance(item,instIdx,itemIdx){var model={};model[this.as]=item;model[this.indexAs]=instIdx;model[this.itemsIndexAs]=itemIdx;return new this.__ctor(model);}},{key:"__insertInstance",value:function __insertInstance(item,instIdx,itemIdx){var inst=this.__pool.pop();if(inst){// TODO(kschaaf): If the pool is shared across turns, hostProps
+for(var _i3=this.__instances.length-1;_i3>=instIdx;_i3--){this.__detachAndRemoveInstance(_i3);}}},{key:'__detachInstance',value:function __detachInstance(idx){var inst=this.__instances[idx];for(var i=0;i<inst.children.length;i++){var el=inst.children[i];inst.root.appendChild(el);}return inst;}},{key:'__attachInstance',value:function __attachInstance(idx,parent){var inst=this.__instances[idx];parent.insertBefore(inst.root,this);}},{key:'__detachAndRemoveInstance',value:function __detachAndRemoveInstance(idx){var inst=this.__detachInstance(idx);if(inst){this.__pool.push(inst);}this.__instances.splice(idx,1);}},{key:'__stampInstance',value:function __stampInstance(item,instIdx,itemIdx){var model={};model[this.as]=item;model[this.indexAs]=instIdx;model[this.itemsIndexAs]=itemIdx;return new this.__ctor(model);}},{key:'__insertInstance',value:function __insertInstance(item,instIdx,itemIdx){var inst=this.__pool.pop();if(inst){// TODO(kschaaf): If the pool is shared across turns, hostProps
 // need to be re-set to reused instances in addition to item
 inst._setPendingProperty(this.as,item);inst._setPendingProperty(this.indexAs,instIdx);inst._setPendingProperty(this.itemsIndexAs,itemIdx);inst._flushProperties();}else{inst=this.__stampInstance(item,instIdx,itemIdx);}var beforeRow=this.__instances[instIdx+1];var beforeNode=beforeRow?beforeRow.children[0]:this;this.parentNode.insertBefore(inst.root,beforeNode);this.__instances[instIdx]=inst;return inst;}// Implements extension point from Templatize mixin
-},{key:"_showHideChildren",value:function _showHideChildren(hidden){for(var i=0;i<this.__instances.length;i++){this.__instances[i]._showHideChildren(hidden);}}// Called as a side effect of a host items.<key>.<path> path change,
+},{key:'_showHideChildren',value:function _showHideChildren(hidden){for(var i=0;i<this.__instances.length;i++){this.__instances[i]._showHideChildren(hidden);}}// Called as a side effect of a host items.<key>.<path> path change,
 // responsible for notifying item.<path> changes to inst for key
-},{key:"__handleItemPath",value:function __handleItemPath(path,value){var itemsPath=path.slice(6);// 'items.'.length == 6
+},{key:'__handleItemPath',value:function __handleItemPath(path,value){var itemsPath=path.slice(6);// 'items.'.length == 6
 var dot=itemsPath.indexOf('.');var itemsIdx=dot<0?itemsPath:itemsPath.substring(0,dot);// If path was index into array...
 if(itemsIdx==parseInt(itemsIdx,10)){var itemSubPath=dot<0?'':itemsPath.substring(dot+1);// See if the item subpath should trigger a full refresh...
 if(!this.__handleObservedPaths(itemSubPath)){// If not, forward to the instance for that index
@@ -5060,7 +5060,7 @@ inst._setPendingPropertyOrPath(itemPath,value,false,true);inst._flushProperties(
      *
      * @param {HTMLElement} el Element for which to return the item.
      * @return {*} Item associated with the element.
-     */},{key:"itemForElement",value:function itemForElement(el){var instance=this.modelForElement(el);return instance&&instance[this.as];}/**
+     */},{key:'itemForElement',value:function itemForElement(el){var instance=this.modelForElement(el);return instance&&instance[this.as];}/**
      * Returns the inst index for a given element stamped by this `dom-repeat`.
      * If `sort` is provided, the index will reflect the sorted order (rather
      * than the original array order).
@@ -5068,7 +5068,7 @@ inst._setPendingPropertyOrPath(itemPath,value,false,true);inst._flushProperties(
      * @param {HTMLElement} el Element for which to return the index.
      * @return {*} Row index associated with the element (note this may
      *   not correspond to the array index if a user `sort` is applied).
-     */},{key:"indexForElement",value:function indexForElement(el){var instance=this.modelForElement(el);return instance&&instance[this.indexAs];}/**
+     */},{key:'indexForElement',value:function indexForElement(el){var instance=this.modelForElement(el);return instance&&instance[this.indexAs];}/**
      * Returns the template "model" associated with a given element, which
      * serves as the binding scope for the template instance the element is
      * contained in. A template model is an instance of `Polymer.Base`, and
@@ -5084,7 +5084,7 @@ inst._setPendingPropertyOrPath(itemPath,value,false,true);inst._flushProperties(
      * @param {HTMLElement} el Element for which to return a template model.
      * @return {TemplateInstanceBase} Model representing the binding scope for
      *   the element.
-     */},{key:"modelForElement",value:function modelForElement(el){return Polymer.Templatize.modelForElement(this.template,el);}}]);return DomRepeat;}(domRepeatBase);customElements.define(DomRepeat.is,DomRepeat);Polymer.DomRepeat=DomRepeat;})();(function(){/*
+     */},{key:'modelForElement',value:function modelForElement(el){return Polymer.Templatize.modelForElement(this.template,el);}}]);return DomRepeat;}(domRepeatBase);customElements.define(DomRepeat.is,DomRepeat);Polymer.DomRepeat=DomRepeat;})();(function(){/*
 
 Copyright (c) 2017 The Polymer Project Authors. All rights reserved.
 This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
@@ -5274,7 +5274,7 @@ if(!this.info.prevent){Gestures._fire(t,'tap',{x:e.clientX,y:e.clientY,sourceEve
    */Polymer.GestureEventListeners=Polymer.dedupingMixin(function(superClass){/**
      * @polymerMixinClass
      * @implements {Polymer_GestureEventListeners}
-     */var GestureEventListeners=function(_superClass5){_inherits(GestureEventListeners,_superClass5);function GestureEventListeners(){_classCallCheck(this,GestureEventListeners);return _possibleConstructorReturn(this,(GestureEventListeners.__proto__||Object.getPrototypeOf(GestureEventListeners)).apply(this,arguments));}_createClass(GestureEventListeners,[{key:"_addEventListenerToNode",value:function _addEventListenerToNode(node,eventName,handler){if(!gestures.addListener(node,eventName,handler)){_get(GestureEventListeners.prototype.__proto__||Object.getPrototypeOf(GestureEventListeners.prototype),"_addEventListenerToNode",this).call(this,node,eventName,handler);}}},{key:"_removeEventListenerFromNode",value:function _removeEventListenerFromNode(node,eventName,handler){if(!gestures.removeListener(node,eventName,handler)){_get(GestureEventListeners.prototype.__proto__||Object.getPrototypeOf(GestureEventListeners.prototype),"_removeEventListenerFromNode",this).call(this,node,eventName,handler);}}}]);return GestureEventListeners;}(superClass);return GestureEventListeners;});})();(function(){'use strict';// run a callback when HTMLImports are ready or immediately if
+     */var GestureEventListeners=function(_superClass5){_inherits(GestureEventListeners,_superClass5);function GestureEventListeners(){_classCallCheck(this,GestureEventListeners);return _possibleConstructorReturn(this,(GestureEventListeners.__proto__||Object.getPrototypeOf(GestureEventListeners)).apply(this,arguments));}_createClass(GestureEventListeners,[{key:'_addEventListenerToNode',value:function _addEventListenerToNode(node,eventName,handler){if(!gestures.addListener(node,eventName,handler)){_get(GestureEventListeners.prototype.__proto__||Object.getPrototypeOf(GestureEventListeners.prototype),'_addEventListenerToNode',this).call(this,node,eventName,handler);}}},{key:'_removeEventListenerFromNode',value:function _removeEventListenerFromNode(node,eventName,handler){if(!gestures.removeListener(node,eventName,handler)){_get(GestureEventListeners.prototype.__proto__||Object.getPrototypeOf(GestureEventListeners.prototype),'_removeEventListenerFromNode',this).call(this,node,eventName,handler);}}}]);return GestureEventListeners;}(superClass);return GestureEventListeners;});})();(function(){'use strict';// run a callback when HTMLImports are ready or immediately if
 // this api is not available.
 function whenImportsReady(cb){if(window.HTMLImports){HTMLImports.whenReady(cb);}else{cb();}}/**
    * Convenience method for importing an HTML document imperatively.
@@ -5462,7 +5462,7 @@ spliceOperationsFromEditDistances:function spliceOperationsFromEditDistances(dis
    * or removals from the target's list of flattened nodes.
    * @summary Class that listens for changes (additions or removals) to
    * "flattened nodes" on a given `node`.
-   */var FlattenedNodesObserver=function(){_createClass(FlattenedNodesObserver,null,[{key:"getFlattenedNodes",/**
+   */var FlattenedNodesObserver=function(){_createClass(FlattenedNodesObserver,null,[{key:'getFlattenedNodes',/**
      * Returns the list of flattened nodes for the given `node`.
      * This list consists of a node's children and, for any children
      * that are `<slot>` elements, the expanded flattened list of `assignedNodes`.
@@ -5477,22 +5477,22 @@ spliceOperationsFromEditDistances:function spliceOperationsFromEditDistances(dis
      * Activates an observer. This method is automatically called when
      * a `FlattenedNodesObserver` is created. It should only be called to
      * re-activate an observer that has been deactivated via the `disconnect` method.
-     */_createClass(FlattenedNodesObserver,[{key:"connect",value:function connect(){var _this22=this;if(isSlot(this._target)){this._listenSlots([this._target]);}else{this._listenSlots(this._target.children);if(window.ShadyDOM){this._shadyChildrenObserver=ShadyDOM.observeChildren(this._target,function(mutations){_this22._processMutations(mutations);});}else{this._nativeChildrenObserver=new MutationObserver(function(mutations){_this22._processMutations(mutations);});this._nativeChildrenObserver.observe(this._target,{childList:true});}}this._connected=true;}/**
+     */_createClass(FlattenedNodesObserver,[{key:'connect',value:function connect(){var _this22=this;if(isSlot(this._target)){this._listenSlots([this._target]);}else{this._listenSlots(this._target.children);if(window.ShadyDOM){this._shadyChildrenObserver=ShadyDOM.observeChildren(this._target,function(mutations){_this22._processMutations(mutations);});}else{this._nativeChildrenObserver=new MutationObserver(function(mutations){_this22._processMutations(mutations);});this._nativeChildrenObserver.observe(this._target,{childList:true});}}this._connected=true;}/**
      * Deactivates the flattened nodes observer. After calling this method
      * the observer callback will not be called when changes to flattened nodes
      * occur. The `connect` method may be subsequently called to reactivate
      * the observer.
-     */},{key:"disconnect",value:function disconnect(){if(isSlot(this._target)){this._unlistenSlots([this._target]);}else{this._unlistenSlots(this._target.children);if(window.ShadyDOM&&this._shadyChildrenObserver){ShadyDOM.unobserveChildren(this._shadyChildrenObserver);this._shadyChildrenObserver=null;}else if(this._nativeChildrenObserver){this._nativeChildrenObserver.disconnect();this._nativeChildrenObserver=null;}}this._connected=false;}},{key:"_schedule",value:function _schedule(){var _this23=this;if(!this._scheduled){this._scheduled=true;Polymer.Async.microTask.run(function(){return _this23.flush();});}}},{key:"_processMutations",value:function _processMutations(mutations){this._processSlotMutations(mutations);this.flush();}},{key:"_processSlotMutations",value:function _processSlotMutations(mutations){if(mutations){for(var i=0;i<mutations.length;i++){var mutation=mutations[i];if(mutation.addedNodes){this._listenSlots(mutation.addedNodes);}if(mutation.removedNodes){this._unlistenSlots(mutation.removedNodes);}}}}/**
+     */},{key:'disconnect',value:function disconnect(){if(isSlot(this._target)){this._unlistenSlots([this._target]);}else{this._unlistenSlots(this._target.children);if(window.ShadyDOM&&this._shadyChildrenObserver){ShadyDOM.unobserveChildren(this._shadyChildrenObserver);this._shadyChildrenObserver=null;}else if(this._nativeChildrenObserver){this._nativeChildrenObserver.disconnect();this._nativeChildrenObserver=null;}}this._connected=false;}},{key:'_schedule',value:function _schedule(){var _this23=this;if(!this._scheduled){this._scheduled=true;Polymer.Async.microTask.run(function(){return _this23.flush();});}}},{key:'_processMutations',value:function _processMutations(mutations){this._processSlotMutations(mutations);this.flush();}},{key:'_processSlotMutations',value:function _processSlotMutations(mutations){if(mutations){for(var i=0;i<mutations.length;i++){var mutation=mutations[i];if(mutation.addedNodes){this._listenSlots(mutation.addedNodes);}if(mutation.removedNodes){this._unlistenSlots(mutation.removedNodes);}}}}/**
      * Flushes the observer causing any pending changes to be immediately
      * delivered the observer callback. By default these changes are delivered
      * asynchronously at the next microtask checkpoint.
      *
      * @return {boolean} Returns true if any pending changes caused the observer
      * callback to run.
-     */},{key:"flush",value:function flush(){if(!this._connected){return;}if(window.ShadyDOM){ShadyDOM.flush();}if(this._nativeChildrenObserver){this._processSlotMutations(this._nativeChildrenObserver.takeRecords());}else if(this.shadyChildrenObserver){this._processSlotMutations(this._shadyChildrenObserver.takeRecords());}this._scheduled=false;var info={target:this._target,addedNodes:[],removedNodes:[]};var newNodes=this.constructor.getFlattenedNodes(this._target);var splices=Polymer.ArraySplice.calculateSplices(newNodes,this._effectiveNodes);// process removals
+     */},{key:'flush',value:function flush(){if(!this._connected){return;}if(window.ShadyDOM){ShadyDOM.flush();}if(this._nativeChildrenObserver){this._processSlotMutations(this._nativeChildrenObserver.takeRecords());}else if(this.shadyChildrenObserver){this._processSlotMutations(this._shadyChildrenObserver.takeRecords());}this._scheduled=false;var info={target:this._target,addedNodes:[],removedNodes:[]};var newNodes=this.constructor.getFlattenedNodes(this._target);var splices=Polymer.ArraySplice.calculateSplices(newNodes,this._effectiveNodes);// process removals
 for(var i=0,s;i<splices.length&&(s=splices[i]);i++){for(var j=0,n;j<s.removed.length&&(n=s.removed[j]);j++){info.removedNodes.push(n);}}// process adds
 for(var _i6=0,_s;_i6<splices.length&&(_s=splices[_i6]);_i6++){for(var _j2=_s.index;_j2<_s.index+_s.addedCount;_j2++){info.addedNodes.push(newNodes[_j2]);}}// update cache
-this._effectiveNodes=newNodes;var didFlush=false;if(info.addedNodes.length||info.removedNodes.length){didFlush=true;this.callback.call(this._target,info);}return didFlush;}},{key:"_listenSlots",value:function _listenSlots(nodeList){for(var i=0;i<nodeList.length;i++){var n=nodeList[i];if(isSlot(n)){n.addEventListener('slotchange',this._boundSchedule);}}}},{key:"_unlistenSlots",value:function _unlistenSlots(nodeList){for(var i=0;i<nodeList.length;i++){var n=nodeList[i];if(isSlot(n)){n.removeEventListener('slotchange',this._boundSchedule);}}}}]);return FlattenedNodesObserver;}();Polymer.FlattenedNodesObserver=FlattenedNodesObserver;})();(function(){'use strict';var p=Element.prototype;var normalizedMatchesSelector=p.matches||p.matchesSelector||p.mozMatchesSelector||p.msMatchesSelector||p.oMatchesSelector||p.webkitMatchesSelector;/**
+this._effectiveNodes=newNodes;var didFlush=false;if(info.addedNodes.length||info.removedNodes.length){didFlush=true;this.callback.call(this._target,info);}return didFlush;}},{key:'_listenSlots',value:function _listenSlots(nodeList){for(var i=0;i<nodeList.length;i++){var n=nodeList[i];if(isSlot(n)){n.addEventListener('slotchange',this._boundSchedule);}}}},{key:'_unlistenSlots',value:function _unlistenSlots(nodeList){for(var i=0;i<nodeList.length;i++){var n=nodeList[i];if(isSlot(n)){n.removeEventListener('slotchange',this._boundSchedule);}}}}]);return FlattenedNodesObserver;}();Polymer.FlattenedNodesObserver=FlattenedNodesObserver;})();(function(){'use strict';var p=Element.prototype;var normalizedMatchesSelector=p.matches||p.matchesSelector||p.mozMatchesSelector||p.msMatchesSelector||p.oMatchesSelector||p.webkitMatchesSelector;/**
    * Cross-platform `element.matches` shim.
    *
    * @function matchesSelector
@@ -5510,14 +5510,14 @@ this._effectiveNodes=newNodes;var didFlush=false;if(info.addedNodes.length||info
      * @param {Function} callback Called when direct or distributed children
      *   of this element changes
      * @return {Polymer.FlattenedNodesObserver} Observer instance
-     */_createClass(DomApi,[{key:"observeNodes",value:function observeNodes(callback){return new Polymer.FlattenedNodesObserver(this.node,callback);}/**
+     */_createClass(DomApi,[{key:'observeNodes',value:function observeNodes(callback){return new Polymer.FlattenedNodesObserver(this.node,callback);}/**
      * Disconnects an observer previously created via `observeNodes`
      *
      * @param {Polymer.FlattenedNodesObserver} observerHandle Observer instance
      *   to disconnect.
-     */},{key:"unobserveNodes",value:function unobserveNodes(observerHandle){observerHandle.disconnect();}/**
+     */},{key:'unobserveNodes',value:function unobserveNodes(observerHandle){observerHandle.disconnect();}/**
      * Provided as a backwards-compatible API only.  This method does nothing.
-     */},{key:"notifyObserver",value:function notifyObserver(){}/**
+     */},{key:'notifyObserver',value:function notifyObserver(){}/**
      * Returns true if the provided node is contained with this element's
      * light-DOM children or shadow root, including any nested shadow roots
      * of children therein.
@@ -5525,7 +5525,7 @@ this._effectiveNodes=newNodes;var didFlush=false;if(info.addedNodes.length||info
      * @param {Node} node Node to test
      * @return {boolean} Returns true if the given `node` is contained within
      *   this element's light or shadow DOM.
-     */},{key:"deepContains",value:function deepContains(node){if(this.node.contains(node)){return true;}var n=node;var doc=node.ownerDocument;// walk from node to `this` or `document`
+     */},{key:'deepContains',value:function deepContains(node){if(this.node.contains(node)){return true;}var n=node;var doc=node.ownerDocument;// walk from node to `this` or `document`
 while(n&&n!==doc&&n!==this.node){// use logical parentnode, or native ShadowRoot host
 n=n.parentNode||n.host;}return n===this.node;}/**
      * Returns the root node of this node.  Equivalent to `getRoodNode()`.
@@ -5534,52 +5534,52 @@ n=n.parentNode||n.host;}return n===this.node;}/**
      * exists. If the node is connected to a document this is either a
      * shadowRoot or the document; otherwise, it may be the node
      * itself or a node or document fragment containing it.
-     */},{key:"getOwnerRoot",value:function getOwnerRoot(){return this.node.getRootNode();}/**
+     */},{key:'getOwnerRoot',value:function getOwnerRoot(){return this.node.getRootNode();}/**
      * For slot elements, returns the nodes assigned to the slot; otherwise
      * an empty array. It is equivalent to `<slot>.addignedNodes({flatten:true})`.
      *
      * @return {Array<Node>} Array of assigned nodes
-     */},{key:"getDistributedNodes",value:function getDistributedNodes(){return this.node.localName==='slot'?this.node.assignedNodes({flatten:true}):[];}/**
+     */},{key:'getDistributedNodes',value:function getDistributedNodes(){return this.node.localName==='slot'?this.node.assignedNodes({flatten:true}):[];}/**
      * Returns an array of all slots this element was distributed to.
      *
      * @return {Array<HTMLSlotElement>} Description
-     */},{key:"getDestinationInsertionPoints",value:function getDestinationInsertionPoints(){var ip$=[];var n=this.node.assignedSlot;while(n){ip$.push(n);n=n.assignedSlot;}return ip$;}/**
+     */},{key:'getDestinationInsertionPoints',value:function getDestinationInsertionPoints(){var ip$=[];var n=this.node.assignedSlot;while(n){ip$.push(n);n=n.assignedSlot;}return ip$;}/**
      * Calls `importNode` on the `ownerDocument` for this node.
      *
      * @param {Node} node Node to import
      * @param {boolean} deep True if the node should be cloned deeply during
      *   import
      * @return {Node} Clone of given node imported to this owner document
-     */},{key:"importNode",value:function importNode(node,deep){var doc=this.node instanceof Document?this.node:this.node.ownerDocument;return doc.importNode(node,deep);}/**
+     */},{key:'importNode',value:function importNode(node,deep){var doc=this.node instanceof Document?this.node:this.node.ownerDocument;return doc.importNode(node,deep);}/**
      * Returns a flattened list of all child nodes and nodes distributed
      * to child slots.
      *
      * @return {type} Description
-     */},{key:"getEffectiveChildNodes",value:function getEffectiveChildNodes(){return Polymer.FlattenedNodesObserver.getFlattenedNodes(this.node);}/**
+     */},{key:'getEffectiveChildNodes',value:function getEffectiveChildNodes(){return Polymer.FlattenedNodesObserver.getFlattenedNodes(this.node);}/**
      * Returns a filtered list of flattened child elements for this element based
      * on the given selector.
      *
      * @param {string} selector Selector to filter nodes against
      * @return {Array<HTMLElement>} List of flattened child elements
-     */},{key:"queryDistributedElements",value:function queryDistributedElements(selector){var c$=this.getEffectiveChildNodes();var list=[];for(var i=0,l=c$.length,c;i<l&&(c=c$[i]);i++){if(c.nodeType===Node.ELEMENT_NODE&&matchesSelector(c,selector)){list.push(c);}}return list;}/**
+     */},{key:'queryDistributedElements',value:function queryDistributedElements(selector){var c$=this.getEffectiveChildNodes();var list=[];for(var i=0,l=c$.length,c;i<l&&(c=c$[i]);i++){if(c.nodeType===Node.ELEMENT_NODE&&matchesSelector(c,selector)){list.push(c);}}return list;}/**
      * For shadow roots, returns the currently focused element within this
      * shadow root.
      *
      * @return {Node|undefined} Currently focused element
-     */},{key:"activeElement",get:function get(){var node=this.node;return node._activeElement!==undefined?node._activeElement:node.activeElement;}}]);return DomApi;}();function forwardMethods(proto,methods){var _loop=function _loop(i){var method=methods[i];proto[method]=function(){return this.node[method].apply(this.node,arguments);};};for(var i=0;i<methods.length;i++){_loop(i);}}function forwardReadOnlyProperties(proto,properties){var _loop2=function _loop2(i){var name=properties[i];Object.defineProperty(proto,name,{get:function get(){return this.node[name];},configurable:true});};for(var i=0;i<properties.length;i++){_loop2(i);}}function forwardProperties(proto,properties){var _loop3=function _loop3(i){var name=properties[i];Object.defineProperty(proto,name,{get:function get(){return this.node[name];},set:function set(value){this.node[name]=value;},configurable:true});};for(var i=0;i<properties.length;i++){_loop3(i);}}forwardMethods(DomApi.prototype,['cloneNode','appendChild','insertBefore','removeChild','replaceChild','setAttribute','removeAttribute','querySelector','querySelectorAll']);forwardReadOnlyProperties(DomApi.prototype,['parentNode','firstChild','lastChild','nextSibling','previousSibling','firstElementChild','lastElementChild','nextElementSibling','previousElementSibling','childNodes','children','classList']);forwardProperties(DomApi.prototype,['textContent','innerHTML']);/**
+     */},{key:'activeElement',get:function get(){var node=this.node;return node._activeElement!==undefined?node._activeElement:node.activeElement;}}]);return DomApi;}();function forwardMethods(proto,methods){var _loop=function _loop(i){var method=methods[i];proto[method]=function(){return this.node[method].apply(this.node,arguments);};};for(var i=0;i<methods.length;i++){_loop(i);}}function forwardReadOnlyProperties(proto,properties){var _loop2=function _loop2(i){var name=properties[i];Object.defineProperty(proto,name,{get:function get(){return this.node[name];},configurable:true});};for(var i=0;i<properties.length;i++){_loop2(i);}}function forwardProperties(proto,properties){var _loop3=function _loop3(i){var name=properties[i];Object.defineProperty(proto,name,{get:function get(){return this.node[name];},set:function set(value){this.node[name]=value;},configurable:true});};for(var i=0;i<properties.length;i++){_loop3(i);}}forwardMethods(DomApi.prototype,['cloneNode','appendChild','insertBefore','removeChild','replaceChild','setAttribute','removeAttribute','querySelector','querySelectorAll']);forwardReadOnlyProperties(DomApi.prototype,['parentNode','firstChild','lastChild','nextSibling','previousSibling','firstElementChild','lastElementChild','nextElementSibling','previousElementSibling','childNodes','children','classList']);forwardProperties(DomApi.prototype,['textContent','innerHTML']);/**
    * Event API wrapper class returned from `Polymer.dom.(target)` when
    * `target` is an `Event`.
    */var EventApi=function(){function EventApi(event){_classCallCheck(this,EventApi);this.event=event;}/**
      * Returns the first node on the `composedPath` of this event.
      *
      * @return {Node} The node this event was dispatched to
-     */_createClass(EventApi,[{key:"rootTarget",get:function get(){return this.event.composedPath()[0];}/**
+     */_createClass(EventApi,[{key:'rootTarget',get:function get(){return this.event.composedPath()[0];}/**
      * Returns the local (re-targeted) target for this event.
      *
      * @return {Node} The local (re-targeted) target for this event.
-     */},{key:"localTarget",get:function get(){return this.event.target;}/**
+     */},{key:'localTarget',get:function get(){return this.event.target;}/**
      * Returns the `composedPath` for this event.
-     */},{key:"path",get:function get(){return this.event.composedPath();}}]);return EventApi;}();/**
+     */},{key:'path',get:function get(){return this.event.composedPath();}}]);return EventApi;}();/**
    * Legacy DOM and Event manipulation API wrapper factory used to abstract
    * differences between native Shadow DOM and "Shady DOM" when polyfilling on
    * older browsers.
@@ -5637,33 +5637,33 @@ var settings=Polymer.Settings||{};settings.useShadow=!window.ShadyDOM;settings.u
      */var LegacyElement=function(_legacyElementBase){_inherits(LegacyElement,_legacyElementBase);function LegacyElement(){_classCallCheck(this,LegacyElement);var _this24=_possibleConstructorReturn(this,(LegacyElement.__proto__||Object.getPrototypeOf(LegacyElement)).call(this));_this24.root=_this24;_this24.created();return _this24;}/**
        * Legacy callback called during the `constructor`, for overriding
        * by the user.
-       */_createClass(LegacyElement,[{key:"created",value:function created(){}},{key:"connectedCallback",value:function connectedCallback(){_get(LegacyElement.prototype.__proto__||Object.getPrototypeOf(LegacyElement.prototype),"connectedCallback",this).call(this);this.isAttached=true;this.attached();}/**
+       */_createClass(LegacyElement,[{key:'created',value:function created(){}},{key:'connectedCallback',value:function connectedCallback(){_get(LegacyElement.prototype.__proto__||Object.getPrototypeOf(LegacyElement.prototype),'connectedCallback',this).call(this);this.isAttached=true;this.attached();}/**
        * Legacy callback called during `connectedCallback`, for overriding
        * by the user.
-       */},{key:"attached",value:function attached(){}},{key:"disconnectedCallback",value:function disconnectedCallback(){_get(LegacyElement.prototype.__proto__||Object.getPrototypeOf(LegacyElement.prototype),"disconnectedCallback",this).call(this);this.isAttached=false;this.detached();}/**
+       */},{key:'attached',value:function attached(){}},{key:'disconnectedCallback',value:function disconnectedCallback(){_get(LegacyElement.prototype.__proto__||Object.getPrototypeOf(LegacyElement.prototype),'disconnectedCallback',this).call(this);this.isAttached=false;this.detached();}/**
        * Legacy callback called during `disconnectedCallback`, for overriding
        * by the user.
-       */},{key:"detached",value:function detached(){}},{key:"attributeChangedCallback",value:function attributeChangedCallback(name,old,value){if(old!==value){_get(LegacyElement.prototype.__proto__||Object.getPrototypeOf(LegacyElement.prototype),"attributeChangedCallback",this).call(this,name,old,value);this.attributeChanged(name,old,value);}}/**
+       */},{key:'detached',value:function detached(){}},{key:'attributeChangedCallback',value:function attributeChangedCallback(name,old,value){if(old!==value){_get(LegacyElement.prototype.__proto__||Object.getPrototypeOf(LegacyElement.prototype),'attributeChangedCallback',this).call(this,name,old,value);this.attributeChanged(name,old,value);}}/**
        * Legacy callback called during `attributeChangedChallback`, for overriding
        * by the user.
-       */},{key:"attributeChanged",value:function attributeChanged(){}/**
+       */},{key:'attributeChanged',value:function attributeChanged(){}/**
        * Overrides the default `Polymer.PropertyEffects` implementation to
        * add support for class initialization via the `_registered` callback.
        * This is called only when the first instance of the element is created.
        *
        * @override
-       */},{key:"_initializeProperties",value:function _initializeProperties(){var proto=Object.getPrototypeOf(this);if(!proto.hasOwnProperty('__hasRegisterFinished')){proto.__hasRegisterFinished=true;this._registered();}_get(LegacyElement.prototype.__proto__||Object.getPrototypeOf(LegacyElement.prototype),"_initializeProperties",this).call(this);}/**
+       */},{key:'_initializeProperties',value:function _initializeProperties(){var proto=Object.getPrototypeOf(this);if(!proto.hasOwnProperty('__hasRegisterFinished')){proto.__hasRegisterFinished=true;this._registered();}_get(LegacyElement.prototype.__proto__||Object.getPrototypeOf(LegacyElement.prototype),'_initializeProperties',this).call(this);}/**
        * Called automatically when an element is initializing.
        * Users may override this method to perform class registration time
        * work. The implementation should ensure the work is performed
        * only once for the class.
        * @protected
-       */},{key:"_registered",value:function _registered(){}/**
+       */},{key:'_registered',value:function _registered(){}/**
        * Overrides the default `Polymer.PropertyEffects` implementation to
        * add support for installing `hostAttributes` and `listeners`.
        *
        * @override
-       */},{key:"ready",value:function ready(){this._ensureAttributes();this._applyListeners();_get(LegacyElement.prototype.__proto__||Object.getPrototypeOf(LegacyElement.prototype),"ready",this).call(this);}/**
+       */},{key:'ready',value:function ready(){this._ensureAttributes();this._applyListeners();_get(LegacyElement.prototype.__proto__||Object.getPrototypeOf(LegacyElement.prototype),'ready',this).call(this);}/**
        * Ensures an element has required attributes. Called when the element
        * is being readied via `ready`. Users should override to set the
        * element's required attributes. The implementation should be sure
@@ -5672,7 +5672,7 @@ var settings=Polymer.Settings||{};settings.useShadow=!window.ShadyDOM;settings.u
        * to the element user and not done here; reasonable exceptions include
        * setting aria roles and focusability.
        * @protected
-       */},{key:"_ensureAttributes",value:function _ensureAttributes(){}/**
+       */},{key:'_ensureAttributes',value:function _ensureAttributes(){}/**
        * Adds element event listeners. Called when the element
        * is being readied via `ready`. Users should override to
        * add any required element event listeners.
@@ -5681,7 +5681,7 @@ var settings=Polymer.Settings||{};settings.useShadow=!window.ShadyDOM;settings.u
        * these elements, consider adding listeners asychronously so as not to
        * block render.
        * @protected
-       */},{key:"_applyListeners",value:function _applyListeners(){}/**
+       */},{key:'_applyListeners',value:function _applyListeners(){}/**
        * Converts a typed JavaScript value to a string.
        *
        * Note this method is provided as backward-compatible legacy API
@@ -5692,7 +5692,7 @@ var settings=Polymer.Settings||{};settings.useShadow=!window.ShadyDOM;settings.u
        *
        * @param {*} value Value to deserialize
        * @return {string} Serialized value
-       */},{key:"serialize",value:function serialize(value){return this._serializeValue(value);}/**
+       */},{key:'serialize',value:function serialize(value){return this._serializeValue(value);}/**
        * Converts a string to a typed JavaScript value.
        *
        * Note this method is provided as backward-compatible legacy API
@@ -5704,7 +5704,7 @@ var settings=Polymer.Settings||{};settings.useShadow=!window.ShadyDOM;settings.u
        * @param {string} value String to deserialize
        * @param {*} type Type to deserialize the string to
        * @return {*} Returns the deserialized value in the `type` given.
-       */},{key:"deserialize",value:function deserialize(value,type){return this._deserializeValue(value,type);}/**
+       */},{key:'deserialize',value:function deserialize(value,type){return this._deserializeValue(value,type);}/**
        * Serializes a property to its associated attribute.
        *
        * Note this method is provided as backward-compatible legacy API
@@ -5713,7 +5713,7 @@ var settings=Polymer.Settings||{};settings.useShadow=!window.ShadyDOM;settings.u
        * @param {string} property Property name to reflect.
        * @param {string=} attribute Attribute name to reflect.
        * @param {*=} value Property value to refect.
-       */},{key:"reflectPropertyToAttribute",value:function reflectPropertyToAttribute(property,attribute,value){this._propertyToAttribute(property,attribute,value);}/**
+       */},{key:'reflectPropertyToAttribute',value:function reflectPropertyToAttribute(property,attribute,value){this._propertyToAttribute(property,attribute,value);}/**
        * Sets a typed value to an HTML attribute on a node.
        *
        * Note this method is provided as backward-compatible legacy API
@@ -5722,14 +5722,14 @@ var settings=Polymer.Settings||{};settings.useShadow=!window.ShadyDOM;settings.u
        * @param {*} value Value to serialize.
        * @param {string} attribute Attribute name to serialize to.
        * @param {Element} node Element to set attribute to.
-       */},{key:"serializeValueToAttribute",value:function serializeValueToAttribute(value,attribute,node){this._valueToNodeAttribute(node||this,value,attribute);}/**
+       */},{key:'serializeValueToAttribute',value:function serializeValueToAttribute(value,attribute,node){this._valueToNodeAttribute(node||this,value,attribute);}/**
        * Copies own properties (including accessor descriptors) from a source
        * object to a target object.
        *
        * @param {Object} prototype Target object to copy properties to.
        * @param {Object} api Source object to copy properties from.
        * @return {Object} prototype object that was passed as first argument.
-       */},{key:"extend",value:function extend(prototype,api){if(!(prototype&&api)){return prototype||api;}var n$=Object.getOwnPropertyNames(api);for(var i=0,n;i<n$.length&&(n=n$[i]);i++){var pd=Object.getOwnPropertyDescriptor(api,n);if(pd){Object.defineProperty(prototype,n,pd);}}return prototype;}/**
+       */},{key:'extend',value:function extend(prototype,api){if(!(prototype&&api)){return prototype||api;}var n$=Object.getOwnPropertyNames(api);for(var i=0,n;i<n$.length&&(n=n$[i]);i++){var pd=Object.getOwnPropertyDescriptor(api,n);if(pd){Object.defineProperty(prototype,n,pd);}}return prototype;}/**
        * Copies props from a source object to a target object.
        *
        * Note, this method uses a simple `for...in` strategy for enumerating
@@ -5739,7 +5739,7 @@ var settings=Polymer.Settings||{};settings.useShadow=!window.ShadyDOM;settings.u
        * @param {Object} target Target object to copy properties to.
        * @param {Object} source Source object to copy properties from.
        * @return {Object} Target object that was passed as first argument.
-       */},{key:"mixin",value:function mixin(target,source){for(var i in source){target[i]=source[i];}return target;}/**
+       */},{key:'mixin',value:function mixin(target,source){for(var i in source){target[i]=source[i];}return target;}/**
        * Sets the prototype of an object.
        *
        * Note this method is provided as backward-compatible legacy API
@@ -5749,14 +5749,14 @@ var settings=Polymer.Settings||{};settings.useShadow=!window.ShadyDOM;settings.u
        * `object`.
        * @return {Object} Returns the given `object` with its prototype set
        * to the given `prototype` object.
-       */},{key:"chainObject",value:function chainObject(object,prototype){if(object&&prototype&&object!==prototype){object.__proto__=prototype;}return object;}/* **** Begin Template **** *//**
+       */},{key:'chainObject',value:function chainObject(object,prototype){if(object&&prototype&&object!==prototype){object.__proto__=prototype;}return object;}/* **** Begin Template **** *//**
        * Calls `importNode` on the `content` of the `template` specified and
        * returns a document fragment containing the imported content.
        *
        * @param {HTMLTemplateElement} template HTML template element to instance.
        * @return {DocumentFragment} Document fragment containing the imported
        *   template content.
-      */},{key:"instanceTemplate",value:function instanceTemplate(template){var content=this.constructor._contentForTemplate(template);var dom=/** @type {DocumentFragment} */document.importNode(content,true);return dom;}/* **** Begin Events **** *//**
+      */},{key:'instanceTemplate',value:function instanceTemplate(template){var content=this.constructor._contentForTemplate(template);var dom=/** @type {DocumentFragment} */document.importNode(content,true);return dom;}/* **** Begin Events **** *//**
        * Dispatches a custom event with an optional detail value.
        *
        * @param {string} type Name of event type.
@@ -5767,14 +5767,14 @@ var settings=Polymer.Settings||{};settings.useShadow=!window.ShadyDOM;settings.u
        *  `cancelable` (boolean, defaults to false), and
        *  `node` on which to fire the event (HTMLElement, defaults to `this`).
        * @return {Event} The new event that was fired.
-       */},{key:"fire",value:function fire(type,detail,options){options=options||{};detail=detail===null||detail===undefined?{}:detail;var event=new Event(type,{bubbles:options.bubbles===undefined?true:options.bubbles,cancelable:Boolean(options.cancelable),composed:options.composed===undefined?true:options.composed});event.detail=detail;var node=options.node||this;node.dispatchEvent(event);return event;}/**
+       */},{key:'fire',value:function fire(type,detail,options){options=options||{};detail=detail===null||detail===undefined?{}:detail;var event=new Event(type,{bubbles:options.bubbles===undefined?true:options.bubbles,cancelable:Boolean(options.cancelable),composed:options.composed===undefined?true:options.composed});event.detail=detail;var node=options.node||this;node.dispatchEvent(event);return event;}/**
        * Convenience method to add an event listener on a given element,
        * late bound to a named method on this element.
        *
        * @param {Element} node Element to add event listener to.
        * @param {string} eventName Name of event to listen for.
        * @param {string} methodName Name of handler method on `this` to call.
-       */},{key:"listen",value:function listen(node,eventName,methodName){node=node||this;var hbl=this.__boundListeners||(this.__boundListeners=new WeakMap());var bl=hbl.get(node);if(!bl){bl={};hbl.set(node,bl);}var key=eventName+methodName;if(!bl[key]){bl[key]=this._addMethodEventListenerToNode(node,eventName,methodName,this);}}/**
+       */},{key:'listen',value:function listen(node,eventName,methodName){node=node||this;var hbl=this.__boundListeners||(this.__boundListeners=new WeakMap());var bl=hbl.get(node);if(!bl){bl={};hbl.set(node,bl);}var key=eventName+methodName;if(!bl[key]){bl[key]=this._addMethodEventListenerToNode(node,eventName,methodName,this);}}/**
        * Convenience method to remove an event listener from a given element,
        * late bound to a named method on this element.
        *
@@ -5782,7 +5782,7 @@ var settings=Polymer.Settings||{};settings.useShadow=!window.ShadyDOM;settings.u
        * @param {string} eventName Name of event to stop listening to.
        * @param {string} methodName Name of handler method on `this` to not call
        anymore.
-       */},{key:"unlisten",value:function unlisten(node,eventName,methodName){node=node||this;var bl=this.__boundListeners&&this.__boundListeners.get(node);var key=eventName+methodName;var handler=bl&&bl[key];if(handler){this._removeEventListenerFromNode(node,eventName,handler);bl[key]=null;}}/**
+       */},{key:'unlisten',value:function unlisten(node,eventName,methodName){node=node||this;var bl=this.__boundListeners&&this.__boundListeners.get(node);var key=eventName+methodName;var handler=bl&&bl[key];if(handler){this._removeEventListenerFromNode(node,eventName,handler);bl[key]=null;}}/**
        * Override scrolling behavior to all direction, one direction, or none.
        *
        * Valid scroll directions:
@@ -5795,18 +5795,18 @@ var settings=Polymer.Settings||{};settings.useShadow=!window.ShadyDOM;settings.u
        * Defaults to `all`.
        * @param {HTMLElement=} node Element to apply scroll direction setting.
        * Defaults to `this`.
-       */},{key:"setScrollDirection",value:function setScrollDirection(direction,node){Polymer.Gestures.setTouchAction(node||this,DIRECTION_MAP[direction]||'auto');}/* **** End Events **** *//**
+       */},{key:'setScrollDirection',value:function setScrollDirection(direction,node){Polymer.Gestures.setTouchAction(node||this,DIRECTION_MAP[direction]||'auto');}/* **** End Events **** *//**
        * Convenience method to run `querySelector` on this local DOM scope.
        *
        * This function calls `Polymer.dom(this.root).querySelector(slctr)`.
        *
        * @param {string} slctr Selector to run on this local DOM scope
        * @return {Element} Element found by the selector, or null if not found.
-       */},{key:"$$",value:function $$(slctr){return this.root.querySelector(slctr);}/**
+       */},{key:'$$',value:function $$(slctr){return this.root.querySelector(slctr);}/**
        * Return the element whose local dom within which this element
        * is contained. This is a shorthand for
        * `this.getRootNode().host`.
-       */},{key:"distributeContent",/**
+       */},{key:'distributeContent',/**
        * Force this element to distribute its children to its local dom.
        * This is necessary only when ShadyDOM is used and only in cases that
        * are not automatically handled. For example,
@@ -5820,38 +5820,38 @@ var settings=Polymer.Settings||{};settings.useShadow=!window.ShadyDOM;settings.u
        * to the `<content>`, the result of its `getDistributedNodes` method.
        *
        * @return {Array<Node>} List of effctive child nodes.
-       */},{key:"getEffectiveChildNodes",value:function getEffectiveChildNodes(){return Polymer.dom(this).getEffectiveChildNodes();}/**
+       */},{key:'getEffectiveChildNodes',value:function getEffectiveChildNodes(){return Polymer.dom(this).getEffectiveChildNodes();}/**
        * Returns a list of nodes distributed within this element that match
        * `selector`. These can be dom children or elements distributed to
        * children that are insertion points.
        * @param {string} selector Selector to run.
        * @return {Array<Node>} List of distributed elements that match selector.
-       */},{key:"queryDistributedElements",value:function queryDistributedElements(selector){return Polymer.dom(this).queryDistributedElements(selector);}/**
+       */},{key:'queryDistributedElements',value:function queryDistributedElements(selector){return Polymer.dom(this).queryDistributedElements(selector);}/**
        * Returns a list of elements that are the effective children. The effective
        * children list is the same as the element's children except that
        * any `<content>` elements are replaced with the list of elements
        * distributed to the `<content>`.
        *
        * @return {Array<Node>} List of effctive children.
-       */},{key:"getEffectiveChildren",value:function getEffectiveChildren(){var list=this.getEffectiveChildNodes();return list.filter(function(n){return n.nodeType===Node.ELEMENT_NODE;});}/**
+       */},{key:'getEffectiveChildren',value:function getEffectiveChildren(){var list=this.getEffectiveChildNodes();return list.filter(function(n){return n.nodeType===Node.ELEMENT_NODE;});}/**
        * Returns a string of text content that is the concatenation of the
        * text content's of the element's effective childNodes (the elements
        * returned by <a href="#getEffectiveChildNodes>getEffectiveChildNodes</a>.
        *
        * @return {string} List of effctive children.
-       */},{key:"getEffectiveTextContent",value:function getEffectiveTextContent(){var cn=this.getEffectiveChildNodes();var tc=[];for(var i=0,c;c=cn[i];i++){if(c.nodeType!==Node.COMMENT_NODE){tc.push(c.textContent);}}return tc.join('');}/**
+       */},{key:'getEffectiveTextContent',value:function getEffectiveTextContent(){var cn=this.getEffectiveChildNodes();var tc=[];for(var i=0,c;c=cn[i];i++){if(c.nodeType!==Node.COMMENT_NODE){tc.push(c.textContent);}}return tc.join('');}/**
        * Returns the first effective childNode within this element that
        * match `selector`. These can be dom child nodes or elements distributed
        * to children that are insertion points.
        * @param {string} selector Selector to run.
        * @return {Object<Node>} First effective child node that matches selector.
-       */},{key:"queryEffectiveChildren",value:function queryEffectiveChildren(selector){var e$=this.queryDistributedElements(selector);return e$&&e$[0];}/**
+       */},{key:'queryEffectiveChildren',value:function queryEffectiveChildren(selector){var e$=this.queryDistributedElements(selector);return e$&&e$[0];}/**
        * Returns a list of effective childNodes within this element that
        * match `selector`. These can be dom child nodes or elements distributed
        * to children that are insertion points.
        * @param {string} selector Selector to run.
        * @return {Array<Node>} List of effective child nodes that match selector.
-       */},{key:"queryAllEffectiveChildren",value:function queryAllEffectiveChildren(selector){return this.queryDistributedElements(selector);}/**
+       */},{key:'queryAllEffectiveChildren',value:function queryAllEffectiveChildren(selector){return this.queryDistributedElements(selector);}/**
        * Returns a list of nodes distributed to this element's `<slot>`.
        *
        * If this element contains more than one `<slot>` in its local DOM,
@@ -5860,7 +5860,7 @@ var settings=Polymer.Settings||{};settings.useShadow=!window.ShadyDOM;settings.u
        * @param {string=} slctr CSS selector to choose the desired
        *   `<slot>`.  Defaults to `content`.
        * @return {Array<Node>} List of distributed nodes for the `<slot>`.
-       */},{key:"getContentChildNodes",value:function getContentChildNodes(slctr){var content=this.root.querySelector(slctr||'slot');return content?Polymer.dom(content).getDistributedNodes():[];}/**
+       */},{key:'getContentChildNodes',value:function getContentChildNodes(slctr){var content=this.root.querySelector(slctr||'slot');return content?Polymer.dom(content).getDistributedNodes():[];}/**
        * Returns a list of element children distributed to this element's
        * `<slot>`.
        *
@@ -5873,24 +5873,24 @@ var settings=Polymer.Settings||{};settings.useShadow=!window.ShadyDOM;settings.u
        *   `<content>`.  Defaults to `content`.
        * @return {Array<HTMLElement>} List of distributed nodes for the
        *   `<slot>`.
-       */},{key:"getContentChildren",value:function getContentChildren(slctr){return this.getContentChildNodes(slctr).filter(function(n){return n.nodeType===Node.ELEMENT_NODE;});}/**
+       */},{key:'getContentChildren',value:function getContentChildren(slctr){return this.getContentChildNodes(slctr).filter(function(n){return n.nodeType===Node.ELEMENT_NODE;});}/**
        * Checks whether an element is in this element's light DOM tree.
        *
        * @param {?Node} node The element to be checked.
        * @return {boolean} true if node is in this element's light DOM tree.
-       */},{key:"isLightDescendant",value:function isLightDescendant(node){return this!==node&&this.contains(node)&&this.getRootNode()===node.getRootNode();}/**
+       */},{key:'isLightDescendant',value:function isLightDescendant(node){return this!==node&&this.contains(node)&&this.getRootNode()===node.getRootNode();}/**
        * Checks whether an element is in this element's local DOM tree.
        *
        * @param {HTMLElement=} node The element to be checked.
        * @return {boolean} true if node is in this element's local DOM tree.
-       */},{key:"isLocalDescendant",value:function isLocalDescendant(node){return this.root===node.getRootNode();}// NOTE: should now be handled by ShadyCss library.
-},{key:"scopeSubtree",value:function scopeSubtree(container,shouldObserve){}// eslint-disable-line no-unused-vars
+       */},{key:'isLocalDescendant',value:function isLocalDescendant(node){return this.root===node.getRootNode();}// NOTE: should now be handled by ShadyCss library.
+},{key:'scopeSubtree',value:function scopeSubtree(container,shouldObserve){}// eslint-disable-line no-unused-vars
 /**
        * Returns the computed style value for the given property.
        * @param {string} property The css property name.
        * @return {string} Returns the computed css property value for the given
        * `property`.
-       */},{key:"getComputedStyleValue",value:function getComputedStyleValue(property){return styleInterface.getComputedStyleValue(this,property);}// debounce
+       */},{key:'getComputedStyleValue',value:function getComputedStyleValue(property){return styleInterface.getComputedStyleValue(this,property);}// debounce
 /**
        * Call `debounce` to collapse multiple requests for a named task into
        * one invocation which is made after the wait time has elapsed with
@@ -5914,20 +5914,20 @@ var settings=Polymer.Settings||{};settings.useShadow=!window.ShadyDOM;settings.u
        * active; `cancel()` cancels the debouncer if it is active;
        * `flush()` immediately invokes the debounced callback if the debouncer
        * is active.
-       */},{key:"debounce",value:function debounce(jobName,callback,wait){this._debouncers=this._debouncers||{};return this._debouncers[jobName]=Polymer.Debouncer.debounce(this._debouncers[jobName],wait>0?Polymer.Async.timeOut.after(wait):Polymer.Async.microTask,callback.bind(this));}/**
+       */},{key:'debounce',value:function debounce(jobName,callback,wait){this._debouncers=this._debouncers||{};return this._debouncers[jobName]=Polymer.Debouncer.debounce(this._debouncers[jobName],wait>0?Polymer.Async.timeOut.after(wait):Polymer.Async.microTask,callback.bind(this));}/**
        * Returns whether a named debouncer is active.
        *
        * @param {string} jobName The name of the debouncer started with `debounce`
        * @return {boolean} Whether the debouncer is active (has not yet fired).
-       */},{key:"isDebouncerActive",value:function isDebouncerActive(jobName){this._debouncers=this._debouncers||{};var debouncer=this._debouncers[jobName];return!!(debouncer&&debouncer.isActive());}/**
+       */},{key:'isDebouncerActive',value:function isDebouncerActive(jobName){this._debouncers=this._debouncers||{};var debouncer=this._debouncers[jobName];return!!(debouncer&&debouncer.isActive());}/**
        * Immediately calls the debouncer `callback` and inactivates it.
        *
        * @param {string} jobName The name of the debouncer started with `debounce`
-       */},{key:"flushDebouncer",value:function flushDebouncer(jobName){this._debouncers=this._debouncers||{};var debouncer=this._debouncers[jobName];if(debouncer){debouncer.flush();}}/**
+       */},{key:'flushDebouncer',value:function flushDebouncer(jobName){this._debouncers=this._debouncers||{};var debouncer=this._debouncers[jobName];if(debouncer){debouncer.flush();}}/**
        * Cancels an active debouncer.  The `callback` will not be called.
        *
        * @param {string} jobName The name of the debouncer started with `debounce`
-       */},{key:"cancelDebouncer",value:function cancelDebouncer(jobName){this._debouncers=this._debouncers||{};var debouncer=this._debouncers[jobName];if(debouncer){debouncer.cancel();}}/**
+       */},{key:'cancelDebouncer',value:function cancelDebouncer(jobName){this._debouncers=this._debouncers||{};var debouncer=this._debouncers[jobName];if(debouncer){debouncer.cancel();}}/**
        * Runs a callback function asyncronously.
        *
        * By default (if no waitTime is specified), async callbacks are run at
@@ -5938,12 +5938,12 @@ var settings=Polymer.Settings||{};settings.useShadow=!window.ShadyDOM;settings.u
        *   `callback`.  If unspecified or 0, the callback will be run at microtask
        *   timing (before paint).
        * @return {number} Handle that may be used to cancel the async job.
-       */},{key:"async",value:function async(callback,waitTime){return waitTime>0?Polymer.Async.timeOut.run(callback.bind(this),waitTime):~Polymer.Async.microTask.run(callback.bind(this));}/**
+       */},{key:'async',value:function async(callback,waitTime){return waitTime>0?Polymer.Async.timeOut.run(callback.bind(this),waitTime):~Polymer.Async.microTask.run(callback.bind(this));}/**
        * Cancels an async operation started with `async`.
        *
        * @param {number} handle Handle returned from original `async` call to
        *   cancel.
-       */},{key:"cancelAsync",value:function cancelAsync(handle){handle<0?Polymer.Async.microTask.cancel(~handle):Polymer.Async.timeOut.cancel(handle);}// other
+       */},{key:'cancelAsync',value:function cancelAsync(handle){handle<0?Polymer.Async.microTask.cancel(~handle):Polymer.Async.timeOut.cancel(handle);}// other
 /**
        * Convenience method for creating an element and configuring it.
        *
@@ -5951,7 +5951,7 @@ var settings=Polymer.Settings||{};settings.useShadow=!window.ShadyDOM;settings.u
        * @param {Object} props Object of properties to configure on the
        *    instance.
        * @return {Element} Newly created and configured element.
-       */},{key:"create",value:function create(tag,props){var elt=document.createElement(tag);if(props){if(elt.setProperties){elt.setProperties(props);}else{for(var n in props){elt[n]=props[n];}}}return elt;}/**
+       */},{key:'create',value:function create(tag,props){var elt=document.createElement(tag);if(props){if(elt.setProperties){elt.setProperties(props);}else{for(var n in props){elt[n]=props[n];}}}return elt;}/**
        * Convenience method for importing an HTML document imperatively.
        *
        * This method creates a new `<link rel="import">` element with
@@ -5967,7 +5967,7 @@ var settings=Polymer.Settings||{};settings.useShadow=!window.ShadyDOM;settings.u
        * @param {boolean} optAsync True if the import should be loaded `async`.
        *   Defaults to `false`.
        * @return {HTMLLinkElement} The link element for the URL to be loaded.
-       */},{key:"importHref",value:function importHref(href,onload,onerror,optAsync){// eslint-disable-line no-unused-vars
+       */},{key:'importHref',value:function importHref(href,onload,onerror,optAsync){// eslint-disable-line no-unused-vars
 var loadFn=onload?onload.bind(this):null;var errorFn=onerror?onerror.bind(this):null;return Polymer.importHref(href,loadFn,errorFn,optAsync);}/**
        * Polyfill for Element.prototype.matches, which is sometimes still
        * prefixed.
@@ -5975,27 +5975,27 @@ var loadFn=onload?onload.bind(this):null;var errorFn=onerror?onerror.bind(this):
        * @param {string} selector Selector to test.
        * @param {Element=} node Element to test the selector against.
        * @return {boolean} Whether the element matches the selector.
-       */},{key:"elementMatches",value:function elementMatches(selector,node){return Polymer.dom.matchesSelector(node||this,selector);}/**
+       */},{key:'elementMatches',value:function elementMatches(selector,node){return Polymer.dom.matchesSelector(node||this,selector);}/**
        * Toggles an HTML attribute on or off.
        *
        * @param {string} name HTML attribute name
        * @param {boolean=} bool Boolean to force the attribute on or off.
        *    When unspecified, the state of the attribute will be reversed.
        * @param {HTMLElement=} node Node to target.  Defaults to `this`.
-       */},{key:"toggleAttribute",value:function toggleAttribute(name,bool,node){node=node||this;if(arguments.length==1){bool=!node.hasAttribute(name);}if(bool){node.setAttribute(name,'');}else{node.removeAttribute(name);}}/**
+       */},{key:'toggleAttribute',value:function toggleAttribute(name,bool,node){node=node||this;if(arguments.length==1){bool=!node.hasAttribute(name);}if(bool){node.setAttribute(name,'');}else{node.removeAttribute(name);}}/**
        * Toggles a CSS class on or off.
        *
        * @param {string} name CSS class name
        * @param {boolean=} bool Boolean to force the class on or off.
        *    When unspecified, the state of the class will be reversed.
        * @param {HTMLElement=} node Node to target.  Defaults to `this`.
-       */},{key:"toggleClass",value:function toggleClass(name,bool,node){node=node||this;if(arguments.length==1){bool=!node.classList.contains(name);}if(bool){node.classList.add(name);}else{node.classList.remove(name);}}/**
+       */},{key:'toggleClass',value:function toggleClass(name,bool,node){node=node||this;if(arguments.length==1){bool=!node.classList.contains(name);}if(bool){node.classList.add(name);}else{node.classList.remove(name);}}/**
        * Cross-platform helper for setting an element's CSS `transform` property.
        *
        * @param {string} transformText Transform setting.
        * @param {HTMLElement=} node Element to apply the transform to.
        * Defaults to `this`
-       */},{key:"transform",value:function transform(transformText,node){node=node||this;node.style.webkitTransform=transformText;node.style.transform=transformText;}/**
+       */},{key:'transform',value:function transform(transformText,node){node=node||this;node.style.webkitTransform=transformText;node.style.transform=transformText;}/**
        * Cross-platform helper for setting an element's CSS `translate3d`
        * property.
        *
@@ -6004,7 +6004,7 @@ var loadFn=onload?onload.bind(this):null;var errorFn=onerror?onerror.bind(this):
        * @param {number} z Z offset.
        * @param {HTMLElement=} node Element to apply the transform to.
        * Defaults to `this`.
-       */},{key:"translate3d",value:function translate3d(x,y,z,node){node=node||this;this.transform('translate3d('+x+','+y+','+z+')',node);}/**
+       */},{key:'translate3d',value:function translate3d(x,y,z,node){node=node||this;this.transform('translate3d('+x+','+y+','+z+')',node);}/**
        * Removes an item from an array, if it exists.
        *
        * If the array is specified by path, a change notification is
@@ -6018,33 +6018,33 @@ var loadFn=onload?onload.bind(this):null;var errorFn=onerror?onerror.bind(this):
        *   (or the array itself).
        * @param {*} item Item to remove.
        * @return {Array} Array containing item removed.
-       */},{key:"arrayDelete",value:function arrayDelete(arrayOrPath,item){var index=void 0;if(Array.isArray(arrayOrPath)){index=arrayOrPath.indexOf(item);if(index>=0){return arrayOrPath.splice(index,1);}}else{var arr=Polymer.Path.get(this,arrayOrPath);index=arr.indexOf(item);if(index>=0){return this.splice(arrayOrPath,index,1);}}return null;}// logging
+       */},{key:'arrayDelete',value:function arrayDelete(arrayOrPath,item){var index=void 0;if(Array.isArray(arrayOrPath)){index=arrayOrPath.indexOf(item);if(index>=0){return arrayOrPath.splice(index,1);}}else{var arr=Polymer.Path.get(this,arrayOrPath);index=arr.indexOf(item);if(index>=0){return this.splice(arrayOrPath,index,1);}}return null;}// logging
 /**
        * Facades `console.log`/`warn`/`error` as override point.
        *
        * @param {string} level One of 'log', 'warn', 'error'
        * @param {Array} args Array of strings or objects to log
-       */},{key:"_logger",value:function _logger(level,args){var _console;// accept ['foo', 'bar'] and [['foo', 'bar']]
+       */},{key:'_logger',value:function _logger(level,args){var _console;// accept ['foo', 'bar'] and [['foo', 'bar']]
 if(Array.isArray(args)&&args.length===1){args=args[0];}switch(level){case'log':case'warn':case'error':(_console=console)[level].apply(_console,_toConsumableArray(args));}}/**
        * Facades `console.log` as an override point.
        *
        * @param {...*} var_args Array of strings or objects to log
-       */},{key:"_log",value:function _log(){for(var _len4=arguments.length,args=Array(_len4),_key4=0;_key4<_len4;_key4++){args[_key4]=arguments[_key4];}this._logger('log',args);}/**
+       */},{key:'_log',value:function _log(){for(var _len4=arguments.length,args=Array(_len4),_key4=0;_key4<_len4;_key4++){args[_key4]=arguments[_key4];}this._logger('log',args);}/**
        * Facades `console.warn` as an override point.
        *
        * @param {...*} var_args Array of strings or objects to log
-       */},{key:"_warn",value:function _warn(){for(var _len5=arguments.length,args=Array(_len5),_key5=0;_key5<_len5;_key5++){args[_key5]=arguments[_key5];}this._logger('warn',args);}/**
+       */},{key:'_warn',value:function _warn(){for(var _len5=arguments.length,args=Array(_len5),_key5=0;_key5<_len5;_key5++){args[_key5]=arguments[_key5];}this._logger('warn',args);}/**
        * Facades `console.error` as an override point.
        *
        * @param {...*} var_args Array of strings or objects to log
-       */},{key:"_error",value:function _error(){for(var _len6=arguments.length,args=Array(_len6),_key6=0;_key6<_len6;_key6++){args[_key6]=arguments[_key6];}this._logger('error',args);}/**
+       */},{key:'_error',value:function _error(){for(var _len6=arguments.length,args=Array(_len6),_key6=0;_key6<_len6;_key6++){args[_key6]=arguments[_key6];}this._logger('error',args);}/**
        * Formats a message using the element type an a method name.
        *
        * @param {string} methodName Method name to associate with message
        * @param {...*} var_args Array of strings or objects to log
        * @return {string} String with formatting information for `console`
        *   logging.
-       */},{key:"_logf",value:function _logf(){for(var _len7=arguments.length,args=Array(_len7),_key7=0;_key7<_len7;_key7++){args[_key7]=arguments[_key7];}return['[%s::%s]',this.is].concat(args);}},{key:"domHost",get:function get(){var root=this.getRootNode();return root instanceof DocumentFragment?root.host:root;}}]);return LegacyElement;}(legacyElementBase);return LegacyElement;});})();(function(){'use strict';var LegacyElementMixin=Polymer.LegacyElementMixin;var metaProps={attached:true,detached:true,ready:true,created:true,beforeRegister:true,registered:true,attributeChanged:true,// meta objects
+       */},{key:'_logf',value:function _logf(){for(var _len7=arguments.length,args=Array(_len7),_key7=0;_key7<_len7;_key7++){args[_key7]=arguments[_key7];}return['[%s::%s]',this.is].concat(args);}},{key:'domHost',get:function get(){var root=this.getRootNode();return root instanceof DocumentFragment?root.host:root;}}]);return LegacyElement;}(legacyElementBase);return LegacyElement;});})();(function(){'use strict';var LegacyElementMixin=Polymer.LegacyElementMixin;var metaProps={attached:true,detached:true,ready:true,created:true,beforeRegister:true,registered:true,attributeChanged:true,// meta objects
 behaviors:true/**
      * Applies a "legacy" behavior or array of behaviors to the provided class.
      *
@@ -6099,16 +6099,16 @@ function _mixinBehaviors(behaviors,klass){for(var i=0;i<behaviors.length;i++){va
      * @param {Array=} exclude List of behaviors to exclude from the list.
      * @return {Array} Returns the list of flattened behaviors.
      */function flattenBehaviors(behaviors,list,exclude){list=list||[];for(var i=behaviors.length-1;i>=0;i--){var b=behaviors[i];if(b){if(Array.isArray(b)){flattenBehaviors(b,list);}else{// dedup
-if(list.indexOf(b)<0&&(!exclude||exclude.indexOf(b)<0)){list.unshift(b);}}}else{console.warn('behavior is null, check for missing or 404 import');}}return list;}function GenerateClassFromInfo(info,Base){var PolymerGenerated=function(_Base){_inherits(PolymerGenerated,_Base);function PolymerGenerated(){_classCallCheck(this,PolymerGenerated);return _possibleConstructorReturn(this,(PolymerGenerated.__proto__||Object.getPrototypeOf(PolymerGenerated)).apply(this,arguments));}_createClass(PolymerGenerated,[{key:"created",value:function created(){_get(PolymerGenerated.prototype.__proto__||Object.getPrototypeOf(PolymerGenerated.prototype),"created",this).call(this);if(info.created){info.created.call(this);}}},{key:"_registered",value:function _registered(){_get(PolymerGenerated.prototype.__proto__||Object.getPrototypeOf(PolymerGenerated.prototype),"_registered",this).call(this);/* NOTE: `beforeRegister` is called here for bc, but the behavior
+if(list.indexOf(b)<0&&(!exclude||exclude.indexOf(b)<0)){list.unshift(b);}}}else{console.warn('behavior is null, check for missing or 404 import');}}return list;}function GenerateClassFromInfo(info,Base){var PolymerGenerated=function(_Base){_inherits(PolymerGenerated,_Base);function PolymerGenerated(){_classCallCheck(this,PolymerGenerated);return _possibleConstructorReturn(this,(PolymerGenerated.__proto__||Object.getPrototypeOf(PolymerGenerated)).apply(this,arguments));}_createClass(PolymerGenerated,[{key:'created',value:function created(){_get(PolymerGenerated.prototype.__proto__||Object.getPrototypeOf(PolymerGenerated.prototype),'created',this).call(this);if(info.created){info.created.call(this);}}},{key:'_registered',value:function _registered(){_get(PolymerGenerated.prototype.__proto__||Object.getPrototypeOf(PolymerGenerated.prototype),'_registered',this).call(this);/* NOTE: `beforeRegister` is called here for bc, but the behavior
            is different than in 1.x. In 1.0, the method was called *after*
            mixing prototypes together but *before* processing of meta-objects.
            However, dynamic effects can still be set here and can be done either
            in `beforeRegister` or `registered`. It is no longer possible to set
            `is` in `beforeRegister` as you could in 1.x.
-          */if(info.beforeRegister){info.beforeRegister.call(Object.getPrototypeOf(this));}if(info.registered){info.registered.call(Object.getPrototypeOf(this));}}},{key:"_applyListeners",value:function _applyListeners(){_get(PolymerGenerated.prototype.__proto__||Object.getPrototypeOf(PolymerGenerated.prototype),"_applyListeners",this).call(this);if(info.listeners){for(var l in info.listeners){this._addMethodEventListenerToNode(this,l,info.listeners[l]);}}}// note: exception to "super then me" rule;
+          */if(info.beforeRegister){info.beforeRegister.call(Object.getPrototypeOf(this));}if(info.registered){info.registered.call(Object.getPrototypeOf(this));}}},{key:'_applyListeners',value:function _applyListeners(){_get(PolymerGenerated.prototype.__proto__||Object.getPrototypeOf(PolymerGenerated.prototype),'_applyListeners',this).call(this);if(info.listeners){for(var l in info.listeners){this._addMethodEventListenerToNode(this,l,info.listeners[l]);}}}// note: exception to "super then me" rule;
 // do work before calling super so that super attributes
 // only apply if not already set.
-},{key:"_ensureAttributes",value:function _ensureAttributes(){if(info.hostAttributes){for(var a in info.hostAttributes){this._ensureAttribute(a,info.hostAttributes[a]);}}_get(PolymerGenerated.prototype.__proto__||Object.getPrototypeOf(PolymerGenerated.prototype),"_ensureAttributes",this).call(this);}},{key:"ready",value:function ready(){_get(PolymerGenerated.prototype.__proto__||Object.getPrototypeOf(PolymerGenerated.prototype),"ready",this).call(this);if(info.ready){info.ready.call(this);}}},{key:"attached",value:function attached(){_get(PolymerGenerated.prototype.__proto__||Object.getPrototypeOf(PolymerGenerated.prototype),"attached",this).call(this);if(info.attached){info.attached.call(this);}}},{key:"detached",value:function detached(){_get(PolymerGenerated.prototype.__proto__||Object.getPrototypeOf(PolymerGenerated.prototype),"detached",this).call(this);if(info.detached){info.detached.call(this);}}},{key:"attributeChanged",value:function attributeChanged(name,old,value){_get(PolymerGenerated.prototype.__proto__||Object.getPrototypeOf(PolymerGenerated.prototype),"attributeChanged",this).call(this,name,old,value);if(info.attributeChanged){info.attributeChanged.call(this,name,old,value);}}}],[{key:"properties",get:function get(){return info.properties;}},{key:"observers",get:function get(){return info.observers;}},{key:"template",get:function get(){// get template first from any imperative set in `info._template`
+},{key:'_ensureAttributes',value:function _ensureAttributes(){if(info.hostAttributes){for(var a in info.hostAttributes){this._ensureAttribute(a,info.hostAttributes[a]);}}_get(PolymerGenerated.prototype.__proto__||Object.getPrototypeOf(PolymerGenerated.prototype),'_ensureAttributes',this).call(this);}},{key:'ready',value:function ready(){_get(PolymerGenerated.prototype.__proto__||Object.getPrototypeOf(PolymerGenerated.prototype),'ready',this).call(this);if(info.ready){info.ready.call(this);}}},{key:'attached',value:function attached(){_get(PolymerGenerated.prototype.__proto__||Object.getPrototypeOf(PolymerGenerated.prototype),'attached',this).call(this);if(info.attached){info.attached.call(this);}}},{key:'detached',value:function detached(){_get(PolymerGenerated.prototype.__proto__||Object.getPrototypeOf(PolymerGenerated.prototype),'detached',this).call(this);if(info.detached){info.detached.call(this);}}},{key:'attributeChanged',value:function attributeChanged(name,old,value){_get(PolymerGenerated.prototype.__proto__||Object.getPrototypeOf(PolymerGenerated.prototype),'attributeChanged',this).call(this,name,old,value);if(info.attributeChanged){info.attributeChanged.call(this,name,old,value);}}}],[{key:'properties',get:function get(){return info.properties;}},{key:'observers',get:function get(){return info.observers;}},{key:'template',get:function get(){// get template first from any imperative set in `info._template`
 return info._template||// next look in dom-module associated with this element's is.
 Polymer.DomModule.import(this.is,'template')||// next look for superclass template (note: use superclass symbol
 // to ensure correct `this.is`)
@@ -6311,12 +6311,12 @@ var klass=void 0;if(typeof info==='function'){klass=info;}else{klass=Polymer.Cla
      * @memberof Polymer
      * @summary Custom element to allow using Polymer's template features (data
      *   binding, declarative event listeners, etc.) in the main document.
-     */var DomBind=function(_domBindBase){_inherits(DomBind,_domBindBase);function DomBind(){_classCallCheck(this,DomBind);return _possibleConstructorReturn(this,(DomBind.__proto__||Object.getPrototypeOf(DomBind)).apply(this,arguments));}_createClass(DomBind,[{key:"attributeChangedCallback",// assumes only one observed attribute
-value:function attributeChangedCallback(){this.mutableData=true;}},{key:"connectedCallback",value:function connectedCallback(){this.render();}},{key:"disconnectedCallback",value:function disconnectedCallback(){this.__removeChildren();}},{key:"__insertChildren",value:function __insertChildren(){this.parentNode.insertBefore(this.root,this);}},{key:"__removeChildren",value:function __removeChildren(){if(this.__children){for(var i=0;i<this.__children.length;i++){this.root.appendChild(this.__children[i]);}}}/**
+     */var DomBind=function(_domBindBase){_inherits(DomBind,_domBindBase);function DomBind(){_classCallCheck(this,DomBind);return _possibleConstructorReturn(this,(DomBind.__proto__||Object.getPrototypeOf(DomBind)).apply(this,arguments));}_createClass(DomBind,[{key:'attributeChangedCallback',// assumes only one observed attribute
+value:function attributeChangedCallback(){this.mutableData=true;}},{key:'connectedCallback',value:function connectedCallback(){this.render();}},{key:'disconnectedCallback',value:function disconnectedCallback(){this.__removeChildren();}},{key:'__insertChildren',value:function __insertChildren(){this.parentNode.insertBefore(this.root,this);}},{key:'__removeChildren',value:function __removeChildren(){if(this.__children){for(var i=0;i<this.__children.length;i++){this.root.appendChild(this.__children[i]);}}}/**
        * Forces the element to render its content. This is typically only
        * necessary to call if HTMLImports with the async attribute are used.
-       */},{key:"render",value:function render(){var _this27=this;var template=void 0;if(!this.__children){template=template||this.querySelector('template');if(!template){// Wait until childList changes and template should be there by then
-var observer=new MutationObserver(function(){template=_this27.querySelector('template');if(template){observer.disconnect();_this27.render(template);}else{throw new Error('dom-bind requires a <template> child');}});observer.observe(this,{childList:true});return;}this.root=this._stampTemplate(template);this.$=this.root.$;this.__children=[];for(var n=this.root.firstChild;n;n=n.nextSibling){this.__children[this.__children.length]=n;}this._enableProperties();}this.__insertChildren();this.dispatchEvent(new CustomEvent('dom-change',{bubbles:true,composed:true}));}}],[{key:"observedAttributes",get:function get(){return['mutable-data'];}}]);return DomBind;}(domBindBase);customElements.define('dom-bind',DomBind);})();(function(){'use strict';/**
+       */},{key:'render',value:function render(){var _this27=this;var template=void 0;if(!this.__children){template=template||this.querySelector('template');if(!template){// Wait until childList changes and template should be there by then
+var observer=new MutationObserver(function(){template=_this27.querySelector('template');if(template){observer.disconnect();_this27.render(template);}else{throw new Error('dom-bind requires a <template> child');}});observer.observe(this,{childList:true});return;}this.root=this._stampTemplate(template);this.$=this.root.$;this.__children=[];for(var n=this.root.firstChild;n;n=n.nextSibling){this.__children[this.__children.length]=n;}this._enableProperties();}this.__insertChildren();this.dispatchEvent(new CustomEvent('dom-change',{bubbles:true,composed:true}));}}],[{key:'observedAttributes',get:function get(){return['mutable-data'];}}]);return DomBind;}(domBindBase);customElements.define('dom-bind',DomBind);})();(function(){'use strict';/**
    * The `<dom-if>` element will stamp a light-dom `<template>` child when
    * the `if` property becomes truthy, and the template can use Polymer
    * data-binding and declarative event features when used in the context of
@@ -6336,9 +6336,9 @@ var observer=new MutationObserver(function(){template=_this27.querySelector('tem
    * @memberof Polymer
    * @summary Custom element that conditionally stamps and hides or removes
    *   template content based on a boolean flag.
-   */var DomIf=function(_Polymer$Element){_inherits(DomIf,_Polymer$Element);_createClass(DomIf,null,[{key:"is",// Not needed to find template; can be removed once the analyzer
+   */var DomIf=function(_Polymer$Element){_inherits(DomIf,_Polymer$Element);_createClass(DomIf,null,[{key:'is',// Not needed to find template; can be removed once the analyzer
 // can find the tag name from customElements.define call
-get:function get(){return'dom-if';}},{key:"template",get:function get(){return null;}},{key:"properties",get:function get(){return{/**
+get:function get(){return'dom-if';}},{key:'template',get:function get(){return null;}},{key:'properties',get:function get(){return{/**
          * Fired whenever DOM is added or removed/hidden by this template (by
          * default, rendering occurs lazily).  To force immediate rendering, call
          * `render`.
@@ -6352,7 +6352,7 @@ get:function get(){return'dom-if';}},{key:"template",get:function get(){return n
          * becomes true.  By default, stamped elements will be hidden but left
          * in the DOM when `if` becomes false, which is generally results
          * in better performance.
-         */restamp:{type:Boolean,observer:'__debounceRender'}};}}]);function DomIf(){_classCallCheck(this,DomIf);var _this28=_possibleConstructorReturn(this,(DomIf.__proto__||Object.getPrototypeOf(DomIf)).call(this));_this28.__renderDebouncer=null;_this28.__invalidProps=null;_this28.__instance=null;return _this28;}_createClass(DomIf,[{key:"__debounceRender",value:function __debounceRender(){var _this29=this;// Render is async for 2 reasons:
+         */restamp:{type:Boolean,observer:'__debounceRender'}};}}]);function DomIf(){_classCallCheck(this,DomIf);var _this28=_possibleConstructorReturn(this,(DomIf.__proto__||Object.getPrototypeOf(DomIf)).call(this));_this28.__renderDebouncer=null;_this28.__invalidProps=null;_this28.__instance=null;return _this28;}_createClass(DomIf,[{key:'__debounceRender',value:function __debounceRender(){var _this29=this;// Render is async for 2 reasons:
 // 1. To eliminate dom creation trashing if user code thrashes `if` in the
 //    same turn. This was more common in 1.x where a compound computed
 //    property could result in the result changing multiple times, but is
@@ -6368,14 +6368,14 @@ get:function get(){return'dom-if';}},{key:"template",get:function get(){return n
 //    we wanted a sync option in the future, simply having <dom-if> flush
 //    (or clear) its template's pending host properties before creating
 //    the instance would also avoid the problem.
-this.__renderDebouncer=Polymer.Debouncer.debounce(this.__renderDebouncer,Polymer.Async.microTask,function(){return _this29.__render();});Polymer.enqueueDebouncer(this.__renderDebouncer);}},{key:"disconnectedCallback",value:function disconnectedCallback(){_get(DomIf.prototype.__proto__||Object.getPrototypeOf(DomIf.prototype),"disconnectedCallback",this).call(this);if(!this.parentNode||this.parentNode.nodeType==Node.DOCUMENT_FRAGMENT_NODE&&!this.parentNode.host){this.__teardownInstance();}}},{key:"connectedCallback",value:function connectedCallback(){_get(DomIf.prototype.__proto__||Object.getPrototypeOf(DomIf.prototype),"connectedCallback",this).call(this);if(this.if){this.__debounceRender();}}/**
+this.__renderDebouncer=Polymer.Debouncer.debounce(this.__renderDebouncer,Polymer.Async.microTask,function(){return _this29.__render();});Polymer.enqueueDebouncer(this.__renderDebouncer);}},{key:'disconnectedCallback',value:function disconnectedCallback(){_get(DomIf.prototype.__proto__||Object.getPrototypeOf(DomIf.prototype),'disconnectedCallback',this).call(this);if(!this.parentNode||this.parentNode.nodeType==Node.DOCUMENT_FRAGMENT_NODE&&!this.parentNode.host){this.__teardownInstance();}}},{key:'connectedCallback',value:function connectedCallback(){_get(DomIf.prototype.__proto__||Object.getPrototypeOf(DomIf.prototype),'connectedCallback',this).call(this);if(this.if){this.__debounceRender();}}/**
      * Forces the element to render its content. Normally rendering is
      * asynchronous to a provoking change. This is done for efficiency so
      * that multiple changes trigger only a single render. The render method
      * should be called if, for example, template rendering is required to
      * validate application state.
-     */},{key:"render",value:function render(){Polymer.flush();}},{key:"__render",value:function __render(){if(this.if){if(!this.__ensureInstance()){// No template found yet
-return;}this._showHideChildren();}else if(this.restamp){this.__teardownInstance();}if(!this.restamp&&this.__instance){this._showHideChildren();}if(this.if!=this._lastIf){this.dispatchEvent(new CustomEvent('dom-change',{bubbles:true,composed:true}));this._lastIf=this.if;}}},{key:"__ensureInstance",value:function __ensureInstance(){var _this30=this;var parentNode=this.parentNode;// Guard against element being detached while render was queued
+     */},{key:'render',value:function render(){Polymer.flush();}},{key:'__render',value:function __render(){if(this.if){if(!this.__ensureInstance()){// No template found yet
+return;}this._showHideChildren();}else if(this.restamp){this.__teardownInstance();}if(!this.restamp&&this.__instance){this._showHideChildren();}if(this.if!=this._lastIf){this.dispatchEvent(new CustomEvent('dom-change',{bubbles:true,composed:true}));this._lastIf=this.if;}}},{key:'__ensureInstance',value:function __ensureInstance(){var _this30=this;var parentNode=this.parentNode;// Guard against element being detached while render was queued
 if(parentNode){if(!this.__ctor){var template=this.querySelector('template');if(!template){// Wait until childList changes and template should be there by then
 var observer=new MutationObserver(function(){if(_this30.querySelector('template')){observer.disconnect();_this30.__render();}else{throw new Error('dom-if requires a <template> child');}});observer.observe(this,{childList:true});return false;}this.__ctor=Polymer.Templatize.templatize(template,this,{// dom-if templatizer instances require `mutable: true`, as
 // `__syncHostProperties` relies on that behavior to sync objects
@@ -6384,8 +6384,8 @@ mutableData:true,forwardHostProp:function forwardHostProp(prop,value){if(this.__
 // properties so `__syncHostProperties` can sync them the next
 // time `if` becomes true
 this.__invalidProps=this.__invalidProps||Object.create(null);this.__invalidProps[Polymer.Path.root(prop)]=true;}}}});}if(!this.__instance){this.__instance=new this.__ctor();parentNode.insertBefore(this.__instance.root,this);}else{this.__syncHostProperties();var c$=this.__instance.children;if(c$&&c$.length){// Detect case where dom-if was re-attached in new position
-var lastChild=this.previousSibling;if(lastChild!==c$[c$.length-1]){for(var i=0,n;i<c$.length&&(n=c$[i]);i++){parentNode.insertBefore(n,this);}}}}}return true;}},{key:"__syncHostProperties",value:function __syncHostProperties(){var props=this.__invalidProps;if(props){for(var prop in props){this.__instance._setPendingProperty(prop,this.__dataHost[prop]);}this.__invalidProps=null;this.__instance._flushProperties();}}},{key:"__teardownInstance",value:function __teardownInstance(){if(this.__instance){var c$=this.__instance.children;if(c$&&c$.length){// use first child parent, for case when dom-if may have been detached
-var parent=c$[0].parentNode;for(var i=0,n;i<c$.length&&(n=c$[i]);i++){parent.removeChild(n);}}this.__instance=null;this.__invalidProps=null;}}},{key:"_showHideChildren",value:function _showHideChildren(){var hidden=this.__hideTemplateChildren__||!this.if;if(this.__instance){this.__instance._showHideChildren(hidden);}}}]);return DomIf;}(Polymer.Element);customElements.define(DomIf.is,DomIf);Polymer.DomIf=DomIf;})();(function(){'use strict';/**
+var lastChild=this.previousSibling;if(lastChild!==c$[c$.length-1]){for(var i=0,n;i<c$.length&&(n=c$[i]);i++){parentNode.insertBefore(n,this);}}}}}return true;}},{key:'__syncHostProperties',value:function __syncHostProperties(){var props=this.__invalidProps;if(props){for(var prop in props){this.__instance._setPendingProperty(prop,this.__dataHost[prop]);}this.__invalidProps=null;this.__instance._flushProperties();}}},{key:'__teardownInstance',value:function __teardownInstance(){if(this.__instance){var c$=this.__instance.children;if(c$&&c$.length){// use first child parent, for case when dom-if may have been detached
+var parent=c$[0].parentNode;for(var i=0,n;i<c$.length&&(n=c$[i]);i++){parent.removeChild(n);}}this.__instance=null;this.__invalidProps=null;}}},{key:'_showHideChildren',value:function _showHideChildren(){var hidden=this.__hideTemplateChildren__||!this.if;if(this.__instance){this.__instance._showHideChildren(hidden);}}}]);return DomIf;}(Polymer.Element);customElements.define(DomIf.is,DomIf);Polymer.DomIf=DomIf;})();(function(){'use strict';/**
    * Element mixin for recording  dynamic associations between item paths in a
    * master `items` array and a `selected` array such that path changes to the
    * master array (at the host) element or elsewhere via data-binding) are
@@ -6404,7 +6404,7 @@ var parent=c$[0].parentNode;for(var i=0,n;i<c$.length&&(n=c$[i]);i++){parent.rem
    */var ArraySelectorMixin=Polymer.dedupingMixin(function(superClass){/**
      * @polymerMixinClass
      * @implements {Polymer_ArraySelectorMixin}
-     */var ArraySelectorMixin=function(_superClass6){_inherits(ArraySelectorMixin,_superClass6);_createClass(ArraySelectorMixin,null,[{key:"properties",get:function get(){return{/**
+     */var ArraySelectorMixin=function(_superClass6){_inherits(ArraySelectorMixin,_superClass6);_createClass(ArraySelectorMixin,null,[{key:'properties',get:function get(){return{/**
            * An array containing items from which selection will be made.
            */items:{type:Array},/**
            * When `true`, multiple items may be selected at once (in this case,
@@ -6420,22 +6420,22 @@ var parent=c$[0].parentNode;for(var i=0,n;i<c$.length&&(n=c$[i]);i++){parent.rem
            */selectedItem:{type:Object,notify:true},/**
            * When `true`, calling `select` on an item that is already selected
            * will deselect the item.
-           */toggle:{type:Boolean,value:false}};}},{key:"observers",get:function get(){return['__updateSelection(multi, items.*)'];}}]);function ArraySelectorMixin(){_classCallCheck(this,ArraySelectorMixin);var _this31=_possibleConstructorReturn(this,(ArraySelectorMixin.__proto__||Object.getPrototypeOf(ArraySelectorMixin)).call(this));_this31.__lastItems=null;_this31.__lastMulti=null;_this31.__selectedMap=null;return _this31;}_createClass(ArraySelectorMixin,[{key:"__updateSelection",value:function __updateSelection(multi,itemsInfo){var path=itemsInfo.path;if(path=='items'){// Case 1 - items array changed, so diff against previous array and
+           */toggle:{type:Boolean,value:false}};}},{key:'observers',get:function get(){return['__updateSelection(multi, items.*)'];}}]);function ArraySelectorMixin(){_classCallCheck(this,ArraySelectorMixin);var _this31=_possibleConstructorReturn(this,(ArraySelectorMixin.__proto__||Object.getPrototypeOf(ArraySelectorMixin)).call(this));_this31.__lastItems=null;_this31.__lastMulti=null;_this31.__selectedMap=null;return _this31;}_createClass(ArraySelectorMixin,[{key:'__updateSelection',value:function __updateSelection(multi,itemsInfo){var path=itemsInfo.path;if(path=='items'){// Case 1 - items array changed, so diff against previous array and
 // deselect any removed items and adjust selected indices
 var newItems=itemsInfo.base||[];var lastItems=this.__lastItems;var lastMulti=this.__lastMulti;if(multi!==lastMulti){this.clearSelection();}if(lastItems){var splices=Polymer.ArraySplice.calculateSplices(newItems,lastItems);this.__applySplices(splices);}this.__lastItems=newItems;this.__lastMulti=multi;}else if(itemsInfo.path=='items.splices'){// Case 2 - got specific splice information describing the array mutation:
 // deselect any removed items and adjust selected indices
 this.__applySplices(itemsInfo.value.indexSplices);}else{// Case 3 - an array element was changed, so deselect the previous
 // item for that index if it was previously selected
-var part=path.slice('items.'.length);var idx=parseInt(part,10);if(part.indexOf('.')<0&&part==idx){this.__deselectChangedIdx(idx);}}}},{key:"__applySplices",value:function __applySplices(splices){var _this32=this;var selected=this.__selectedMap;// Adjust selected indices and mark removals
+var part=path.slice('items.'.length);var idx=parseInt(part,10);if(part.indexOf('.')<0&&part==idx){this.__deselectChangedIdx(idx);}}}},{key:'__applySplices',value:function __applySplices(splices){var _this32=this;var selected=this.__selectedMap;// Adjust selected indices and mark removals
 var _loop4=function _loop4(i){var s=splices[i];selected.forEach(function(idx,item){if(idx<s.index){// no change
 }else if(idx>=s.index+s.removed.length){// adjust index
 selected.set(item,idx+s.addedCount-s.removed.length);}else{// remove index
 selected.set(item,-1);}});for(var j=0;j<s.addedCount;j++){var idx=s.index+j;if(selected.has(_this32.items[idx])){selected.set(_this32.items[idx],idx);}}};for(var i=0;i<splices.length;i++){_loop4(i);}// Update linked paths
 this.__updateLinks();// Remove selected items that were removed from the items array
-var sidx=0;selected.forEach(function(idx,item){if(idx<0){if(_this32.multi){_this32.splice('selected',sidx,1);}else{_this32.selected=_this32.selectedItem=null;}selected.delete(item);}else{sidx++;}});}},{key:"__updateLinks",value:function __updateLinks(){var _this33=this;this.__dataLinkedPaths={};if(this.multi){var sidx=0;this.__selectedMap.forEach(function(idx){if(idx>=0){_this33.linkPaths('items.'+idx,'selected.'+sidx++);}});}else{this.__selectedMap.forEach(function(idx){_this33.linkPaths('selected','items.'+idx);_this33.linkPaths('selectedItem','items.'+idx);});}}/**
+var sidx=0;selected.forEach(function(idx,item){if(idx<0){if(_this32.multi){_this32.splice('selected',sidx,1);}else{_this32.selected=_this32.selectedItem=null;}selected.delete(item);}else{sidx++;}});}},{key:'__updateLinks',value:function __updateLinks(){var _this33=this;this.__dataLinkedPaths={};if(this.multi){var sidx=0;this.__selectedMap.forEach(function(idx){if(idx>=0){_this33.linkPaths('items.'+idx,'selected.'+sidx++);}});}else{this.__selectedMap.forEach(function(idx){_this33.linkPaths('selected','items.'+idx);_this33.linkPaths('selectedItem','items.'+idx);});}}/**
        * Clears the selection state.
        *
-       */},{key:"clearSelection",value:function clearSelection(){// Unbind previous selection
+       */},{key:'clearSelection',value:function clearSelection(){// Unbind previous selection
 this.__dataLinkedPaths={};// The selected map stores 3 pieces of information:
 // key: items array object
 // value: items array index
@@ -6446,30 +6446,30 @@ this.selected=this.multi?[]:null;this.selectedItem=null;}/**
        *
        * @param {*} item Item from `items` array to test
        * @return {boolean} Whether the item is selected
-       */},{key:"isSelected",value:function isSelected(item){return this.__selectedMap.has(item);}/**
+       */},{key:'isSelected',value:function isSelected(item){return this.__selectedMap.has(item);}/**
        * Returns whether the item is currently selected.
        *
        * @param {*} idx Index from `items` array to test
        * @return {boolean} Whether the item is selected
-       */},{key:"isIndexSelected",value:function isIndexSelected(idx){return this.isSelected(this.items[idx]);}},{key:"__deselectChangedIdx",value:function __deselectChangedIdx(idx){var _this34=this;var sidx=this.__selectedIndexForItemIndex(idx);if(sidx>=0){var i=0;this.__selectedMap.forEach(function(idx,item){if(sidx==i++){_this34.deselect(item);}});}}},{key:"__selectedIndexForItemIndex",value:function __selectedIndexForItemIndex(idx){var selected=this.__dataLinkedPaths['items.'+idx];if(selected){return parseInt(selected.slice('selected.'.length),10);}}/**
+       */},{key:'isIndexSelected',value:function isIndexSelected(idx){return this.isSelected(this.items[idx]);}},{key:'__deselectChangedIdx',value:function __deselectChangedIdx(idx){var _this34=this;var sidx=this.__selectedIndexForItemIndex(idx);if(sidx>=0){var i=0;this.__selectedMap.forEach(function(idx,item){if(sidx==i++){_this34.deselect(item);}});}}},{key:'__selectedIndexForItemIndex',value:function __selectedIndexForItemIndex(idx){var selected=this.__dataLinkedPaths['items.'+idx];if(selected){return parseInt(selected.slice('selected.'.length),10);}}/**
        * Deselects the given item if it is already selected.
        *
        * @param {*} item Item from `items` array to deselect
-       */},{key:"deselect",value:function deselect(item){var idx=this.__selectedMap.get(item);if(idx>=0){this.__selectedMap.delete(item);var sidx=void 0;if(this.multi){sidx=this.__selectedIndexForItemIndex(idx);}this.__updateLinks();if(this.multi){this.splice('selected',sidx,1);}else{this.selected=this.selectedItem=null;}}}/**
+       */},{key:'deselect',value:function deselect(item){var idx=this.__selectedMap.get(item);if(idx>=0){this.__selectedMap.delete(item);var sidx=void 0;if(this.multi){sidx=this.__selectedIndexForItemIndex(idx);}this.__updateLinks();if(this.multi){this.splice('selected',sidx,1);}else{this.selected=this.selectedItem=null;}}}/**
        * Deselects the given index if it is already selected.
        *
        * @param {number} idx Index from `items` array to deselect
-       */},{key:"deselectIndex",value:function deselectIndex(idx){this.deselect(this.items[idx]);}/**
+       */},{key:'deselectIndex',value:function deselectIndex(idx){this.deselect(this.items[idx]);}/**
        * Selects the given item.  When `toggle` is true, this will automatically
        * deselect the item if already selected.
        *
        * @param {*} item Item from `items` array to select
-       */},{key:"select",value:function select(item){this.selectIndex(this.items.indexOf(item));}/**
+       */},{key:'select',value:function select(item){this.selectIndex(this.items.indexOf(item));}/**
        * Selects the given index.  When `toggle` is true, this will automatically
        * deselect the item if already selected.
        *
        * @param {number} idx Index from `items` array to select
-       */},{key:"selectIndex",value:function selectIndex(idx){var item=this.items[idx];if(!this.isSelected(item)){if(!this.multi){this.__selectedMap.clear();}this.__selectedMap.set(item,idx);this.__updateLinks();if(this.multi){this.push('selected',item);}else{this.selected=this.selectedItem=item;}}else if(this.toggle){this.deselectIndex(idx);}}}]);return ArraySelectorMixin;}(superClass);return ArraySelectorMixin;});// export mixin
+       */},{key:'selectIndex',value:function selectIndex(idx){var item=this.items[idx];if(!this.isSelected(item)){if(!this.multi){this.__selectedMap.clear();}this.__selectedMap.set(item,idx);this.__updateLinks();if(this.multi){this.push('selected',item);}else{this.selected=this.selectedItem=item;}}else if(this.toggle){this.deselectIndex(idx);}}}]);return ArraySelectorMixin;}(superClass);return ArraySelectorMixin;});// export mixin
 Polymer.ArraySelectorMixin=ArraySelectorMixin;/**
    * @constructor
    * @extends {Polymer.Element}
@@ -6539,7 +6539,7 @@ Polymer.ArraySelectorMixin=ArraySelectorMixin;/**
    * @memberof Polymer
    * @summary Custom element that links paths between an input `items` array and
    *   an output `selected` item or array based on calls to its selection API.
-   */var ArraySelector=function(_baseArraySelector){_inherits(ArraySelector,_baseArraySelector);function ArraySelector(){_classCallCheck(this,ArraySelector);return _possibleConstructorReturn(this,(ArraySelector.__proto__||Object.getPrototypeOf(ArraySelector)).apply(this,arguments));}_createClass(ArraySelector,null,[{key:"is",// Not needed to find template; can be removed once the analyzer
+   */var ArraySelector=function(_baseArraySelector){_inherits(ArraySelector,_baseArraySelector);function ArraySelector(){_classCallCheck(this,ArraySelector);return _possibleConstructorReturn(this,(ArraySelector.__proto__||Object.getPrototypeOf(ArraySelector)).apply(this,arguments));}_createClass(ArraySelector,null,[{key:'is',// Not needed to find template; can be removed once the analyzer
 // can find the tag name from customElements.define call
 get:function get(){return'array-selector';}}]);return ArraySelector;}(baseArraySelector);customElements.define(ArraySelector.is,ArraySelector);Polymer.ArraySelector=ArraySelector;})();(function(){/*
 
@@ -6574,7 +6574,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      * concatenated to this element's `<style>`.
      *
      * @return {HTMLStyleElement} This element's light-DOM `<style>`
-     */_createClass(CustomStyle,[{key:"getStyle",value:function getStyle(){if(this._style){return this._style;}var style=this.querySelector('style');if(!style){return;}this._style=style;var include=style.getAttribute(attr);if(include){style.removeAttribute(attr);style.textContent=Polymer.StyleGather.cssFromModules(include)+style.textContent;}return this._style;}}]);return CustomStyle;}(HTMLElement);window.customElements.define('custom-style',CustomStyle);Polymer.CustomStyle=CustomStyle;})();(function(){'use strict';var mutablePropertyChange=Polymer.MutableData._mutablePropertyChange;/**
+     */_createClass(CustomStyle,[{key:'getStyle',value:function getStyle(){if(this._style){return this._style;}var style=this.querySelector('style');if(!style){return;}this._style=style;var include=style.getAttribute(attr);if(include){style.removeAttribute(attr);style.textContent=Polymer.StyleGather.cssFromModules(include)+style.textContent;}return this._style;}}]);return CustomStyle;}(HTMLElement);window.customElements.define('custom-style',CustomStyle);Polymer.CustomStyle=CustomStyle;})();(function(){'use strict';var mutablePropertyChange=Polymer.MutableData._mutablePropertyChange;/**
    * Legacy element behavior to skip strict dirty-checking for objects and arrays,
    * (always consider them to be "dirty") for use on legacy API Polymer elements.
    *
@@ -6850,7 +6850,7 @@ if(this.isLightDescendant(/** @type {Node} */target))return;if(this.pressed){thi
 _asyncClick:function _asyncClick(){this.async(function(){this.click();},1);},// any of these changes are considered a change to button state
 _pressedChanged:function _pressedChanged(pressed){this._changedButtonState();},_ariaActiveAttributeChanged:function _ariaActiveAttributeChanged(value,oldValue){if(oldValue&&oldValue!=value&&this.hasAttribute(oldValue)){this.removeAttribute(oldValue);}},_activeChanged:function _activeChanged(active,ariaActiveAttribute){if(this.toggles){this.setAttribute(this.ariaActiveAttribute,active?'true':'false');}else{this.removeAttribute(this.ariaActiveAttribute);}this._changedButtonState();},_controlStateChanged:function _controlStateChanged(){if(this.disabled){this._setPressed(false);}else{this._changedButtonState();}},// provide hook for follow-on behaviors to react to button-state
 _changedButtonState:function _changedButtonState(){if(this._buttonStateChanged){this._buttonStateChanged();// abstract
-}}};/** @polymerBehavior */Polymer.IronButtonState=[Polymer.IronA11yKeysBehavior,Polymer.IronButtonStateImpl];/** @polymerBehavior Polymer.PaperItemBehavior */Polymer.PaperItemBehaviorImpl={hostAttributes:{role:'option',tabindex:'0'}};/** @polymerBehavior */Polymer.PaperItemBehavior=[Polymer.IronButtonState,Polymer.IronControlState,Polymer.PaperItemBehaviorImpl];Polymer({is:'paper-item',behaviors:[Polymer.PaperItemBehavior]});var ExampleOrder=function(_Polymer$Element2){_inherits(ExampleOrder,_Polymer$Element2);function ExampleOrder(){_classCallCheck(this,ExampleOrder);return _possibleConstructorReturn(this,(ExampleOrder.__proto__||Object.getPrototypeOf(ExampleOrder)).apply(this,arguments));}_createClass(ExampleOrder,[{key:"_selectItem",value:function _selectItem(e){this.$.selector.selectIndex(e.model.index);}},{key:"getData",value:function getData(){var _this38=this;var root=window.location.origin;root+=window.location.pathname.replace("index.html","");fetch(root+"data/exampleOrders.json").then(function(stream){return stream.body.getReader().read();}).then(function(_ref){var value=_ref.value,done=_ref.done;return _this38.parse(value);}).then(function(orders){_this38.orderTypes=Array.from(orders.keys());_this38.orders=Array.from(orders.values());_this38.selectedOrder=_this38.orders[0];});}},{key:"parse",value:function parse(value){var string=value.reduce(function(acc,code){return acc+=String.fromCharCode(code);},"");var json=JSON.parse(string);var ret=new Map();for(var orderType in json){var order=json[orderType];ret.set(orderType,order);}return ret;}},{key:"ready",value:function ready(){_get(ExampleOrder.prototype.__proto__||Object.getPrototypeOf(ExampleOrder.prototype),"ready",this).call(this);this.getData();}}],[{key:"is",get:function get(){return"example-order";}},{key:"properties",get:function get(){return{orders:Array,selectedOrder:Array,orderTypes:Array};}}]);return ExampleOrder;}(Polymer.Element);window.customElements.define(ExampleOrder.is,ExampleOrder);(function(){'use strict';var Utility={distance:function distance(x1,y1,x2,y2){var xDelta=x1-x2;var yDelta=y1-y2;return Math.sqrt(xDelta*xDelta+yDelta*yDelta);},now:window.performance&&window.performance.now?window.performance.now.bind(window.performance):Date.now};/**
+}}};/** @polymerBehavior */Polymer.IronButtonState=[Polymer.IronA11yKeysBehavior,Polymer.IronButtonStateImpl];/** @polymerBehavior Polymer.PaperItemBehavior */Polymer.PaperItemBehaviorImpl={hostAttributes:{role:'option',tabindex:'0'}};/** @polymerBehavior */Polymer.PaperItemBehavior=[Polymer.IronButtonState,Polymer.IronControlState,Polymer.PaperItemBehaviorImpl];Polymer({is:'paper-item',behaviors:[Polymer.PaperItemBehavior]});var ExampleOrder=function(_Polymer$Element2){_inherits(ExampleOrder,_Polymer$Element2);function ExampleOrder(){_classCallCheck(this,ExampleOrder);return _possibleConstructorReturn(this,(ExampleOrder.__proto__||Object.getPrototypeOf(ExampleOrder)).apply(this,arguments));}_createClass(ExampleOrder,[{key:'_selectItem',value:function _selectItem(e){this.$.selector.selectIndex(e.model.index);}},{key:'getData',value:function getData(){var _this38=this;var root=window.location.origin;root+=window.location.pathname.replace("index.html","");fetch(root+"data/exampleOrders.json").then(function(stream){return stream.body.getReader().read();}).then(function(_ref){var value=_ref.value,done=_ref.done;return _this38.parse(value);}).then(function(orders){_this38.orderTypes=Array.from(orders.keys());_this38.orders=Array.from(orders.values());_this38.selectedOrder=_this38.orders[0];});}},{key:'parse',value:function parse(value){var string=value.reduce(function(acc,code){return acc+=String.fromCharCode(code);},"");var json=JSON.parse(string);var ret=new Map();for(var orderType in json){var order=json[orderType];ret.set(orderType,order);}return ret;}},{key:'ready',value:function ready(){_get(ExampleOrder.prototype.__proto__||Object.getPrototypeOf(ExampleOrder.prototype),'ready',this).call(this);this.getData();}}],[{key:'is',get:function get(){return"example-order";}},{key:'properties',get:function get(){return{orders:Array,selectedOrder:Array,orderTypes:Array};}}]);return ExampleOrder;}(Polymer.Element);window.customElements.define(ExampleOrder.is,ExampleOrder);(function(){'use strict';var Utility={distance:function distance(x1,y1,x2,y2){var xDelta=x1-x2;var yDelta=y1-y2;return Math.sqrt(xDelta*xDelta+yDelta*yDelta);},now:window.performance&&window.performance.now?window.performance.now.bind(window.performance):Date.now};/**
      * @param {HTMLElement} element
      * @constructor
      */function ElementMetrics(element){this.element=element;this.width=this.boundingRect.width;this.height=this.boundingRect.height;this.size=Math.max(this.width,this.height);}ElementMetrics.prototype={get boundingRect(){return this.element.getBoundingClientRect();},furthestCornerDistanceFrom:function furthestCornerDistanceFrom(x,y){var topLeft=Utility.distance(x,y,0,0);var topRight=Utility.distance(x,y,this.width,0);var bottomLeft=Utility.distance(x,y,0,this.height);var bottomRight=Utility.distance(x,y,this.width,this.height);return Math.max(topLeft,topRight,bottomLeft,bottomRight);}};/**
@@ -7584,7 +7584,7 @@ var url;if(document.baseURI!=null){url=resolveURL(href,/** @type {string} */docu
 if(window.location.origin){origin=window.location.origin;}else{origin=window.location.protocol+'//'+window.location.host;}var urlOrigin;if(url.origin){urlOrigin=url.origin;}else{urlOrigin=url.protocol+'//'+url.host;}if(urlOrigin!==origin){return null;}var normalizedHref=url.pathname+url.search+url.hash;// pathname should start with '/', but may not if `new URL` is not supported
 if(normalizedHref[0]!=='/'){normalizedHref='/'+normalizedHref;}// If we've been configured not to handle this url... don't handle it!
 if(this._urlSpaceRegExp&&!this._urlSpaceRegExp.test(normalizedHref)){return null;}// Need to use a full URL in case the containing page has a base URI.
-var fullNormalizedHref=resolveURL(normalizedHref,window.location.href).href;return fullNormalizedHref;},_makeRegExp:function _makeRegExp(urlSpaceRegex){return RegExp(urlSpaceRegex);}});})();(function(){var parsers=require('../common/parsers.js');window.Order=require('../common/order.js');;defineCustomElement('order-input',function(_Polymer$Element3){_inherits(_class3,_Polymer$Element3);function _class3(){_classCallCheck(this,_class3);return _possibleConstructorReturn(this,(_class3.__proto__||Object.getPrototypeOf(_class3)).apply(this,arguments));}_createClass(_class3,[{key:"_onInputChanged",value:function _onInputChanged(){var header=this.$.input.querySelector('header');if(header)header.hidden=true;var order=new parsers.OrderUpHtmlParser().parse(this.$.input);console.log('order',order);this._changeUrl(order);}},{key:"ready",value:function ready(){_get(_class3.prototype.__proto__||Object.getPrototypeOf(_class3.prototype),"ready",this).call(this);this.usePercentForTip=JSON.parse(localStorage.getItem('usePercentForTip'));this.$.input.focus();}// _computeTipPercentClass() {
+var fullNormalizedHref=resolveURL(normalizedHref,window.location.href).href;return fullNormalizedHref;},_makeRegExp:function _makeRegExp(urlSpaceRegex){return RegExp(urlSpaceRegex);}});})();(function(){var parsers=require('../common/parsers.js');window.Order=require('../common/order.js');;defineCustomElement('order-input',function(_Polymer$Element3){_inherits(_class3,_Polymer$Element3);function _class3(){_classCallCheck(this,_class3);return _possibleConstructorReturn(this,(_class3.__proto__||Object.getPrototypeOf(_class3)).apply(this,arguments));}_createClass(_class3,[{key:'_onInputChanged',value:function _onInputChanged(){var header=this.$.input.querySelector('header');if(header)header.hidden=true;var order=new parsers.OrderUpHtmlParser().parse(this.$.input);console.log('order',order);this._changeUrl(order);}},{key:'ready',value:function ready(){_get(_class3.prototype.__proto__||Object.getPrototypeOf(_class3.prototype),'ready',this).call(this);this.usePercentForTip=JSON.parse(localStorage.getItem('usePercentForTip'));this.$.input.focus();}// _computeTipPercentClass() {
 //     return this.usePercentForTip ? '' : 'hidden';
 // }
 // _computeTipDollarClass() {
@@ -7610,7 +7610,7 @@ var fullNormalizedHref=resolveURL(normalizedHref,window.location.href).href;retu
 // _onCheckboxTap() {
 //     localStorage.setItem('usePercentForTip', JSON.stringify(!this.usePercentForTip));
 // }
-},{key:"_changeUrl",value:function _changeUrl(order){if(!order||!order.hasPeople){// window.location.href = window.location.href.split('?')[0];
+},{key:'_changeUrl',value:function _changeUrl(order){if(!order||!order.hasPeople){// window.location.href = window.location.href.split('?')[0];
 this.$.location.query='';return;}var query='tax='+order.tax+'&fee='+order.fee+'&tip='+order.tipDollars;var _iteratorNormalCompletion2=true;var _didIteratorError2=false;var _iteratorError2=undefined;try{for(var _iterator2=order.people[Symbol.iterator](),_step2;!(_iteratorNormalCompletion2=(_step2=_iterator2.next()).done);_iteratorNormalCompletion2=true){var _step2$value=_slicedToArray(_step2.value,2),person=_step2$value[0],val=_step2$value[1];query+='&'+encodeURIComponent(person)+'='+Utils._prettifyNumber(val);}}catch(err){_didIteratorError2=true;_iteratorError2=err;}finally{try{if(!_iteratorNormalCompletion2&&_iterator2.return){_iterator2.return();}}finally{if(_didIteratorError2){throw _iteratorError2;}}}this.$.location.query=query;}}]);return _class3;}(Polymer.Element));})();/**
    * `Polymer.NeonAnimatableBehavior` is implemented by elements containing animations for use with
    * elements implementing `Polymer.NeonAnimationRunnerBehavior`.
@@ -7704,26 +7704,26 @@ if(this._animationPlaying){this.cancelAnimation();this._showing=false;this._onAn
 if(this.marginTop!=14&&this.offset==14)offset=this.marginTop;var parentRect=this.offsetParent.getBoundingClientRect();var targetRect=this._target.getBoundingClientRect();var thisRect=this.getBoundingClientRect();var horizontalCenterOffset=(targetRect.width-thisRect.width)/2;var verticalCenterOffset=(targetRect.height-thisRect.height)/2;var targetLeft=targetRect.left-parentRect.left;var targetTop=targetRect.top-parentRect.top;var tooltipLeft,tooltipTop;switch(this.position){case'top':tooltipLeft=targetLeft+horizontalCenterOffset;tooltipTop=targetTop-thisRect.height-offset;break;case'bottom':tooltipLeft=targetLeft+horizontalCenterOffset;tooltipTop=targetTop+targetRect.height+offset;break;case'left':tooltipLeft=targetLeft-thisRect.width-offset;tooltipTop=targetTop+verticalCenterOffset;break;case'right':tooltipLeft=targetLeft+targetRect.width+offset;tooltipTop=targetTop+verticalCenterOffset;break;}// TODO(noms): This should use IronFitBehavior if possible.
 if(this.fitToVisibleBounds){// Clip the left/right side
 if(parentRect.left+tooltipLeft+thisRect.width>window.innerWidth){this.style.right='0px';this.style.left='auto';}else{this.style.left=Math.max(0,tooltipLeft)+'px';this.style.right='auto';}// Clip the top/bottom side.
-if(parentRect.top+tooltipTop+thisRect.height>window.innerHeight){this.style.bottom=parentRect.height+'px';this.style.top='auto';}else{this.style.top=Math.max(-parentRect.top,tooltipTop)+'px';this.style.bottom='auto';}}else{this.style.left=tooltipLeft+'px';this.style.top=tooltipTop+'px';}},_addListeners:function _addListeners(){if(this._target){this.listen(this._target,'mouseenter','show');this.listen(this._target,'focus','show');this.listen(this._target,'mouseleave','hide');this.listen(this._target,'blur','hide');this.listen(this._target,'tap','hide');}this.listen(this,'mouseenter','hide');},_findTarget:function _findTarget(){if(!this.manualMode)this._removeListeners();this._target=this.target;if(!this.manualMode)this._addListeners();},_manualModeChanged:function _manualModeChanged(){if(this.manualMode)this._removeListeners();else this._addListeners();},_onAnimationFinish:function _onAnimationFinish(){this._animationPlaying=false;if(!this._showing){this.toggleClass('hidden',true,this.$.tooltip);}},_removeListeners:function _removeListeners(){if(this._target){this.unlisten(this._target,'mouseenter','show');this.unlisten(this._target,'focus','show');this.unlisten(this._target,'mouseleave','hide');this.unlisten(this._target,'blur','hide');this.unlisten(this._target,'tap','hide');}this.unlisten(this,'mouseenter','hide');}});(function(){var parsers=require('../common/parsers.js');var Order=require('../common/order.js');var QueryStringParserLocal=parsers.QueryStringParser;defineCustomElement('order-split-results-table',function(_Polymer$Element4){_inherits(_class4,_Polymer$Element4);_createClass(_class4,[{key:"_onClipboardTap",value:function _onClipboardTap(){this.$.textForClipboard.hidden=false;this.$.textForClipboard.select();var successful=document.execCommand('copy');if(!successful){console.error('clipboard copy failed');}else{this.$.textForClipboard.hidden=true;}}},{key:"_computeBreakdownItems",value:function _computeBreakdownItems(people){if(!people){return[];}return Array.from(this.order.people.entries()).map(function(entry){return{name:entry[0],price:entry[1]};});}},{key:"_computePersonTotal",value:function _computePersonTotal(name){return this._prettifyNumber(this.order.totals.get(name));}},{key:"_multiply",value:function _multiply(a,b){return this._prettifyNumber(a*b);}}]);function _class4(){_classCallCheck(this,_class4);var _this40=_possibleConstructorReturn(this,(_class4.__proto__||Object.getPrototypeOf(_class4)).call(this));_this40.hidden=true;return _this40;}_createClass(_class4,[{key:"_onOrderChanged",value:function _onOrderChanged(order){console.log(order);if(order&&order.constructor!==Order){throw new Error('order must be of type Order');}this.hidden=!order;}/**
+if(parentRect.top+tooltipTop+thisRect.height>window.innerHeight){this.style.bottom=parentRect.height+'px';this.style.top='auto';}else{this.style.top=Math.max(-parentRect.top,tooltipTop)+'px';this.style.bottom='auto';}}else{this.style.left=tooltipLeft+'px';this.style.top=tooltipTop+'px';}},_addListeners:function _addListeners(){if(this._target){this.listen(this._target,'mouseenter','show');this.listen(this._target,'focus','show');this.listen(this._target,'mouseleave','hide');this.listen(this._target,'blur','hide');this.listen(this._target,'tap','hide');}this.listen(this,'mouseenter','hide');},_findTarget:function _findTarget(){if(!this.manualMode)this._removeListeners();this._target=this.target;if(!this.manualMode)this._addListeners();},_manualModeChanged:function _manualModeChanged(){if(this.manualMode)this._removeListeners();else this._addListeners();},_onAnimationFinish:function _onAnimationFinish(){this._animationPlaying=false;if(!this._showing){this.toggleClass('hidden',true,this.$.tooltip);}},_removeListeners:function _removeListeners(){if(this._target){this.unlisten(this._target,'mouseenter','show');this.unlisten(this._target,'focus','show');this.unlisten(this._target,'mouseleave','hide');this.unlisten(this._target,'blur','hide');this.unlisten(this._target,'tap','hide');}this.unlisten(this,'mouseenter','hide');}});(function(){var parsers=require('../common/parsers.js');var Order=require('../common/order.js');var QueryStringParserLocal=parsers.QueryStringParser;defineCustomElement('order-split-results-table',function(_Polymer$Element4){_inherits(_class4,_Polymer$Element4);_createClass(_class4,[{key:'_onClipboardTap',value:function _onClipboardTap(){this.$.textForClipboard.hidden=false;this.$.textForClipboard.select();var successful=document.execCommand('copy');if(!successful){console.error('clipboard copy failed');}else{this.$.textForClipboard.hidden=true;}}},{key:'_computeBreakdownItems',value:function _computeBreakdownItems(people){if(!people){return[];}return Array.from(this.order.people.entries()).map(function(entry){return{name:entry[0],price:entry[1]};});}},{key:'_computePersonTotal',value:function _computePersonTotal(name){return this._prettifyNumber(this.order.totals.get(name));}},{key:'_multiply',value:function _multiply(a,b){return this._prettifyNumber(a*b);}}]);function _class4(){_classCallCheck(this,_class4);var _this40=_possibleConstructorReturn(this,(_class4.__proto__||Object.getPrototypeOf(_class4)).call(this));_this40.hidden=true;return _this40;}_createClass(_class4,[{key:'_onOrderChanged',value:function _onOrderChanged(order){console.log(order);if(order&&order.constructor!==Order){throw new Error('order must be of type Order');}this.hidden=!order;}/**
                  * Returns a string of a number in the format "#.##"
                  * @example
                  * _prettifyNumber(12); // returns "12.00"
                  * @param {number} n - The number to prettify
                  * @returns {string} A string of a number rounded and padded to 2 decimal places
-                 */},{key:"_prettifyNumber",value:function _prettifyNumber(n){return Utils._prettifyNumber(n);}/**
+                 */},{key:'_prettifyNumber',value:function _prettifyNumber(n){return Utils._prettifyNumber(n);}/**
                  * Returns a listing of names to split costs
                  * @param {object} totals - The totals property from the Order
                  * @returns {string} A view mapping names to split costs
-                 */},{key:"_makeTextForClipboard",value:function _makeTextForClipboard(totals){if(!this.order){return;}// get length of longest name
+                 */},{key:'_makeTextForClipboard',value:function _makeTextForClipboard(totals){if(!this.order){return;}// get length of longest name
 var longestName=-1;var _iteratorNormalCompletion3=true;var _didIteratorError3=false;var _iteratorError3=undefined;try{for(var _iterator3=totals[Symbol.iterator](),_step3;!(_iteratorNormalCompletion3=(_step3=_iterator3.next()).done);_iteratorNormalCompletion3=true){var _step3$value=_slicedToArray(_step3.value,2),person=_step3$value[0],price=_step3$value[1];longestName=Math.max(person.length,longestName);}// add 1 to longest name for a space after name
 }catch(err){_didIteratorError3=true;_iteratorError3=err;}finally{try{if(!_iteratorNormalCompletion3&&_iterator3.return){_iterator3.return();}}finally{if(_didIteratorError3){throw _iteratorError3;}}}longestName+=1;var output='';var name;var _iteratorNormalCompletion4=true;var _didIteratorError4=false;var _iteratorError4=undefined;try{for(var _iterator4=totals[Symbol.iterator](),_step4;!(_iteratorNormalCompletion4=(_step4=_iterator4.next()).done);_iteratorNormalCompletion4=true){var _step4$value=_slicedToArray(_step4.value,2),_person=_step4$value[0],_price=_step4$value[1];var _name=_person;for(var i=_person.length;i<longestName;i++){_name+=' ';}output+=_name+'$'+this._prettifyNumber(_price)+'\n';}}catch(err){_didIteratorError4=true;_iteratorError4=err;}finally{try{if(!_iteratorNormalCompletion4&&_iterator4.return){_iterator4.return();}}finally{if(_didIteratorError4){throw _iteratorError4;}}}return output+'\n'+this._makeUrl(this.order);}/**
                  * Returns a display breaking down the Order split calculations
                  * @param {Order} order - the Order to breakdown
                  * @returns {string} A view of the Order breakdown
-                 */},{key:"_makeBreakdownDisplay",value:function _makeBreakdownDisplay(order){var breakdown='<table id="breakdown">';breakdown+='<tr><th>Person</th><th>Item Costs</th><th>Tax</th><th>Tip</th><th>Fees Per Person</th><th>Person Total</th></tr>';var _iteratorNormalCompletion5=true;var _didIteratorError5=false;var _iteratorError5=undefined;try{for(var _iterator5=order.people[Symbol.iterator](),_step5;!(_iteratorNormalCompletion5=(_step5=_iterator5.next()).done);_iteratorNormalCompletion5=true){var _step5$value=_slicedToArray(_step5.value,2),person=_step5$value[0],price=_step5$value[1];breakdown+='<tr><td>'+person+'</td><td>'+price+'</td><td> + '+// item costs
+                 */},{key:'_makeBreakdownDisplay',value:function _makeBreakdownDisplay(order){var breakdown='<table id="breakdown">';breakdown+='<tr><th>Person</th><th>Item Costs</th><th>Tax</th><th>Tip</th><th>Fees Per Person</th><th>Person Total</th></tr>';var _iteratorNormalCompletion5=true;var _didIteratorError5=false;var _iteratorError5=undefined;try{for(var _iterator5=order.people[Symbol.iterator](),_step5;!(_iteratorNormalCompletion5=(_step5=_iterator5.next()).done);_iteratorNormalCompletion5=true){var _step5$value=_slicedToArray(_step5.value,2),person=_step5$value[0],price=_step5$value[1];breakdown+='<tr><td>'+person+'</td><td>'+price+'</td><td> + '+// item costs
 price+' * '+order.taxPercent+'</td><td> + '+// taxes
 price+' * '+order.tipPercent+'</td><td> + '+// tip
-order.feesPerPerson+'</td><td> = '+this._prettifyNumber(order.totals.get(person))+'</td></tr>';}}catch(err){_didIteratorError5=true;_iteratorError5=err;}finally{try{if(!_iteratorNormalCompletion5&&_iterator5.return){_iterator5.return();}}finally{if(_didIteratorError5){throw _iteratorError5;}}}breakdown+='</table>';return breakdown;}},{key:"_makeUrl",value:function _makeUrl(order){if(!this.order){return;}var params={};params.tax=order.tax;params.fee=order.fee;params.tip=order.tipDollars;var paramString=[].concat(_toConsumableArray(Object.entries(params)),_toConsumableArray(order.people.entries())).map(function(_ref2){var _ref3=_slicedToArray(_ref2,2),key=_ref3[0],value=_ref3[1];return key+"="+value;}).join('&');return location.href.split('?')[0]+'?'+paramString;}},{key:"_handleQueryStringChanged",value:function _handleQueryStringChanged(e,_ref4){var value=_ref4.value;this.order=new QueryStringParserLocal().parse();}}],[{key:"properties",get:function get(){return{order:{type:Object,observer:'_onOrderChanged'}};}}]);return _class4;}(Polymer.Element));})();// this is to help with debugging any SW caching issues if they appear
-var scriptSha='8a64724';var htmlSha=document.querySelector('#sha').innerText;console.debug("script version: "+scriptSha);console.debug("html version:   "+htmlSha);if(scriptSha!==htmlSha){alert('Whoops. The cached files on your machine are out of sync with each other. That\'s our bad. Please hard-refresh the page?');};
-}).call(this,require("pBGvAp"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_5bfa3971.js","/")
+order.feesPerPerson+'</td><td> = '+this._prettifyNumber(order.totals.get(person))+'</td></tr>';}}catch(err){_didIteratorError5=true;_iteratorError5=err;}finally{try{if(!_iteratorNormalCompletion5&&_iterator5.return){_iterator5.return();}}finally{if(_didIteratorError5){throw _iteratorError5;}}}breakdown+='</table>';return breakdown;}},{key:'_makeUrl',value:function _makeUrl(order){if(!this.order){return;}var params={};params.tax=order.tax;params.fee=order.fee;params.tip=order.tipDollars;var paramString=[].concat(_toConsumableArray(Object.entries(params)),_toConsumableArray(order.people.entries())).map(function(_ref2){var _ref3=_slicedToArray(_ref2,2),key=_ref3[0],value=_ref3[1];return key+'='+value;}).join('&');return location.href.split('?')[0]+'?'+paramString;}},{key:'_handleQueryStringChanged',value:function _handleQueryStringChanged(e,_ref4){var value=_ref4.value;this.order=new QueryStringParserLocal().parse();}}],[{key:'properties',get:function get(){return{order:{type:Object,observer:'_onOrderChanged'}};}}]);return _class4;}(Polymer.Element));})();// this is to help with debugging any SW caching issues if they appear
+var scriptSha='8615278';var htmlSha=document.querySelector('#sha').innerText;console.debug('script version: '+scriptSha);console.debug('html version:   '+htmlSha);if(scriptSha!==htmlSha){alert('Whoops. The cached files on your machine are out of sync with each other. That\'s our bad. Please hard-refresh the page?');};
+}).call(this,require("pBGvAp"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_e45c656a.js","/")
 },{"../common/order.js":1,"../common/parsers.js":2,"buffer":4,"pBGvAp":6}]},{},[7])
