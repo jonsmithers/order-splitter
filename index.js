@@ -216,7 +216,8 @@ module.exports = Order;
                     if (center_td && (name = center_td.querySelector('li strong'))) {
                         highlight(name);
                         name = name.innerText;
-                        people[name] = lastItemCost;
+                        people[name] = people[name] || 0;
+                        people[name] += lastItemCost;
                         lastItemCost = null;
                     }
 
@@ -7721,6 +7722,6 @@ var longestName=-1;var _iteratorNormalCompletion3=true;var _didIteratorError3=fa
 price+' * '+order.taxPercent+'</td><td> + '+// taxes
 price+' * '+order.tipPercent+'</td><td> + '+// tip
 order.feesPerPerson+'</td><td> = '+this._prettifyNumber(order.totals.get(person))+'</td></tr>';}}catch(err){_didIteratorError5=true;_iteratorError5=err;}finally{try{if(!_iteratorNormalCompletion5&&_iterator5.return){_iterator5.return();}}finally{if(_didIteratorError5){throw _iteratorError5;}}}breakdown+='</table>';return breakdown;}},{key:'_makeUrl',value:function _makeUrl(order){if(!this.order){return;}var params={};params.tax=order.tax;params.fee=order.fee;params.tip=order.tipDollars;var paramString=[].concat(_toConsumableArray(Object.entries(params)),_toConsumableArray(order.people.entries())).map(function(_ref2){var _ref3=_slicedToArray(_ref2,2),key=_ref3[0],value=_ref3[1];return key+'='+value;}).join('&');return location.href.split('?')[0]+'?'+paramString;}},{key:'_handleQueryStringChanged',value:function _handleQueryStringChanged(e,_ref4){var value=_ref4.value;this.order=new QueryStringParserLocal().parse();}}],[{key:'properties',get:function get(){return{order:{type:Object,observer:'_onOrderChanged'}};}}]);return _class4;}(Polymer.Element));})();defineCustomElement('github-link',function(_Polymer$Element5){_inherits(_class5,_Polymer$Element5);function _class5(){_classCallCheck(this,_class5);return _possibleConstructorReturn(this,(_class5.__proto__||Object.getPrototypeOf(_class5)).apply(this,arguments));}return _class5;}(Polymer.Element));// this is to help with debugging any SW caching issues if they appear
-var scriptSha='5257edc';var htmlSha=document.querySelector('#sha').innerText;console.debug('script version: '+scriptSha);console.debug('html version:   '+htmlSha);if(scriptSha!==htmlSha){alert('Whoops. The cached files on your machine are out of sync with each other. That\'s our bad. Please hard-refresh the page?');};
-}).call(this,require("+xKvab"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_65be4f20.js","/")
+var scriptSha='fd74bab';var htmlSha=document.querySelector('#sha').innerText;console.debug('script version: '+scriptSha);console.debug('html version:   '+htmlSha);if(scriptSha!==htmlSha){alert('Whoops. The cached files on your machine are out of sync with each other. That\'s our bad. Please hard-refresh the page?');};
+}).call(this,require("+xKvab"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_3cd8eeaf.js","/")
 },{"+xKvab":4,"../common/order.js":1,"../common/parsers.js":2,"buffer":5}]},{},[7])
