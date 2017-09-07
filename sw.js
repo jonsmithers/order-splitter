@@ -1,4 +1,4 @@
-let CACHE_NAME = 'order-splitter-cache-9035bae';
+let CACHE_NAME = 'order-splitter-cache-96f40df';
 let urlsToCache = [
     'index.html', 
     'index.js'
