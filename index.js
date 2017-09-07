@@ -47,8 +47,8 @@ class Order {
                 throw new Error(`Missing key ${key}`);
             });
             Object.values(config.people).forEach(personCost => {
-                if (typeof personCost !== 'number') {
-                    throw new Error('config.people\'s values must be numbers');
+                if (typeof personCost !== 'number' || isNaN(personCost)) {
+                    throw new Error('config.people\'s values must be valid numbers');
                 }
             });
         }
@@ -132,6 +132,10 @@ class Order {
     get feesPerPerson() {
         if (!this.hasPeople) return {};
         var subtotal = Array.from(this.people.values()).reduce((a,b)=>a+b);
+        if (subtotal == 0) {
+            // simply convert this.people from Map to standard js object
+            return Array.from(this.people).reduce((obj, [key, value]) => { obj[key] = value; return obj;}, {});
+        }
         return Array.from(this.people.entries()).reduce((feesPerPerson, [name, price]) => {
             feesPerPerson[name] = price/subtotal*this.untaxedFees;
             return feesPerPerson;
@@ -164,7 +168,7 @@ class Order {
             this.totals.set(name, totalForPerson);
         }
         let totalPrice = Array.from(this.totals.values()).reduce((acc, val) => acc+val);
-        if(Math.round(totalPrice*100) != Math.round(this.total*100)) {
+        if (totalPrice != 0 && Math.round(totalPrice*100) != Math.round(this.total*100)) {
             throw new Error('Everyone\'s share does not add up to total');
         }
         return this;
@@ -263,6 +267,7 @@ module.exports = Order;
     }
 
     class QueryStringParser {
+
         /**
          * Parses input from a URL query string into an Order.
          * @example
@@ -305,14 +310,15 @@ module.exports = Order;
 
         /**
          * Parses the confirmation summary from an OrderUp.com order
-         * @param {string} orderUpText - The confirmation summary from OrderUp.com
+         * @param {Element} elementOrText - The element containing the confirmation summary from OrderUp.com, or the text itself
          * @param {number} fee
          * @param {number} tax
          * @param {number} tip - The tip (either a fixed value or percentage)
          * @param {boolean} isTipPercentage - True if the tip is a percentage as opposed to a fixed value
          * @return {Order} An order parsed from the OrderUp.com confirmation summary
          */
-        parse(orderUpText, fee=0, tax=0, tip=0, isTipPercentage=false) {
+        parse(elementOrText, fee=0, tax=0, tip=0, isTipPercentage=false) {
+            let orderUpText = elementOrText.innerText || elementOrText;
             let order = new Order()
                 .withNonTaxedFees(fee)
                 .withTax(tax)
@@ -344,33 +350,45 @@ module.exports = Order;
     }
 
     class CsvParser {
-        parse(csv) {
-            const order = new Order();
-
-            const lines = csv.split('\n');
-            for(let line of lines) {
-                if(line.trim() !== '') {
-                    const [name, ...priceStrings] = line.split(',');
-                    const price = priceStrings.map(ps => Number(ps.trim().replace('$',''))).reduce((p,acc) => p+acc, 0);
-                    if(name === 'fee') {
-                        order.withNonTaxedFees(price);
+        parse(element) {
+            let orderParams = element.innerText.split('\n')
+                .map(line => line.trim())
+                .filter(line => !!line)
+                .reduce((orderParams, line) => {
+                    let [name, ...priceStrings] = line.split(',');
+                    let price = priceStrings.map(priceStr => parseInt(priceStr.replace('$',''))).filter(price => !isNaN(price)).reduce((price,sum) => price+sum, 0);
+                    switch (name) {
+                        case 'fee':
+                            orderParams.untaxedFees = orderParams.untaxedFees || 0;
+                            orderParams.untaxedFees += price;
+                            break;
+                        case 'tax':
+                            orderParams.tax = orderParams.tax || 0;
+                            orderParams.tax += price;
+                            break;
+                        case 'tip':
+                            orderParams.tip = orderParams.tip || 0;
+                            orderParams.tip += price;
+                            break;
+                        default:
+                            orderParams.people[name] = orderParams.people[name] || 0;
+                            orderParams.people[name] += price;
                     }
-                    else if(name === 'tax') {
-                        order.withTax(price);
-                    } 
-                    else if(name === 'tip') {
-                        order.withTip(price);
-                    } 
-                    else {
-                        order.withPerson(name, price);
-                    }
-                }
-            }
+                    return orderParams;
+                }, {people: {}});
 
-            return order;
+            return Order.split(orderParams);
         }
     }
-    module.exports = {OrderUpParser, QueryStringParser, CsvParser, OrderUpHtmlParser};
+    module.exports = {
+        OrderUpParser,
+        QueryStringParser,
+        CsvParser,
+        OrderUpHtmlParser,
+        getUserInputParsers() {
+            return [OrderUpHtmlParser, CsvParser];
+        }
+    };
 })();
 
 }).call(this,require("pBGvAp"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/../common/parsers.js","/../common")
@@ -7593,7 +7611,7 @@ var url;if(document.baseURI!=null){url=resolveURL(href,/** @type {string} */docu
 if(window.location.origin){origin=window.location.origin;}else{origin=window.location.protocol+'//'+window.location.host;}var urlOrigin;if(url.origin){urlOrigin=url.origin;}else{urlOrigin=url.protocol+'//'+url.host;}if(urlOrigin!==origin){return null;}var normalizedHref=url.pathname+url.search+url.hash;// pathname should start with '/', but may not if `new URL` is not supported
 if(normalizedHref[0]!=='/'){normalizedHref='/'+normalizedHref;}// If we've been configured not to handle this url... don't handle it!
 if(this._urlSpaceRegExp&&!this._urlSpaceRegExp.test(normalizedHref)){return null;}// Need to use a full URL in case the containing page has a base URI.
-var fullNormalizedHref=resolveURL(normalizedHref,window.location.href).href;return fullNormalizedHref;},_makeRegExp:function _makeRegExp(urlSpaceRegex){return RegExp(urlSpaceRegex);}});})();(function(){var parsers=require('../common/parsers.js');window.Order=require('../common/order.js');;defineCustomElement('order-input',function(_Polymer$Element3){_inherits(_class3,_Polymer$Element3);function _class3(){_classCallCheck(this,_class3);return _possibleConstructorReturn(this,(_class3.__proto__||Object.getPrototypeOf(_class3)).apply(this,arguments));}_createClass(_class3,[{key:'_onInputChanged',value:function _onInputChanged(){var header=this.$.input.querySelector('header');if(header)header.hidden=true;var order=new parsers.OrderUpHtmlParser().parse(this.$.input);console.log('order',order);this._changeUrl(order);}},{key:'ready',value:function ready(){_get(_class3.prototype.__proto__||Object.getPrototypeOf(_class3.prototype),'ready',this).call(this);this.usePercentForTip=JSON.parse(localStorage.getItem('usePercentForTip'));this.$.input.focus();}// _computeTipPercentClass() {
+var fullNormalizedHref=resolveURL(normalizedHref,window.location.href).href;return fullNormalizedHref;},_makeRegExp:function _makeRegExp(urlSpaceRegex){return RegExp(urlSpaceRegex);}});})();(function(){var parsers=require('../common/parsers.js');window.Order=require('../common/order.js');;defineCustomElement('order-input',function(_Polymer$Element3){_inherits(_class3,_Polymer$Element3);function _class3(){_classCallCheck(this,_class3);return _possibleConstructorReturn(this,(_class3.__proto__||Object.getPrototypeOf(_class3)).apply(this,arguments));}_createClass(_class3,[{key:'_onInputChanged',value:function _onInputChanged(){var _this40=this;var header=this.$.input.querySelector('header');if(header)header.hidden=true;var order=parsers.getUserInputParsers().reduce(function(order,parser){if(order&&order.hasPeople){return order;}try{return new parser().parse(_this40.$.input).split();}catch(e){console.error('Developer Error!',e);return false;}},null);if(order&&order.hasPeople){this._changeUrl(order);}}},{key:'ready',value:function ready(){_get(_class3.prototype.__proto__||Object.getPrototypeOf(_class3.prototype),'ready',this).call(this);this.usePercentForTip=JSON.parse(localStorage.getItem('usePercentForTip'));this.$.input.focus();}// _computeTipPercentClass() {
 //     return this.usePercentForTip ? '' : 'hidden';
 // }
 // _computeTipDollarClass() {
@@ -7619,7 +7637,9 @@ var fullNormalizedHref=resolveURL(normalizedHref,window.location.href).href;retu
 // _onCheckboxTap() {
 //     localStorage.setItem('usePercentForTip', JSON.stringify(!this.usePercentForTip));
 // }
-},{key:'_changeUrl',value:function _changeUrl(order){if(!order||!order.hasPeople){this.$.location.query='';return;}var query='tax='+order.tax+'&fee='+order.fee+'&tip='+order.tipDollars;var _iteratorNormalCompletion2=true;var _didIteratorError2=false;var _iteratorError2=undefined;try{for(var _iterator2=order.people[Symbol.iterator](),_step2;!(_iteratorNormalCompletion2=(_step2=_iterator2.next()).done);_iteratorNormalCompletion2=true){var _step2$value=_slicedToArray(_step2.value,2),person=_step2$value[0],val=_step2$value[1];query+='&'+encodeURIComponent(person)+'='+Utils._formatUSD(val).slice(1);}}catch(err){_didIteratorError2=true;_iteratorError2=err;}finally{try{if(!_iteratorNormalCompletion2&&_iterator2.return){_iterator2.return();}}finally{if(_didIteratorError2){throw _iteratorError2;}}}this.$.location.query=query;}}]);return _class3;}(Polymer.Element));})();/**
+},{key:'_changeUrl',value:function _changeUrl(order){if(!order||!order.hasPeople){this.$.location.query='';return;}var query='tax='+order.tax+'&fee='+order.fee+'&tip='+order.tipDollars;var _iteratorNormalCompletion2=true;var _didIteratorError2=false;var _iteratorError2=undefined;try{for(var _iterator2=order.people[Symbol.iterator](),_step2;!(_iteratorNormalCompletion2=(_step2=_iterator2.next()).done);_iteratorNormalCompletion2=true){var _step2$value=_slicedToArray(_step2.value,2),person=_step2$value[0],val=_step2$value[1];query+='&'+encodeURIComponent(person)+'='+Utils._formatUSD(val).slice(1)// remove '$'
+.replace(/,/g,'');// remove commas in really big numbers (like that ever happens at lunch)
+}}catch(err){_didIteratorError2=true;_iteratorError2=err;}finally{try{if(!_iteratorNormalCompletion2&&_iterator2.return){_iterator2.return();}}finally{if(_didIteratorError2){throw _iteratorError2;}}}this.$.location.query=query;}}]);return _class3;}(Polymer.Element));})();/**
    * `Polymer.NeonAnimatableBehavior` is implemented by elements containing animations for use with
    * elements implementing `Polymer.NeonAnimationRunnerBehavior`.
    * @polymerBehavior
@@ -7712,13 +7732,13 @@ if(this._animationPlaying){this.cancelAnimation();this._showing=false;this._onAn
 if(this.marginTop!=14&&this.offset==14)offset=this.marginTop;var parentRect=this.offsetParent.getBoundingClientRect();var targetRect=this._target.getBoundingClientRect();var thisRect=this.getBoundingClientRect();var horizontalCenterOffset=(targetRect.width-thisRect.width)/2;var verticalCenterOffset=(targetRect.height-thisRect.height)/2;var targetLeft=targetRect.left-parentRect.left;var targetTop=targetRect.top-parentRect.top;var tooltipLeft,tooltipTop;switch(this.position){case'top':tooltipLeft=targetLeft+horizontalCenterOffset;tooltipTop=targetTop-thisRect.height-offset;break;case'bottom':tooltipLeft=targetLeft+horizontalCenterOffset;tooltipTop=targetTop+targetRect.height+offset;break;case'left':tooltipLeft=targetLeft-thisRect.width-offset;tooltipTop=targetTop+verticalCenterOffset;break;case'right':tooltipLeft=targetLeft+targetRect.width+offset;tooltipTop=targetTop+verticalCenterOffset;break;}// TODO(noms): This should use IronFitBehavior if possible.
 if(this.fitToVisibleBounds){// Clip the left/right side
 if(parentRect.left+tooltipLeft+thisRect.width>window.innerWidth){this.style.right='0px';this.style.left='auto';}else{this.style.left=Math.max(0,tooltipLeft)+'px';this.style.right='auto';}// Clip the top/bottom side.
-if(parentRect.top+tooltipTop+thisRect.height>window.innerHeight){this.style.bottom=parentRect.height+'px';this.style.top='auto';}else{this.style.top=Math.max(-parentRect.top,tooltipTop)+'px';this.style.bottom='auto';}}else{this.style.left=tooltipLeft+'px';this.style.top=tooltipTop+'px';}},_addListeners:function _addListeners(){if(this._target){this.listen(this._target,'mouseenter','show');this.listen(this._target,'focus','show');this.listen(this._target,'mouseleave','hide');this.listen(this._target,'blur','hide');this.listen(this._target,'tap','hide');}this.listen(this,'mouseenter','hide');},_findTarget:function _findTarget(){if(!this.manualMode)this._removeListeners();this._target=this.target;if(!this.manualMode)this._addListeners();},_manualModeChanged:function _manualModeChanged(){if(this.manualMode)this._removeListeners();else this._addListeners();},_onAnimationFinish:function _onAnimationFinish(){this._animationPlaying=false;if(!this._showing){this.toggleClass('hidden',true,this.$.tooltip);}},_removeListeners:function _removeListeners(){if(this._target){this.unlisten(this._target,'mouseenter','show');this.unlisten(this._target,'focus','show');this.unlisten(this._target,'mouseleave','hide');this.unlisten(this._target,'blur','hide');this.unlisten(this._target,'tap','hide');}this.unlisten(this,'mouseenter','hide');}});(function(){var parsers=require('../common/parsers.js');var Order=require('../common/order.js');var QueryStringParserLocal=parsers.QueryStringParser;defineCustomElement('order-split-results-table',function(_Polymer$Element4){_inherits(_class4,_Polymer$Element4);_createClass(_class4,[{key:'_onClipboardTap',value:function _onClipboardTap(){this.$.textForClipboard.hidden=false;this.$.textForClipboard.select();var successful=document.execCommand('copy');if(!successful){console.error('clipboard copy failed');}else{this.$.textForClipboard.hidden=true;}}},{key:'_computeBreakdownItems',value:function _computeBreakdownItems(people){if(!people){return[];}return Array.from(this.order.people.entries()).map(function(_ref2){var _ref3=_slicedToArray(_ref2,2),name=_ref3[0],price=_ref3[1];return{name:name,price:price};});}},{key:'_computeFeesPerPersonUSD',value:function _computeFeesPerPersonUSD(order,name){if(!order)return;return this._formatUSD(order.feesPerPerson[name]);}},{key:'_computeFeesPerPersonTooltip',value:function _computeFeesPerPersonTooltip(order,name){if(!order)return;return order.untaxedFees+' x '+order.people.get(name)+' / '+order.subTotal;}},{key:'_computePersonTotalUSD',value:function _computePersonTotalUSD(name){return this._formatUSD(this.order.totals.get(name));}},{key:'_multiplyUSD',value:function _multiplyUSD(a,b){return this._formatUSD(a*b);}}]);function _class4(){_classCallCheck(this,_class4);var _this40=_possibleConstructorReturn(this,(_class4.__proto__||Object.getPrototypeOf(_class4)).call(this));_this40.hidden=true;return _this40;}_createClass(_class4,[{key:'_onOrderChanged',value:function _onOrderChanged(order){console.log(order);if(order&&order.constructor!==Order){throw new Error('order must be of type Order');}this.hidden=!order;}},{key:'_formatUSD',value:function _formatUSD(n){return Utils._formatUSD(n);}},{key:'_divide',value:function _divide(dividend,divisor){return dividend/divisor;}/**
+if(parentRect.top+tooltipTop+thisRect.height>window.innerHeight){this.style.bottom=parentRect.height+'px';this.style.top='auto';}else{this.style.top=Math.max(-parentRect.top,tooltipTop)+'px';this.style.bottom='auto';}}else{this.style.left=tooltipLeft+'px';this.style.top=tooltipTop+'px';}},_addListeners:function _addListeners(){if(this._target){this.listen(this._target,'mouseenter','show');this.listen(this._target,'focus','show');this.listen(this._target,'mouseleave','hide');this.listen(this._target,'blur','hide');this.listen(this._target,'tap','hide');}this.listen(this,'mouseenter','hide');},_findTarget:function _findTarget(){if(!this.manualMode)this._removeListeners();this._target=this.target;if(!this.manualMode)this._addListeners();},_manualModeChanged:function _manualModeChanged(){if(this.manualMode)this._removeListeners();else this._addListeners();},_onAnimationFinish:function _onAnimationFinish(){this._animationPlaying=false;if(!this._showing){this.toggleClass('hidden',true,this.$.tooltip);}},_removeListeners:function _removeListeners(){if(this._target){this.unlisten(this._target,'mouseenter','show');this.unlisten(this._target,'focus','show');this.unlisten(this._target,'mouseleave','hide');this.unlisten(this._target,'blur','hide');this.unlisten(this._target,'tap','hide');}this.unlisten(this,'mouseenter','hide');}});(function(){var parsers=require('../common/parsers.js');var Order=require('../common/order.js');var QueryStringParserLocal=parsers.QueryStringParser;defineCustomElement('order-split-results-table',function(_Polymer$Element4){_inherits(_class4,_Polymer$Element4);_createClass(_class4,[{key:'_onClipboardTap',value:function _onClipboardTap(){this.$.textForClipboard.hidden=false;this.$.textForClipboard.select();var successful=document.execCommand('copy');if(!successful){console.error('clipboard copy failed');}else{this.$.textForClipboard.hidden=true;}}},{key:'_computeBreakdownItems',value:function _computeBreakdownItems(people){if(!people){return[];}return Array.from(this.order.people.entries()).map(function(_ref2){var _ref3=_slicedToArray(_ref2,2),name=_ref3[0],price=_ref3[1];return{name:name,price:price};});}},{key:'_computeFeesPerPersonUSD',value:function _computeFeesPerPersonUSD(order,name){if(!order)return;return this._formatUSD(order.feesPerPerson[name]);}},{key:'_computeFeesPerPersonTooltip',value:function _computeFeesPerPersonTooltip(order,name){if(!order)return;return order.untaxedFees+' x '+order.people.get(name)+' / '+order.subTotal;}},{key:'_computePersonTotalUSD',value:function _computePersonTotalUSD(name){return this._formatUSD(this.order.totals.get(name));}},{key:'_multiplyUSD',value:function _multiplyUSD(a,b){return this._formatUSD(a*b);}}]);function _class4(){_classCallCheck(this,_class4);var _this41=_possibleConstructorReturn(this,(_class4.__proto__||Object.getPrototypeOf(_class4)).call(this));_this41.hidden=true;return _this41;}_createClass(_class4,[{key:'_onOrderChanged',value:function _onOrderChanged(order){console.log(order);if(order&&order.constructor!==Order){throw new Error('order must be of type Order');}this.hidden=!order;}},{key:'_formatUSD',value:function _formatUSD(n){return Utils._formatUSD(n);}},{key:'_divide',value:function _divide(dividend,divisor){return dividend/divisor;}/**
                  * Returns a listing of names to split costs
                  * @param {object} totals - The totals property from the Order
                  * @returns {string} A view mapping names to split costs
                  */},{key:'_makeTextForClipboard',value:function _makeTextForClipboard(totals){if(!this.order){return;}// get length of longest name
 var longestName=-1;var _iteratorNormalCompletion3=true;var _didIteratorError3=false;var _iteratorError3=undefined;try{for(var _iterator3=totals[Symbol.iterator](),_step3;!(_iteratorNormalCompletion3=(_step3=_iterator3.next()).done);_iteratorNormalCompletion3=true){var _step3$value=_slicedToArray(_step3.value,2),person=_step3$value[0],price=_step3$value[1];longestName=Math.max(person.length,longestName);}// add 1 to longest name for a space after name
 }catch(err){_didIteratorError3=true;_iteratorError3=err;}finally{try{if(!_iteratorNormalCompletion3&&_iterator3.return){_iterator3.return();}}finally{if(_didIteratorError3){throw _iteratorError3;}}}longestName+=1;var name;var output='```\n';var _iteratorNormalCompletion4=true;var _didIteratorError4=false;var _iteratorError4=undefined;try{for(var _iterator4=totals[Symbol.iterator](),_step4;!(_iteratorNormalCompletion4=(_step4=_iterator4.next()).done);_iteratorNormalCompletion4=true){var _step4$value=_slicedToArray(_step4.value,2),_person=_step4$value[0],_price=_step4$value[1];var _name=_person;for(var i=_person.length;i<longestName;i++){_name+=' ';}output+=_name+this._formatUSD(_price)+'\n';}}catch(err){_didIteratorError4=true;_iteratorError4=err;}finally{try{if(!_iteratorNormalCompletion4&&_iterator4.return){_iterator4.return();}}finally{if(_didIteratorError4){throw _iteratorError4;}}}output+='```\n';return output+'\n'+this._makeUrl(this.order);}},{key:'_makeUrl',value:function _makeUrl(order){if(!this.order){return;}var params={};params.tax=order.tax;params.fee=order.fee;params.tip=order.tipDollars;var paramString=[].concat(_toConsumableArray(Object.entries(params)),_toConsumableArray(order.people.entries())).map(function(_ref4){var _ref5=_slicedToArray(_ref4,2),key=_ref5[0],value=_ref5[1];return key+'='+value;}).join('&');return location.href.split('?')[0]+'?'+paramString;}},{key:'_handleQueryStringChanged',value:function _handleQueryStringChanged(e,_ref6){var value=_ref6.value;this.order=new QueryStringParserLocal().parse();}}],[{key:'properties',get:function get(){return{order:{type:Object,observer:'_onOrderChanged'}};}}]);return _class4;}(Polymer.Element));})();defineCustomElement('github-link',function(_Polymer$Element5){_inherits(_class5,_Polymer$Element5);function _class5(){_classCallCheck(this,_class5);return _possibleConstructorReturn(this,(_class5.__proto__||Object.getPrototypeOf(_class5)).apply(this,arguments));}return _class5;}(Polymer.Element));// this is to help with debugging any SW caching issues if they appear
-var scriptSha='a680fe7';var htmlSha=document.querySelector('#sha').innerText;console.debug('script version: '+scriptSha);console.debug('html version:   '+htmlSha);if(scriptSha!==htmlSha){alert('Whoops. The cached files on your machine are out of sync with each other. That\'s our bad. Please hard-refresh the page?');};
-}).call(this,require("pBGvAp"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_21d92aea.js","/")
+var scriptSha='f30e4ab';var htmlSha=document.querySelector('#sha').innerText;console.debug('script version: '+scriptSha);console.debug('html version:   '+htmlSha);if(scriptSha!==htmlSha){alert('Whoops. The cached files on your machine are out of sync with each other. That\'s our bad. Please hard-refresh the page?');};
+}).call(this,require("pBGvAp"),typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer,arguments[3],arguments[4],arguments[5],arguments[6],"/fake_e654e568.js","/")
 },{"../common/order.js":1,"../common/parsers.js":2,"buffer":4,"pBGvAp":6}]},{},[7])
